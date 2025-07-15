@@ -9,13 +9,10 @@ export const useSyncDb = () => {
 
   const syncUserMutation = useMutation({
     mutationFn: () => userApi.syncUser(api),
-    onSuccess: (response) =>
+    onSuccess: (response: any) =>
       console.log("User synced successfully:", response.data),
     onError: (error: any) => console.error("User sync failed:", error),
   });
-
-  console.log(syncUserMutation.data)
-
   // auto-sync user when signed in
   useEffect(() => {
     // if user is signed in and user is not synced yet, sync user
