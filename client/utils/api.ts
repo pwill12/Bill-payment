@@ -2,7 +2,7 @@ import axios, { AxiosInstance } from "axios";
 import { useAuth } from "@clerk/clerk-expo";
 import { User } from "@/types";
 
-const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL || "https://bill-payment-api.vercel.app/api";
+const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL || "https://bill-payment-one.vercel.app/api";
 // ! 🔥 localhost api would not work on your actual physical device
 // const API_BASE_URL = "http://localhost:5001/api";
 
@@ -27,7 +27,7 @@ export const useApiClient = (): AxiosInstance => {
 };
 
 export const userApi = {
-  syncUser: (api: AxiosInstance, data: User) => api.post("/users", data),
+  syncUser: (api: AxiosInstance) => api.post("/users"),
 //   getCurrentUser: (api: AxiosInstance) => api.get("/users/me"),
 //   updateProfile: (api: AxiosInstance, data: any) => api.put("/users/profile", data),
 };

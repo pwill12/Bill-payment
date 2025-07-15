@@ -7,6 +7,7 @@ export async function createUsersTable() {
         await sqldb`CREATE TABLE IF NOT EXISTS users(
         id SERIAL PRIMARY KEY,
         clerk_id VARCHAR(50) UNIQUE NOT NULL,
+        username VARCHAR(50) UNIQUE NULL,
         firstName VARCHAR(255) NULL,
         lastName VARCHAR(255) NULL,
         balance DECIMAL(20,2) DEFAULT 100.00,
@@ -23,18 +24,6 @@ export async function createUsersTable() {
     }
 }
 
-// export async function MODIFY() {
-
-//     try {
-//         await sqldb`ALTER TABLE users ADD CONSTRAINT balance_updated DEFAULT (100) FOR balance
-//         `
-//         console.log("ALTERED");
-//     } catch (error) {
-//         console.error("Error while creating users table", error);
-//         process.exit(1)
-//     }
-// }
-
 export async function insertUsers(req, res) {
 
     try {
@@ -45,14 +34,23 @@ export async function insertUsers(req, res) {
         `;
 
         if (findexistinguser.length > 0) {
-            return res.status(200).json({ user: {findexistinguser}, message: "User already exists" });
+            return res.status(200).json({ user: { findexistinguser }, message: "User already exists" });
         }
 
-        const { clerk_id, email, firstName, lastName, username, number, img } = req.body
+        const clerkUser = await clerkClient.users.getUser(userId);
+
+        const userData = {
+            clerk_id: userId,
+            email: clerkUser.emailAddresses[0]?.emailAddress,
+            firstName: clerkUser.firstName || null,
+            lastName: clerkUser.lastName || null,
+            username: clerkUser.emailAddresses[0].emailAddress.split("@")[0],
+            img: clerkUser.imageUrl || null,
+        };
 
         const insertuser = await sqldb`
-            INSERT INTO users(clerk_id, firstName, lastName, email, number, img)
-            VALUES (${clerk_id}, ${firstName}, ${lastName}, ${email}, ${number}, ${img})
+            INSERT INTO users(clerk_id, username, firstName, lastName, email, img)
+            VALUES (${userData.clerk_id}, ${userData.username}, ${userData.firstName}, ${userData.lastName}, ${userData.email}, ${userData.img})
             RETURNING *
         `;
         return res.status(201).json(insertuser[0])
