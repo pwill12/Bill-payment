@@ -7,23 +7,27 @@ import {
   Ionicons,
   MaterialCommunityIcons,
 } from "@expo/vector-icons";
-import { Text, View } from "react-native";
+import { Image, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import AddMoney from "@/components/AddMoney";
 import SignOutButton from "@/components/SignOutButton";
 import { useSyncDb } from "@/hooks/useRegister";
+import { useUser } from "@clerk/clerk-expo";
 
 const HomeScreen = () => {
 
   useSyncDb()
+
+  const { user } = useUser();
+  const username =  user?.emailAddresses[0].emailAddress.split("@")[0]
   
   return (
     <SafeAreaView className="flex-1 bg-white">
       <View className="flex-col px-3 py-2 bg-gray-50">
         <View className="flex-row justify-between py-7">
           <View className="flex-row items-center gap-4">
-            <Feather name="user" size={27}/>
-            <Text className="text-lg font-bold">Hi, Princewill</Text>
+            <Image source={{ uri: user?.imageUrl }} className="w-12 h-12 rounded-full mr-1" />
+            <Text className="text-lg font-bold">Hi, {username}</Text>
           </View>
           <View className="flex-row gap-6 items-center">
             <AntDesign name="customerservice" size={24}/>
