@@ -1,0 +1,21 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "bill-api",
+  "main": "node src/server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon src/server.js"
+  },
+  "author": "will",
+  "type": "module",
+  "license": "ISC",
+  "dependencies": {
+    "@clerk/express": "^1.7.0",
+    "@neondatabase/serverless": "^1.0.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
+    "express": "^4.21.0",
+    "nodemon": "^3.1.10"
+  }
+}
