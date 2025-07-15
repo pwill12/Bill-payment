@@ -34,7 +34,7 @@ export async function insertUsers(req, res) {
         `;
 
         if (findexistinguser.length > 0) {
-            return res.status(200).json({ user: { findexistinguser }, message: "User already exists" });
+            return res.status(200).json({ user: findexistinguser[0], message: "User already exists" });
         }
 
         const clerkUser = await clerkClient.users.getUser(userId);
