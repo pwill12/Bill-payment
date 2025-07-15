@@ -41,7 +41,6 @@ export async function insertUsers(req, res) {
 
         const userData = {
             clerk_id: userId,
-            username: clerkUser.username || null,
             email: clerkUser.emailAddresses[0]?.emailAddress,
             firstName: clerkUser.firstName || null,
             lastName: clerkUser.lastName || null,
@@ -50,8 +49,8 @@ export async function insertUsers(req, res) {
         };
 
         const insertuser = await sqldb`
-            INSERT INTO users(clerk_id, username, firstName, lastName, email, number, img)
-            VALUES (${userData.clerk_id}, ${userData.username}, ${userData.firstName}, ${userData.lastName}, ${userData.email}, ${userData.number}, ${userData.img})
+            INSERT INTO users(clerk_id, username, firstName, lastName, email, img)
+            VALUES (${userData.clerk_id}, ${userData.username}, ${userData.firstName}, ${userData.lastName}, ${userData.email}, ${userData.img})
             RETURNING *
         `;
         return res.status(201).json(insertuser[0])
