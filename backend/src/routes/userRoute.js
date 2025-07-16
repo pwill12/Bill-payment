@@ -5,6 +5,6 @@ import { protectRoute } from "../middlewares/authorization.js";
 const router = Router()
 
 router.post("/users", protectRoute, insertUsers)
-router.get("/users/:user_id",protectRoute, findUser)
+router.get("/user/find",protectRoute, findUser)
 
 export default router

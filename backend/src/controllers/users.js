@@ -74,7 +74,7 @@ export async function findUser(req, res) {
             return res.status(401).json({ message: "no user found" })
         }
 
-        res.status(201).json(finduser[0])
+        return res.status(201).json(finduser[0])
 
     } catch (error) {
         res.status(500).json({ message: "internal server error" })
