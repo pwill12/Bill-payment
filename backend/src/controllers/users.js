@@ -67,14 +67,13 @@ export async function findUser(req, res) {
 
         const finduser = await sqldb`
             SELECT * FROM users WHERE clerk_id = ${userId}
-            RETURNING *
         `;
 
         if (finduser.length == 0) {
-            return res.status(401).json({ message: "no user found" })
+            return res.status(404).json({ message: "no user found" })
         }
 
-        return res.status(201).json(finduser[0])
+        res.status(201).json(finduser[0])
 
     } catch (error) {
         res.status(500).json({ message: "internal server error" })
