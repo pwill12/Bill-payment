@@ -22,7 +22,7 @@ const Balance = () => {
       <View className="flex-row justify-between">
         <View className="flex-row items-center">
           <Feather name="dollar-sign" size={23} color={"white"} />
-          <Text className="color-white font-medium text-3xl">200</Text>
+          <Text className="color-white font-medium text-2xl">{currentUser?currentUser.balance:'loading'}</Text>
         </View>
         <AddMoney />
       </View>
