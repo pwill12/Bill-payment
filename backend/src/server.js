@@ -19,7 +19,7 @@ app.use(clerkMiddleware())
 const Port = process.env.Port || 8080
 
 app.use(cors({
-    origin: 'https://bill-payment-one.vercel.app' || 'http://localhost:8080',
+    origin: ['https://bill-payment-one.vercel.app' ,'http://localhost:8080'],
     methods: 'GET, PUT, POST, PATCH, HEAD'
 }))
 
