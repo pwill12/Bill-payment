@@ -15,7 +15,5 @@ export const useCurrentUser = () => {
     select: (response) => response.data,
   });
 
-  console.log(error)
-
   return { currentUser, isLoading, error, refetch };
 };
