@@ -1,11 +1,11 @@
 import { View, Text } from "react-native";
 import React from "react";
-import { Feather, Ionicons } from "@expo/vector-icons";
+import { Feather, Ionicons, MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 
 interface BillCategory {
   id: string;
   name: string;
-  icon: React.ComponentProps<typeof Feather>['name'] | React.ComponentProps<typeof Ionicons>['name'] | undefined
+  icon: React.ComponentProps<typeof MaterialCommunityIcons>['name']
   iconSet: "Ionicons" | "Feather";
   size?: number
 }
@@ -19,10 +19,10 @@ interface PayBillsProps {
 const PayBills = ({categories, onCategoryPress} : PayBillsProps) => {
 
   const defaultCategories: BillCategory[] = [
-    { id: "airtime", name: "Airtime", icon: 'cellular', iconSet: "Ionicons" ,size: 21},
+    { id: "airtime", name: "Airtime", icon: 'signal', iconSet: "Ionicons" ,size: 21},
     { id: "data", name: "Data", icon: "wifi", iconSet: "Feather", size: 21},
     { id: "betting", name: "Betting", icon: "football", iconSet: "Ionicons", size: 21},
-    { id: "tv", name: "TV", icon: "tv", iconSet: "Feather" , size: 21},
+    { id: "tv", name: "TV", icon: "youtube-tv", iconSet: "Feather" , size: 21},
   ];
 
   const billCategories = categories || defaultCategories;
@@ -36,8 +36,7 @@ const PayBills = ({categories, onCategoryPress} : PayBillsProps) => {
              accessibilityRole="button"
              accessibilityLabel={`Pay ${category.name} bills`}
         >
-          {category.iconSet === 'Ionicons' && (<Ionicons name={category.icon} size={category.size}/>)}
-          {category.iconSet === 'Feather' && <Feather name={category.icon} size={21}/>}
+          <MaterialCommunityIcons name={category.icon} size={category.size} color={'lightgreen'}/>
           <Text className="text-xs">{category.name}</Text>
         </View>
       ))}
