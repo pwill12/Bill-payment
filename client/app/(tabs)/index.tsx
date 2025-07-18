@@ -7,13 +7,15 @@ import {
   Ionicons,
   MaterialCommunityIcons,
 } from "@expo/vector-icons";
-import { Image, Text, View } from "react-native";
+import { Image, ScrollView, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import AddMoney from "@/components/AddMoney";
 import SignOutButton from "@/components/SignOutButton";
 import { useSyncDb } from "@/hooks/useRegister";
 import { useUser } from "@clerk/clerk-expo";
 import Balance from "@/components/Balance";
+import PayBills from "@/components/PayBills";
+import TransactionCard from "@/components/TransactionCard";
 
 const HomeScreen = () => {
   useSyncDb();
@@ -23,7 +25,8 @@ const HomeScreen = () => {
 
   return (
     <SafeAreaView className="flex-1 bg-white">
-      <View className="flex-col px-3 py-2 bg-gray-50">
+      <ScrollView>
+      <View className="flex-col px-3 py-1 bg-gray-50">
         <View className="flex-row justify-between py-7">
           <View className="flex-row items-center gap-4">
             <Image
@@ -68,7 +71,10 @@ const HomeScreen = () => {
             <Text>Atm Card</Text>
           </View>
         </View>
+        <PayBills/>
+        <TransactionCard/>
       </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };

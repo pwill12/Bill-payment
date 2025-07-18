@@ -32,7 +32,7 @@ export default function Mytab() {
         }}
       />
       <Tabs.Screen
-        name="Reward"
+        name="rewards"
         options={{
           title: "Rewards",
           tabBarIcon: ({ color, size }) => <Feather name="gift" size={size} color={color} />,
