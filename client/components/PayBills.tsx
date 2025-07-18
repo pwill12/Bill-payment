@@ -20,13 +20,12 @@ const PayBills = ({categories, onCategoryPress} : PayBillsProps) => {
 
   const defaultCategories: BillCategory[] = [
     { id: "airtime", name: "Airtime", icon: 'cellular', iconSet: "Ionicons" ,size: 21},
-    { id: "data", name: "Data", icon: "wifi", iconSet: "Feather" },
-    { id: "betting", name: "Betting", icon: "football", iconSet: "Ionicons" },
-    { id: "tv", name: "TV", icon: "tv", iconSet: "Feather" },
+    { id: "data", name: "Data", icon: "wifi", iconSet: "Feather", size: 21},
+    { id: "betting", name: "Betting", icon: "football", iconSet: "Ionicons", size: 21},
+    { id: "tv", name: "TV", icon: "tv", iconSet: "Feather" , size: 21},
   ];
 
   const billCategories = categories || defaultCategories;
-  const iconNames = 'cellular'
   return (
     <View className="py-4 px-5 flex-row bg-white items-center mt-5 justify-between rounded-lg">
       {billCategories.map((category)=>(
