@@ -2,7 +2,6 @@ import { Assetimages } from "@/assets";
 import { useSocialAuth } from "@/hooks/useSocialAuth";
 import { useAuth } from "@clerk/clerk-expo";
 import { Redirect } from "expo-router";
-import { navigate } from "expo-router/build/global-state/routing";
 import {
   ActivityIndicator,
   Image,
@@ -17,7 +16,6 @@ export default function Index() {
 
   if (isSignedIn) {
     return <Redirect href={"/(tabs)"} />;
-    // navigate("/(tabs)");
   }
 
   return (

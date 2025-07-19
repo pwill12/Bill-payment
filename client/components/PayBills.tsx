@@ -1,6 +1,6 @@
 import { View, Text } from "react-native";
 import React from "react";
-import { Feather, Ionicons, MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 interface BillCategory {
   id: string;
