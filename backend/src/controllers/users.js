@@ -79,3 +79,25 @@ export async function findUser(req, res) {
         res.status(500).json({ message: "internal server error" })
     }
 }
+
+export async function findReceivers(req, res) {
+
+    try {
+
+        const { receiver } = req.params
+        
+        const finduser = await sqldb`
+            SELECT * FROM users WHERE clerk_id = ${receiver}
+        `;
+
+        if (finduser.length == 0) {
+            return res.status(404).json({ message: "no user found" })
+        }
+
+        res.status(201).json(finduser[0])
+
+    } catch (error) {
+        res.status(500).json({ message: "internal server error" })
+    }
+}
+

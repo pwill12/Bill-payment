@@ -32,6 +32,10 @@ export const userApi = {
 //   updateProfile: (api: AxiosInstance, data: any) => api.put("/users/profile", data),
 };
 
+export const receiverApi = {
+  getReceiver: (api: AxiosInstance, username: string | undefined) => api.get(`/user/find/${username}`),
+};
+
 // export const postApi = {
 //   createPost: (api: AxiosInstance, data: { content: string; image?: string }) =>
 //     api.post("/posts", data),
