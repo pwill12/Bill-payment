@@ -1,21 +1,19 @@
 import React from "react";
 import {
   AntDesign,
-  Feather,
-  FontAwesome,
-  FontAwesome5,
   Ionicons,
   MaterialCommunityIcons,
 } from "@expo/vector-icons";
-import { Image, ScrollView, Text, View } from "react-native";
+import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import AddMoney from "@/components/AddMoney";
 import SignOutButton from "@/components/SignOutButton";
 import { useSyncDb } from "@/hooks/useRegister";
 import { useUser } from "@clerk/clerk-expo";
 import Balance from "@/components/Balance";
 import PayBills from "@/components/PayBills";
 import TransactionCard from "@/components/TransactionCard";
+import { navigate } from "expo-router/build/global-state/routing";
+import { Redirect } from "expo-router";
 
 const HomeScreen = () => {
   useSyncDb();
@@ -54,14 +52,16 @@ const HomeScreen = () => {
             />
             <Text>To Bank</Text>
           </View>
+          <TouchableOpacity onPress={()=> navigate('/sendpagecard')}>
           <View className="flex-col items-center gap-1">
             <MaterialCommunityIcons
               name="contacts-outline"
               size={25}
               color={"lightgreen"}
             />
-            <Text>To Paystack</Text>
+            <Text>To username</Text>
           </View>
+          </TouchableOpacity>
           <View className="flex-col items-center gap-1">
             <MaterialCommunityIcons
               name="credit-card-outline"
