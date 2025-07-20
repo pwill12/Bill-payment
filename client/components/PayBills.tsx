@@ -6,7 +6,6 @@ interface BillCategory {
   id: string;
   name: string;
   icon: React.ComponentProps<typeof MaterialCommunityIcons>['name']
-  iconSet: "Ionicons" | "Feather";
   size?: number
 }
 
@@ -19,10 +18,10 @@ interface PayBillsProps {
 const PayBills = ({categories, onCategoryPress} : PayBillsProps) => {
 
   const defaultCategories: BillCategory[] = [
-    { id: "airtime", name: "Airtime", icon: 'signal', iconSet: "Ionicons" ,size: 21},
-    { id: "data", name: "Data", icon: "wifi", iconSet: "Feather", size: 21},
-    { id: "betting", name: "Betting", icon: "football", iconSet: "Ionicons", size: 21},
-    { id: "tv", name: "TV", icon: "youtube-tv", iconSet: "Feather" , size: 21},
+    { id: "airtime", name: "Airtime", icon: 'cellphone-wireless' ,size: 21},
+    { id: "data", name: "Data", icon: "wifi", size: 21},
+    { id: "betting", name: "Betting", icon: "soccer", size: 21},
+    { id: "tv", name: "TV", icon: "youtube-tv" , size: 21},
   ];
 
   const billCategories = categories || defaultCategories;

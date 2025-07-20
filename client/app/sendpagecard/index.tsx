@@ -3,18 +3,19 @@ import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
 import TransferCard from "@/components/TransferCard";
+import { router } from "expo-router";
 
 const TransferPageCard = () => {
   return (
     <SafeAreaView className="flex-1 bg-white">
       <View className="bg-gray-50 gap-4 flex-1">
         <View className="flex-row justify-between py-5 px-3 bg-white w-full">
-          <TouchableOpacity className="flex-row items-center gap-3">
+          <TouchableOpacity className="flex-row items-center gap-3" onPress={() => router.back()}>
             <Feather name="arrow-left" color={"lightgreen"} />
             <Text>Transfer to Bank Account</Text>
           </TouchableOpacity>
           <TouchableOpacity className="items-center">
-            <Text className="color-green-500">History</Text>
+            <Text className="text-green-500">History</Text>
           </TouchableOpacity>
         </View>
         <View className="px-3 gap-4">
