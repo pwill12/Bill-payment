@@ -4,7 +4,7 @@ import React from "react";
 interface TransactionButtonProps {
   onPress?: () => void;
   title?: string;
-  disabled?: boolean
+  disabled?: boolean;
 }
 
 const TransactionButton = ({
@@ -20,7 +20,9 @@ const TransactionButton = ({
       onPress={onPress}
       disabled={disabled}
     >
-      <Text className="text-white text-xl">{title}</Text>
+      <Text className={`text-xl ${disabled ? "text-gray-500" : "text-white"}`}>
+        {title}
+      </Text>
     </TouchableOpacity>
   );
 };
