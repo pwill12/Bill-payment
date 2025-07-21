@@ -1,4 +1,4 @@
-import { View, Text, TextInput, Alert } from "react-native";
+import { View, Text, TextInput } from "react-native";
 import React, { useState } from "react";
 import TransactionButton from "./TransactionButton";
 
@@ -7,7 +7,7 @@ interface TransferCardProps {
   isLoading?: boolean;
 }
 
-const TransferCard = ({ onTransfer, isLoading = false }: TransferCardProps) => {
+const TransferCard = ({ onTransfer, isLoading }: TransferCardProps) => {
   const [recipientUsername, setRecipientUsername] = useState("");
   const [error, setError] = useState("");
 

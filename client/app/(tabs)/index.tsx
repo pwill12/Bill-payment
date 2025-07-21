@@ -52,7 +52,7 @@ const HomeScreen = () => {
             />
             <Text>To Bank</Text>
           </View>
-          <TouchableOpacity onPress={()=> navigate('/sendpagecard')}>
+          <TouchableOpacity onPress={()=> navigate('/transfer')}>
           <View className="flex-col items-center gap-1">
             <MaterialCommunityIcons
               name="contacts-outline"

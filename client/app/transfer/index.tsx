@@ -1,0 +1,59 @@
+import { View, Text, Alert } from "react-native";
+import React, { useState } from "react";
+import TransferCard from "@/components/TransferCard";
+import HeaderName from "@/components/HeaderName";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { navigate } from "expo-router/build/global-state/routing";
+import { useRouter } from "expo-router";
+import { useReceiver } from "@/hooks/useReceiver";
+
+
+const TransferPageCard = () => {
+  
+   const [username, setUsername] = useState<string>('')
+   const { receiver, isLoading, error } = useReceiver(username)
+   
+   React.useEffect(() => {
+     setloading(isLoading)
+   }, [isLoading])
+   
+   React.useEffect(() => {
+     if (error) {
+       Alert.alert(error.message)
+       console.log(error)
+     }
+   }, [error])
+   
+   React.useEffect(() => {
+     if (receiver && username) {
+       router.push({pathname: '/transfer/summary', params: {name: username, userdetails: receiver}})
+     }
+   }, [receiver, username])
+
+  const [loading, setloading] = useState<boolean>(false)
+
+  const handlePress = () => {
+    navigate("/");
+  };
+
+  const router = useRouter()
+
+  const HandleTransfer = (username: string) => {
+    setUsername(username)
+  };
+  return (
+    <HeaderName
+      showhistorybutton={true}
+      headertext="Transfer to User Account"
+      onPress={handlePress}
+    >
+      <View className="bg-blue-100 px-3 py-4 flex-row gap-2 items-center rounded-lg ">
+        <MaterialCommunityIcons name="bank-transfer" size={21} />
+        <Text>Free transfer for today 3</Text>
+      </View>
+      <TransferCard onTransfer={HandleTransfer} isLoading={loading}/>
+    </HeaderName>
+  );
+};
+
+export default TransferPageCard;
