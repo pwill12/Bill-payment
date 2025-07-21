@@ -5,7 +5,7 @@ import { Feather } from '@expo/vector-icons'
 
 const TransferSummary = () => {
   return (
-    <HeaderName otherprops={false} headertext='Complete transaction'>
+    <HeaderName showhistorybutton={false} headertext='Complete transaction'>
     <View className='flex-row gap-5'>
       <Feather name='user' size={21}/>
       <View className='flex-col gap-2 items-center'>

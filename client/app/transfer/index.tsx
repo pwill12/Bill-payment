@@ -9,6 +9,26 @@ import { useReceiver } from "@/hooks/useReceiver";
 
 
 const TransferPageCard = () => {
+  
+   const [username, setUsername] = useState<string>('')
+   const { receiver, isLoading, error } = useReceiver(username)
+   
+   React.useEffect(() => {
+     setloading(isLoading)
+   }, [isLoading])
+   
+   React.useEffect(() => {
+     if (error) {
+       Alert.alert(error.message)
+       console.log(error)
+     }
+   }, [error])
+   
+   React.useEffect(() => {
+     if (receiver && username) {
+       router.push({pathname: '/transfer/summary', params: {name: username, userdetails: receiver}})
+     }
+   }, [receiver, username])
 
   const [loading, setloading] = useState<boolean>(false)
 
@@ -19,17 +39,11 @@ const TransferPageCard = () => {
   const router = useRouter()
 
   const HandleTransfer = (username: string) => {
-    const{receiver,isLoading,error}=useReceiver(username)
-    setloading(isLoading)
-    if (error) {
-      Alert.alert(error.message)
-      console.log(error)
-    }
-    router.push({pathname: '/transfer/summary', params: {name: username, userdetails: receiver}})
+    setUsername(username)
   };
   return (
     <HeaderName
-      otherprops={true}
+      showhistorybutton={true}
       headertext="Transfer to User Account"
       onPress={handlePress}
     >

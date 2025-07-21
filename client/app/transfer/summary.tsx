@@ -7,7 +7,7 @@ import { useLocalSearchParams } from "expo-router";
 const TransferSummary = () => {
     const {name} = useLocalSearchParams()
   return (
-    <HeaderName otherprops={false} headertext="Complete transaction">
+    <HeaderName showhistorybutton={false} headertext="Complete transaction">
       <View className="flex-row gap-5">
         <MaterialCommunityIcons name="account-circle-outline" color={'lightgray'} size={40}/>
         <View className="flex-col gap-1">

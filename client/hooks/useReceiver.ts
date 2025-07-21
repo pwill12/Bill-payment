@@ -10,8 +10,9 @@ export const useReceiver = (username?: string) => {
     error,
     refetch,
   } = useQuery({
-    queryKey: ['receiver'],
+    queryKey: ['receiver', username],
     queryFn: () => (receiverApi.getReceiver(api, username)),
+    enabled: !username,
     select: (response) => response?.data
   });
 

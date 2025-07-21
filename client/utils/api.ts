@@ -1,6 +1,5 @@
 import axios, { AxiosInstance } from "axios";
 import { useAuth } from "@clerk/clerk-expo";
-import { User } from "@/types";
 
 const API_BASE_URL = "https://bill-payment-one.vercel.app/api";
 // ! 🔥 localhost api would not work on your actual physical device
@@ -33,7 +32,12 @@ export const userApi = {
 };
 
 export const receiverApi = {
-  getReceiver: (api: AxiosInstance, username: string | undefined) => api.get(`/user/find/${username}`),
+  getReceiver: (api: AxiosInstance, username: string | undefined) => {
+    if (!username) {
+      return Promise.reject(new Error('Username is required'));
+    }
+    return api.get(`/user/find/${username}`);
+  },
 };
 
 // export const postApi = {

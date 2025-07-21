@@ -5,7 +5,7 @@ import { Feather } from "@expo/vector-icons";
 import { router } from "expo-router";
 
 interface HeaderProps {
-  otherprops: boolean;
+  showhistorybutton: boolean;
   headertext: string;
   children: React.ReactNode;
   onPress?: () => void;
@@ -13,7 +13,7 @@ interface HeaderProps {
 
 const HeaderName = ({
   children,
-  otherprops,
+  showhistorybutton,
   headertext,
   onPress,
 }: HeaderProps) => {
@@ -28,8 +28,8 @@ const HeaderName = ({
             <Feather name="arrow-left" color={"lightgreen"} />
             <Text>{headertext}</Text>
           </TouchableOpacity>
-          {otherprops && (
-            <TouchableOpacity className="items-center" onPress={onPress}>
+          {showhistorybutton && (
+            <TouchableOpacity className="items-center" onPress={onPress} accessibilityLabel="History" role="button">
               <Text className="text-green-500">History</Text>
             </TouchableOpacity>
           )}
