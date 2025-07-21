@@ -6,12 +6,14 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { navigate } from "expo-router/build/global-state/routing";
 import { useRouter } from "expo-router";
 import { useReceiver } from "@/hooks/useReceiver";
+import { useQueryClient } from "@tanstack/react-query";
 
 const TransferPageCard = () => {
+  
   const [username, setUsername] = useState<string>("");
   const [enabled, setenabled] = useState<boolean>(false);
 
-  const { receiver, isLoading, error } = useReceiver(username, enabled);
+  const { receiver, isLoading, error, refetch } = useReceiver(username, enabled);
 
   React.useEffect(() => {
     setloading(isLoading);
@@ -24,14 +26,15 @@ const TransferPageCard = () => {
     }
   }, [error]);
 
-  React.useEffect(() => {
-    if (receiver && username) {
-      router.push({
-        pathname: "/transfer/summary",
-        params: { name: username, userdetails: receiver },
-      });
-    }
-  }, [receiver, username]);
+  // React.useEffect(() => {
+  //   if (receiver!==undefined) {
+  //     router.push({
+  //       pathname: "/transfer/summary",
+  //       params: { name: username, userdetails: receiver },
+  //     });
+  //     setenabled(false)
+  //   }
+  // },[receiver]);
 
   const [loading, setloading] = useState<boolean>(false);
 
@@ -44,7 +47,23 @@ const TransferPageCard = () => {
   const HandleTransfer = (username: string) => {
     setUsername(username);
     setenabled(true);
+    if (receiver?.username === username) {
+      router.push({
+        pathname: "/transfer/summary",
+        params: { name: username,  firstname: receiver?.firstname}
+      });
+    }
   };
+
+  React.useEffect(() => {
+    if (receiver?.username === username) {
+      router.push({
+        pathname: "/transfer/summary",
+        params: { name: username,  firstname: receiver?.firstname}
+      });
+      setenabled(false)
+    }
+  },[receiver && username]);
   return (
     <HeaderName
       showhistorybutton={true}

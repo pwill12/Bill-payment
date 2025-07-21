@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { receiverApi, useApiClient} from "../utils/api";
 import { useEffect } from "react";
 
-export const useReceiver = (username?: string, enabled: boolean = false) => {
+export const useReceiver = (username?: string, enabled?: boolean) => {
   const api = useApiClient();
 
   const {
