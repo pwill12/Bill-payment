@@ -7,40 +7,43 @@ import { navigate } from "expo-router/build/global-state/routing";
 import { useRouter } from "expo-router";
 import { useReceiver } from "@/hooks/useReceiver";
 
-
 const TransferPageCard = () => {
-  
-   const [username, setUsername] = useState<string>('')
-   const [enabled, setenabled] = useState<boolean>(false)
-   
-   const { receiver, isLoading, error } = useReceiver(username,enabled)
-   
-   React.useEffect(() => {
-     setloading(isLoading)
-   }, [isLoading])
-   
-     if (error) {
-       Alert.alert(error.message)
-       console.log(error)
-     }
-   
-   React.useEffect(() => {
-     if (receiver && username) {
-       router.push({pathname: '/transfer/summary', params: {name: username, userdetails: receiver}})
-     }
-   }, [receiver, username])
+  const [username, setUsername] = useState<string>("");
+  const [enabled, setenabled] = useState<boolean>(false);
 
-  const [loading, setloading] = useState<boolean>(false)
+  const { receiver, isLoading, error } = useReceiver(username, enabled);
+
+  React.useEffect(() => {
+    setloading(isLoading);
+  }, [isLoading]);
+
+  React.useEffect(() => {
+    if (error) {
+      Alert.alert(error.message);
+      console.log(error);
+    }
+  }, [error]);
+
+  React.useEffect(() => {
+    if (receiver && username) {
+      router.push({
+        pathname: "/transfer/summary",
+        params: { name: username, userdetails: receiver },
+      });
+    }
+  }, [receiver, username]);
+
+  const [loading, setloading] = useState<boolean>(false);
 
   const handlePress = () => {
     navigate("/");
   };
 
-  const router = useRouter()
+  const router = useRouter();
 
   const HandleTransfer = (username: string) => {
-    setUsername(username)
-    setenabled(true)
+    setUsername(username);
+    setenabled(true);
   };
   return (
     <HeaderName
@@ -52,7 +55,7 @@ const TransferPageCard = () => {
         <MaterialCommunityIcons name="bank-transfer" size={21} />
         <Text>Free transfer for today 3</Text>
       </View>
-      <TransferCard onTransfer={HandleTransfer} isLoading={loading}/>
+      <TransferCard onTransfer={HandleTransfer} isLoading={loading} />
     </HeaderName>
   );
 };
