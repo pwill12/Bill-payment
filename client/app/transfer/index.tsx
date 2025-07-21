@@ -11,18 +11,18 @@ import { useReceiver } from "@/hooks/useReceiver";
 const TransferPageCard = () => {
   
    const [username, setUsername] = useState<string>('')
-   const { receiver, isLoading, error } = useReceiver(username)
+   const [enabled, setenabled] = useState<boolean>(false)
+   
+   const { receiver, isLoading, error } = useReceiver(username,enabled)
    
    React.useEffect(() => {
      setloading(isLoading)
    }, [isLoading])
    
-   React.useEffect(() => {
      if (error) {
        Alert.alert(error.message)
        console.log(error)
      }
-   }, [error])
    
    React.useEffect(() => {
      if (receiver && username) {
@@ -40,6 +40,7 @@ const TransferPageCard = () => {
 
   const HandleTransfer = (username: string) => {
     setUsername(username)
+    setenabled(true)
   };
   return (
     <HeaderName
