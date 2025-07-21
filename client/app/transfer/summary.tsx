@@ -12,8 +12,8 @@ const TransferSummary = () => {
       <View className="flex-row gap-5">
         <MaterialCommunityIcons name="account-circle-outline" color={'lightgray'} size={40}/>
         <View className="flex-col gap-1">
-          <Text className="font-medium text-xl">{firstname}</Text>
-          <Text className="font-light text-gray-500">{name}</Text>
+          <Text className="font-medium text-xl">{name}</Text>
+          <Text className="font-light text-gray-500">{firstname}</Text>
         </View>
       </View>
     </HeaderName>

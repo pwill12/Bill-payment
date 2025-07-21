@@ -1,60 +1,31 @@
-import { View, Text, Alert } from "react-native";
-import React, { useState } from "react";
+import { View, Text } from "react-native";
+import React, { useEffect } from "react";
 import TransferCard from "@/components/TransferCard";
 import HeaderName from "@/components/HeaderName";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { navigate } from "expo-router/build/global-state/routing";
-import { useRouter } from "expo-router";
+import { router } from "expo-router";
 import { useReceiver } from "@/hooks/useReceiver";
-import { useQueryClient } from "@tanstack/react-query";
 
 const TransferPageCard = () => {
-  const [username, setUsername] = useState<string>("");
-  const [enabled, setenabled] = useState<boolean>(false);
-  const { receiver, isLoading, error, refetch } = useReceiver(
-    username,
-    enabled
-  );
-
-  const [loading, setloading] = useState<boolean>(false);
+  const { fetchUsersandCache, data, loading } = useReceiver();
 
   const handlePress = () => {
     navigate("/");
   };
 
-  const router = useRouter();
-
-  React.useEffect(() => {
-    setloading(isLoading);
-  }, [isLoading]);
-
-  React.useEffect(() => {
-    if (error) {
-      Alert.alert(error.message);
-      console.log(error);
-    }
-  }, [error]);
-
   const HandleTransfer = async (username: string) => {
-    setUsername(username);
-    setenabled(true);
-
-    await receiver;
-
-    setenabled(false);
-
-    if (receiver?.username !== undefined) {
-      setenabled(false);
-      router.push({
-        pathname: "/transfer/summary",
-        params: { name: username, firstname: receiver?.firstname },
-      });
-      console.log(receiver?.username);
-      // setenabled(false)
-    }
+    await fetchUsersandCache(username);
   };
 
-  console.log(enabled);
+  useEffect(() => {
+    if (data?.status === 200) {
+      router.push({
+        pathname: "/transfer/summary",
+        params: { name: data?.data.firstname, firstname: data?.data.username },
+      });
+    }
+  }, [data]);
 
   return (
     <HeaderName

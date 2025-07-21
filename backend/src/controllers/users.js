@@ -86,10 +86,6 @@ export async function findReceivers(req, res) {
 
         const { receiver } = req.params
 
-        if (!receiver || receiver.trim() === '') {
-            return res.status(400).json({ message: "receiver parameter is required" })
-        }
-
         const finduser = await sqldb`
             SELECT * FROM users WHERE username = ${receiver}
         `;
