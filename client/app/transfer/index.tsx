@@ -9,11 +9,20 @@ import { useReceiver } from "@/hooks/useReceiver";
 import { useQueryClient } from "@tanstack/react-query";
 
 const TransferPageCard = () => {
-  
   const [username, setUsername] = useState<string>("");
   const [enabled, setenabled] = useState<boolean>(false);
+  const { receiver, isLoading, error, refetch } = useReceiver(
+    username,
+    enabled
+  );
 
-  const { receiver, isLoading, error, refetch } = useReceiver(username, enabled);
+  const [loading, setloading] = useState<boolean>(false);
+
+  const handlePress = () => {
+    navigate("/");
+  };
+
+  const router = useRouter();
 
   React.useEffect(() => {
     setloading(isLoading);
@@ -26,44 +35,27 @@ const TransferPageCard = () => {
     }
   }, [error]);
 
-  // React.useEffect(() => {
-  //   if (receiver!==undefined) {
-  //     router.push({
-  //       pathname: "/transfer/summary",
-  //       params: { name: username, userdetails: receiver },
-  //     });
-  //     setenabled(false)
-  //   }
-  // },[receiver]);
-
-  const [loading, setloading] = useState<boolean>(false);
-
-  const handlePress = () => {
-    navigate("/");
-  };
-
-  const router = useRouter();
-
-  const HandleTransfer = (username: string) => {
+  const HandleTransfer = async (username: string) => {
     setUsername(username);
     setenabled(true);
-    if (receiver?.username === username) {
+
+    await receiver;
+
+    setenabled(false);
+
+    if (receiver?.username !== undefined) {
+      setenabled(false);
       router.push({
         pathname: "/transfer/summary",
-        params: { name: username,  firstname: receiver?.firstname}
+        params: { name: username, firstname: receiver?.firstname },
       });
+      console.log(receiver?.username);
+      // setenabled(false)
     }
   };
 
-  React.useEffect(() => {
-    if (receiver?.username === username) {
-      router.push({
-        pathname: "/transfer/summary",
-        params: { name: username,  firstname: receiver?.firstname}
-      });
-      setenabled(false)
-    }
-  },[receiver && username]);
+  console.log(enabled);
+
   return (
     <HeaderName
       showhistorybutton={true}

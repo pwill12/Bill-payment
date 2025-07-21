@@ -6,6 +6,7 @@ import { useLocalSearchParams } from "expo-router";
 
 const TransferSummary = () => {
     const {name, firstname} = useLocalSearchParams()
+    console.log(name)
   return (
     <HeaderName showhistorybutton={false} headertext="Complete transaction">
       <View className="flex-row gap-5">
