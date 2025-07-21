@@ -1,7 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import { receiverApi, useApiClient} from "../utils/api";
+import { useEffect } from "react";
 
-export const useReceiver = (username?: string) => {
+export const useReceiver = (username?: string, enabled: boolean = false) => {
   const api = useApiClient();
 
   const {
@@ -12,9 +13,10 @@ export const useReceiver = (username?: string) => {
   } = useQuery({
     queryKey: ['receiver', username],
     queryFn: () => (receiverApi.getReceiver(api, username)),
-    enabled: !username,
+    enabled: enabled,
     select: (response) => response?.data
   });
+
 
   return { receiver, isLoading, error, refetch };
 };

@@ -36,7 +36,7 @@ export const receiverApi = {
     if (!username) {
       return Promise.reject(new Error('Username is required'));
     }
-    return api.get(`/user/find/${username}`);
+    return api(`/user/find/${username}`);
   },
 };
 

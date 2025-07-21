@@ -91,7 +91,7 @@ export async function findReceivers(req, res) {
         }
 
         const finduser = await sqldb`
-            SELECT * FROM users WHERE clerk_id = ${receiver}
+            SELECT * FROM users WHERE username = ${receiver}
         `;
 
         if (finduser.length == 0) {
