@@ -13,7 +13,6 @@ import Balance from "@/components/Balance";
 import PayBills from "@/components/PayBills";
 import TransactionCard from "@/components/TransactionCard";
 import { navigate } from "expo-router/build/global-state/routing";
-import { Redirect } from "expo-router";
 
 const HomeScreen = () => {
   useSyncDb();

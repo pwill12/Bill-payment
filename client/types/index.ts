@@ -1,8 +1,10 @@
 export interface User {
   clerk_id: string | null;
-  firstName: string | null;
-  lastName: string | null ;
+  username: string;
+  firstname: string | null;
+  lastname: string | null ;
   img?: string | null;
   email: string | null;
   number?: string | null;
+  status?: number
 }

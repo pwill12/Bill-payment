@@ -1,50 +1,38 @@
 import { View, Text, Alert } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import TransferCard from "@/components/TransferCard";
 import HeaderName from "@/components/HeaderName";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { navigate } from "expo-router/build/global-state/routing";
-import { useRouter } from "expo-router";
+import { router } from "expo-router";
 import { useReceiver } from "@/hooks/useReceiver";
+import { useAuth } from "@clerk/clerk-expo";
 
 const TransferPageCard = () => {
-  const [username, setUsername] = useState<string>("");
-  const [enabled, setenabled] = useState<boolean>(false);
-
-  const { receiver, isLoading, error } = useReceiver(username, enabled);
-
-  React.useEffect(() => {
-    setloading(isLoading);
-  }, [isLoading]);
-
-  React.useEffect(() => {
-    if (error) {
-      Alert.alert(error.message);
-      console.log(error);
-    }
-  }, [error]);
-
-  React.useEffect(() => {
-    if (receiver && username) {
-      router.push({
-        pathname: "/transfer/summary",
-        params: { name: username, userdetails: receiver },
-      });
-    }
-  }, [receiver, username]);
-
-  const [loading, setloading] = useState<boolean>(false);
+  const { fetchUsersandCache, data, loading } = useReceiver();
+  const {userId} = useAuth()
 
   const handlePress = () => {
     navigate("/");
   };
 
-  const router = useRouter();
-
-  const HandleTransfer = (username: string) => {
-    setUsername(username);
-    setenabled(true);
+  const HandleTransfer = async (username: string) => {
+    await fetchUsersandCache(username);
   };
+
+  useEffect(() => {
+
+    if (data?.clerk_id === userId) {
+      Alert.alert("You cannot send to yourself")
+    }
+    else if (data?.username) {
+      router.push({
+        pathname: "/transfer/summary",
+        params: { name: data?.firstname, firstname: data?.username },
+      });
+    }
+  }, [data,userId]);
+
   return (
     <HeaderName
       showhistorybutton={true}
