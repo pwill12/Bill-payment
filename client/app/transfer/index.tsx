@@ -1,4 +1,4 @@
-import { View, Text } from "react-native";
+import { View, Text, Alert } from "react-native";
 import React, { useEffect } from "react";
 import TransferCard from "@/components/TransferCard";
 import HeaderName from "@/components/HeaderName";
@@ -6,9 +6,11 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { navigate } from "expo-router/build/global-state/routing";
 import { router } from "expo-router";
 import { useReceiver } from "@/hooks/useReceiver";
+import { useAuth } from "@clerk/clerk-expo";
 
 const TransferPageCard = () => {
   const { fetchUsersandCache, data, loading } = useReceiver();
+  const {userId} = useAuth()
 
   const handlePress = () => {
     navigate("/");
@@ -19,13 +21,17 @@ const TransferPageCard = () => {
   };
 
   useEffect(() => {
-    if (data?.status === 200) {
+
+    if (data?.clerk_id === userId) {
+      Alert.alert("You cannot send to yourself")
+    }
+    else if (data?.username) {
       router.push({
         pathname: "/transfer/summary",
-        params: { name: data?.data.firstname, firstname: data?.data.username },
+        params: { name: data?.firstname, firstname: data?.username },
       });
     }
-  }, [data]);
+  }, [data,userId]);
 
   return (
     <HeaderName

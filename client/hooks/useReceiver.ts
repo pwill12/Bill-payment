@@ -1,23 +1,23 @@
 import { QueryClient } from "@tanstack/react-query";
 import { receiverApi, useApiClient } from "../utils/api";
 import { useState } from "react";
-import { AxiosResponse } from "axios";
 import { Alert } from "react-native";
+import { User } from "@/types";
 
 export const useReceiver = () => {
     const api = useApiClient();
-  
-    const [loading, setloading] = useState<boolean>(false);
-    const [data, setdata] = useState <AxiosResponse>();
-
-  const fetchUsersandCache = async(username: string) => {
-  const queryClient = new QueryClient({
+    const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
         staleTime: Infinity,
       },
     },
   });
+  
+    const [loading, setloading] = useState<boolean>(false);
+    const [data, setdata] = useState <User | null>(null);
+
+  const fetchUsersandCache = async(username: string) => {
 
   try {
     setloading(true);
@@ -26,14 +26,16 @@ export const useReceiver = () => {
       queryFn: () => receiverApi.getReceiver(api, username),
     });
 
-    console.log(data);
+    
     if (data) {
       setloading(false);
-      setdata(data)
+      setdata(data.data)
+      console.log(data)
     }
   } catch (error) {
-    console.log(error);
-    Alert.alert("Invalid user", "User Does not exist")
+    const errorMessage = error instanceof Error ? error.message : "User does not exist";
+     Alert.alert("Invalid user", errorMessage);
+    // Alert.alert("Invalid user", "User Does not exist")
     setloading(false);
   }
 }
