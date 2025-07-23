@@ -28,7 +28,7 @@ const TransferPageCard = () => {
     else if (data?.username) {
       router.push({
         pathname: "/transfer/summary",
-        params: { name: data?.firstname, firstname: data?.username },
+        params: { name: data?.username, firstname: data?.firstname, lastname: data?.lastname, img: data?.img },
       });
     }
   }, [data,userId]);

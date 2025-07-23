@@ -1,40 +1,37 @@
 import { View, Text, TextInput } from "react-native";
 import React, { useState } from "react";
 import TransactionButton from "./TransactionButton";
+import TextInputs from "./TextInputs";
 
 interface TransferCardProps {
   onTransfer?: (username: string) => void;
   isLoading?: boolean;
+  errors?: boolean;
 }
 
 const TransferCard = ({ onTransfer, isLoading }: TransferCardProps) => {
   const [recipientUsername, setRecipientUsername] = useState("");
-  const [error, setError] = useState("");
+
+  const handleChange = (text: string) => {
+    setRecipientUsername(text);
+  };
 
   const handleTransfer = () => {
-    if (!recipientUsername.trim()) {
-      setError("Please enter a recipient username");
-      return;
-    }
-    setError("");
+    // if (recipientUsername.trim().includes()) {
+    //   setError("Please enter a recipient username");
+    //   return;
+    // }
+    // setError("");
     onTransfer?.(recipientUsername);
   };
 
   return (
     <View className="flex-col gap-6 rounded-xl bg-white px-3 py-7">
       <Text className="font-semibold text-2xl">Recipient Account</Text>
-      <TextInput
-        placeholder="Enter recipent username"
-        className="font-medium text-xl border border-gray-200 rounded p-3"
-        onChangeText={(text) => {
-          setRecipientUsername(text);
-          if (error) setError("");
-        }}
+      <TextInputs
         value={recipientUsername}
+        onChange={handleChange}
       />
-      {error ? (
-        <Text className="text-red-500 text-sm mt-1">{error}</Text>
-      ) : null}
       <TransactionButton
         title={isLoading ? "Processing..." : "Next"}
         disabled={isLoading || !recipientUsername.trim()}

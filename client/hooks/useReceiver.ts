@@ -30,7 +30,6 @@ export const useReceiver = () => {
     if (data) {
       setloading(false);
       setdata(data.data)
-      console.log(data)
     }
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : "User does not exist";

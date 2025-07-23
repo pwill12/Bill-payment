@@ -3,8 +3,8 @@ export interface User {
   username: string;
   firstname: string | null;
   lastname: string | null ;
-  img?: string | null;
-  email: string | null;
+  img: string;
+  email: string;
   number?: string | null;
   status?: number
 }
