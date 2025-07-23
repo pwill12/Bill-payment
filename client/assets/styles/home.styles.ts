@@ -25,5 +25,10 @@ export const homestyles = StyleSheet.create({
         padding: 20,
         backgroundColor: 'lightblue',
         borderRadius: '50%'
+    },
+    border: {
+        borderStyle: 'solid',
+        borderBottomColor: 'lightblue',
+        borderBottomWidth: 1,
     }
 })
