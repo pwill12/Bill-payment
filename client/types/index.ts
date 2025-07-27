@@ -6,5 +6,5 @@ export interface User {
   img: string;
   email: string;
   number?: string | null;
-  status?: number
+  balance: number
 }
