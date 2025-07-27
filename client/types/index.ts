@@ -8,3 +8,13 @@ export interface User {
   number?: string | null;
   balance: number
 }
+
+export enum transactiontype {
+    "send","receive","airtime","data"
+}
+export interface Transferprops {
+    amount: number;
+    sender: string;
+    receiver: string;
+    type: transactiontype;
+}
