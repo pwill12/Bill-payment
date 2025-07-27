@@ -28,7 +28,7 @@ export default function RootLayout() {
           {/* <Stack.Screen name="onboarding" /> */}
           <Stack.Screen name="(auth)" />
           <Stack.Screen name="(tabs)" />
-          <Stack.Screen name="transferpage" />
+          {/* <Stack.Screen name="transferpage" /> */}
         </Stack>
       </QueryClientProvider>
     </ClerkProvider>

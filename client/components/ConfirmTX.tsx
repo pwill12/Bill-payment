@@ -1,0 +1,98 @@
+import { View, Text, TouchableOpacity } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import BottomSheet, {
+  BottomSheetBackdrop,
+  BottomSheetView,
+} from "@gorhom/bottom-sheet";
+import { Feather } from "@expo/vector-icons";
+import { Ref, useCallback } from "react";
+import TransactionButton, { COLORS } from "./TransactionButton";
+
+enum bottomtype {
+  airtime,
+  send,
+}
+interface Props {
+  name?: string | undefined;
+  username?: string;
+  bank?: string;
+  amount?: number;
+  Ref: Ref<BottomSheet>;
+  onClose: () => void;
+  type?: bottomtype;
+}
+
+const ConfirmTransfer = ({
+  Ref,
+  onClose,
+  username,
+  bank = "Billy",
+  amount,
+  name,
+}: Props) => {
+  const insets = useSafeAreaInsets();
+  const renderBackdrop = useCallback(
+    (props: any) => (
+      <BottomSheetBackdrop
+        appearsOnIndex={0}
+        disappearsOnIndex={-1}
+        {...props}
+      />
+    ),
+    []
+  );
+  return (
+    <BottomSheet
+      ref={Ref}
+      index={-1}
+      onClose={onClose}
+      handleIndicatorStyle={{ display: "none" }}
+      enablePanDownToClose={true}
+      backdropComponent={renderBackdrop}
+    >
+      <BottomSheetView
+        className="flex-1 px-4"
+        style={{ height: 9.5 * insets.bottom }}
+      >
+        <TouchableOpacity className="self-end" onPress={onClose}>
+          <Feather className="" name="x" size={20} />
+        </TouchableOpacity>
+        <View className="gap-5">
+          <Text className="text-center text-xl font-semibold">Reminder</Text>
+          <Text className="">
+            Double check the transfer details before you proceed Pls note that
+            successful transfers cannot be reversed.
+          </Text>
+          <View className="flex-col p-3 rounded-lg bg-slate-100 gap-3">
+            <Text className="font-semibold">Transaction Details</Text>
+            <View className="flex-row justify-between">
+              <Text>Name</Text>
+              <Text className="font-semibold">{name}</Text>
+            </View>
+            <View className="flex-row justify-between">
+              <Text>username</Text>
+              <Text className="font-semibold">{username}</Text>
+            </View>
+            <View className="flex-row justify-between">
+              <Text>Bank</Text>
+              <Text className="font-semibold">{bank}</Text>
+            </View>
+            <View className="flex-row justify-between">
+              <Text>Amount</Text>
+              <View className="flex-row items-center">
+                <Feather name="dollar-sign" size={15} />
+                <Text className="font-semibold">{amount}</Text>
+              </View>
+            </View>
+          </View>
+          <View className="flex-row justify-between px-5">
+            <TransactionButton title="Recheck" size="10" color={COLORS.lightblue}/>
+            <TransactionButton title="Confirm" size="10"/>
+          </View>
+        </View>
+      </BottomSheetView>
+    </BottomSheet>
+  );
+};
+
+export default ConfirmTransfer;

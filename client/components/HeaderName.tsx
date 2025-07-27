@@ -19,8 +19,8 @@ const HeaderName = ({
 }: HeaderProps) => {
   return (
     <SafeAreaView className="flex-1 bg-white">
-      <View className="bg-gray-50 gap-4 flex-1">
-        <View className="flex-row justify-between py-5 px-3 bg-white w-full">
+      <View className="bg-gray-50 gap- flex-1">
+        <View className="flex-row justify-between py-5 px-3 bg-white">
           <TouchableOpacity
             className="flex-row items-center gap-3"
             onPress={() => router.back()}
