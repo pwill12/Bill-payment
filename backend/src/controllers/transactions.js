@@ -22,11 +22,11 @@ export async function transactions(req, res) {
     try {
         await transactionsTable();
 
-        const { amount, type, sender, receiver } = req.body
+        const { amount, type, receiver } = req.body
         const { userId } = getAuth(req)
 
         const getbalance = await sqldb`
-            SELECT balance FROM users WHERE clerk_id = ${userId}
+            SELECT balance,username FROM users WHERE clerk_id = ${userId}
         `
         const senderbal = parseFloat(getbalance[0].balance)
 
@@ -40,7 +40,7 @@ export async function transactions(req, res) {
                 BEGIN;
                 UPDATE users SET balance = balance - ${amount} WHERE username = ${sender};
                 UPDATE users SET balance = balance + ${amount} WHERE username = ${receiver};
-                INSERT INTO transactionLog (sender, receiver, type , amount)
+                INSERT INTO transactionLog (senders, receiver, type , amount)
                 VALUES ${getbalance[0].username, receiver, type, amount};
                 COMMIT;
             `
