@@ -26,34 +26,30 @@ export async function transactions(req, res) {
         const { userId } = getAuth(req)
 
         const getbalance = await sqldb`
-            SELECT * FROM users WHERE clerk_id = ${userId}
+            SELECT balance FROM users WHERE clerk_id = ${userId}
         `
         const senderbal = parseFloat(getbalance[0].balance)
-
-        const getreceiver = await sqldb`
-            SELECT * FROM users WHERE username = ${receiver}
-        `
-        const receiverbal = parseFloat(getreceiver[0].balance)
 
         if (senderbal <= 0 || amount <= 0) {
             console.log("balance is less than 0")
             return res.status(400).json({ message: "all fields required" })
         }
 
-        console.log(amount)
         try {
             const transaction = await sqldb`
-                BEGIN TRANSACTION;
-                UPDATE users SET balance = balance - ${senderbal} WHERE clerk_id = ${userId};
-                UPDATE users SET balance = balance + ${receiverbal} WHERE clerk_id = ${receiver};
+                BEGIN;
+                UPDATE users SET balance = balance - ${amount} WHERE username = ${sender};
+                UPDATE users SET balance = balance + ${amount} WHERE username = ${receiver};
                 INSERT INTO transactionLog (sender, receiver, type , amount)
                 VALUES ${getbalance[0].username, receiver, type, amount};
-                ROLLBACK;
                 COMMIT;
             `
             res.status(201).json(transaction)
 
         } catch (error) {
+            await sqldb`
+                ROLLBACK;
+            `
             res.status(401).json({ message: "error creating transaction sending" })
             console.log("error sending money", error)
         }
