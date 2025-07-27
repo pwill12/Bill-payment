@@ -40,7 +40,7 @@ export async function transactions(req, res) {
                 BEGIN;
                 UPDATE users SET balance = balance - ${amount} WHERE username = ${sender};
                 UPDATE users SET balance = balance + ${amount} WHERE username = ${receiver};
-                INSERT INTO transactionLog (senders, receiver, type , amount)
+                INSERT INTO transactionLog (sender, receiver, type , amount)
                 VALUES ${getbalance[0].username, receiver, type, amount};
                 COMMIT;
             `
