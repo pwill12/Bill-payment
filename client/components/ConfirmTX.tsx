@@ -1,12 +1,11 @@
-import { View, Text, TouchableOpacity } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { View, Text, TouchableOpacity, Dimensions } from "react-native";
 import BottomSheet, {
   BottomSheetBackdrop,
   BottomSheetView,
 } from "@gorhom/bottom-sheet";
 import { Feather } from "@expo/vector-icons";
 import { Ref, useCallback } from "react";
-import TransactionButton, { COLORS } from "./TransactionButton";
+import TransactionButton, { ButtonSize, COLORS } from "./TransactionButton";
 
 enum bottomtype {
   airtime,
@@ -30,7 +29,7 @@ const ConfirmTransfer = ({
   amount,
   name,
 }: Props) => {
-  const insets = useSafeAreaInsets();
+  const { height } = Dimensions.get('screen');
   const renderBackdrop = useCallback(
     (props: any) => (
       <BottomSheetBackdrop
@@ -52,7 +51,7 @@ const ConfirmTransfer = ({
     >
       <BottomSheetView
         className="flex-1 px-4"
-        style={{ height: 9.5 * insets.bottom }}
+        style={{ minHeight: height * 0.5 }}
       >
         <TouchableOpacity className="self-end" onPress={onClose}>
           <Feather className="" name="x" size={20} />
@@ -81,13 +80,13 @@ const ConfirmTransfer = ({
               <Text>Amount</Text>
               <View className="flex-row items-center">
                 <Feather name="dollar-sign" size={15} />
-                <Text className="font-semibold">{amount}</Text>
+                <Text className="font-semibold">{amount ?? 0}</Text>
               </View>
             </View>
           </View>
           <View className="flex-row justify-between px-5">
-            <TransactionButton title="Recheck" size="10" color={COLORS.lightblue}/>
-            <TransactionButton title="Confirm" size="10"/>
+            <TransactionButton title="Recheck" size={ButtonSize.xl} color={COLORS.lightblue} onPress={onClose}/>
+            <TransactionButton title="Confirm" size={ButtonSize.xl}/>
           </View>
         </View>
       </BottomSheetView>

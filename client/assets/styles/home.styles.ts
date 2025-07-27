@@ -1,11 +1,7 @@
 import {
-  BLOSSOMCOLORS,
-  COLORS,
-  OCEANCOLORS,
   RETROCOLORS,
 } from "@/constants/color";
 import { Dimensions, StyleSheet } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const { width, height } = Dimensions.get("screen");
 
@@ -29,7 +25,7 @@ export const homestyles = StyleSheet.create({
   nextbutton: {
     padding: 20,
     backgroundColor: "lightblue",
-    borderRadius: "50%",
+    borderRadius: 25,
   },
   border: {
     borderStyle: "solid",

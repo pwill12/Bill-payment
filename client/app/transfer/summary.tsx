@@ -21,7 +21,7 @@ const TransferSummary = () => {
     ? params.lastname[0]
     : params.lastname;
   const { currentUser, isLoading, error } = useCurrentUser();
-  const [checkbalance, setcheckbalance] = useState(true)
+  const [checkbalance, setcheckbalance] = useState(true);
   const [amount, setamount] = useState<string>("");
   const bottomSheetRef = useRef<BottomSheet>(null);
   const handleChange = (text: string) => {
@@ -34,10 +34,31 @@ const TransferSummary = () => {
   const handleCollapsePress = () => bottomSheetRef.current?.close();
 
   useEffect(() => {
-    if (currentUser !== undefined && amount) {
-    setcheckbalance(parseFloat(amount) > currentUser?.balance)
+    if (currentUser !== undefined && amount.trim()) {
+      const numericAmount = parseFloat(amount);
+      setcheckbalance(
+        isNaN(numericAmount) || numericAmount > currentUser.balance
+      );
+    }
+  }, [currentUser, amount]);
+
+  if (error) {
+    return (
+      <SafeAreaView className="flex-1 bg-white">
+        <Text className="text-center text-red-500 mt-10">
+          Failed to load user data. Please try again.
+        </Text>
+      </SafeAreaView>
+    );
   }
-  }, [currentUser, amount])
+
+  if (isLoading) {
+    return (
+      <SafeAreaView className="flex-1 bg-white">
+        <Text className="text-center mt-10">Loading...</Text>
+      </SafeAreaView>
+    );
+  }
 
   return (
     <SafeAreaView className="flex-1 bg-white">
@@ -66,7 +87,19 @@ const TransferSummary = () => {
           </View>
           <AmountCard handleChange={handleChange} amount={amount} />
           <Remark />
-          <TransactionButton onPress={handleModal} title={!amount ? 'Enter amount' : checkbalance ? 'Insufficent funds' : 'Confirm' } disabled={checkbalance} />
+          <TransactionButton
+            onPress={handleModal}
+            title={
+              !amount
+                ? "Enter amount"
+                : checkbalance
+                  ? "Insufficent funds"
+                  : parseFloat(amount.trim()) <= 0
+                    ? "enter valid amount"
+                    : "Confirm"
+            }
+            disabled={checkbalance || parseFloat(amount.trim()) <= 0 || !parseFloat(amount.trim())}
+          />
         </View>
       </View>
       <ConfirmTransfer
@@ -74,7 +107,7 @@ const TransferSummary = () => {
         onClose={handleCollapsePress}
         name={`${firstname} ${lastname}`}
         username={name}
-        amount={parseFloat(amount)}
+        amount={amount.trim() ? parseFloat(amount) : 0}
       />
     </SafeAreaView>
   );
