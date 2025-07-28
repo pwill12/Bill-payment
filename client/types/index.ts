@@ -14,7 +14,7 @@ export enum transactiontype {
     AIRTIME = "airtime"
 }
 export interface Transferprops {
-    amount?: number;
-    receiver?: string;
+    amount: number;
+    receiver: string;
     type?: string;
 }

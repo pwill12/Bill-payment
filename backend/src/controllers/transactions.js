@@ -48,7 +48,7 @@ export async function transactions(req, res) {
                 UPDATE users SET balance = balance - ${amount} WHERE username = ${getbalance[0].username};
                 UPDATE users SET balance = balance + ${amount} WHERE username = ${receiver};
                 INSERT INTO transactionlog (sender, receiver, type , amount)
-                VALUES ${getbalance[0].username, receiver, type, amount};
+                VALUES (${getbalance[0].username}, ${receiver}, ${type}, ${amount});
                 COMMIT;
             `
             res.status(201).json(transaction)

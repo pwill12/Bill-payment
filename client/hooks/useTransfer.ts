@@ -29,9 +29,9 @@ const useTransfer = (amount : number | undefined, type: string | undefined, rece
   });
 
   const createsend = () => {
-    if (!amount && !receiver) {
+    if (!amount || !receiver || !type) {
       Alert.alert(
-        "no amount entered or username",
+        "Missing required field",
         "Please enter amount or username!"
       );
       return;
@@ -40,7 +40,7 @@ const useTransfer = (amount : number | undefined, type: string | undefined, rece
       amount,
       receiver,
       type,
-    };
+    } as Transferprops;
 
     createTransferMutation.mutate(details);
   };
