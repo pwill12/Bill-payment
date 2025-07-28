@@ -28,6 +28,13 @@ export async function transactions(req, res) {
         const getbalance = await sqldb`
             SELECT balance,username FROM users WHERE clerk_id = ${userId}
         `
+        const getreceiver = await sqldb`
+            SELECT * FROM users WHERE username = ${receiver}
+         `
+
+        if (!getreceiver || getreceiver.length === 0) {
+            return res.status(404).json({ message: "Receiver not found" })
+        }
         const senderbal = parseFloat(getbalance[0].balance)
 
         if (senderbal <= 0 || amount <= 0) {
@@ -38,10 +45,10 @@ export async function transactions(req, res) {
         try {
             const transaction = await sqldb`
                 BEGIN;
-                UPDATE users SET balance = balance - ${amount} WHERE username = ${sender};
+                UPDATE users SET balance = balance - ${amount} WHERE username = ${getbalance[0].username};
                 UPDATE users SET balance = balance + ${amount} WHERE username = ${receiver};
-                INSERT INTO transactionLog (sender, receiver, type , amount)
-                VALUES ${getbalance[0].username, receiver, type, amount};
+                INSERT INTO transactionlog (sender, receiver, type , amount)
+                VALUES (${getbalance[0].username}, ${receiver}, ${type}, ${amount});
                 COMMIT;
             `
             res.status(201).json(transaction)

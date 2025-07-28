@@ -6,29 +6,29 @@ import BottomSheet, {
 import { Feather } from "@expo/vector-icons";
 import { Ref, useCallback } from "react";
 import TransactionButton, { ButtonSize, COLORS } from "./TransactionButton";
+import useTransfer from "@/hooks/useTransfer";
+import { transactiontype } from "@/types";
 
-enum bottomtype {
-  airtime,
-  send,
-}
 interface Props {
   name?: string | undefined;
-  username?: string;
+  receiver?: string | undefined;
   bank?: string;
   amount?: number;
+  type?: string | undefined;
   Ref: Ref<BottomSheet>;
   onClose: () => void;
-  type?: bottomtype;
 }
 
 const ConfirmTransfer = ({
   Ref,
   onClose,
-  username,
+  receiver,
   bank = "Billy",
   amount,
+  type,
   name,
 }: Props) => {
+  const {createsend} = useTransfer(amount, type, receiver)
   const { height } = Dimensions.get('screen');
   const renderBackdrop = useCallback(
     (props: any) => (
@@ -70,7 +70,7 @@ const ConfirmTransfer = ({
             </View>
             <View className="flex-row justify-between">
               <Text>username</Text>
-              <Text className="font-semibold">{username}</Text>
+              <Text className="font-semibold">{receiver}</Text>
             </View>
             <View className="flex-row justify-between">
               <Text>Bank</Text>
@@ -86,7 +86,7 @@ const ConfirmTransfer = ({
           </View>
           <View className="flex-row justify-between px-5">
             <TransactionButton title="Recheck" size={ButtonSize.xl} color={COLORS.lightblue} onPress={onClose}/>
-            <TransactionButton title="Confirm" size={ButtonSize.xl}/>
+            <TransactionButton title="Confirm" size={ButtonSize.xl} onPress={createsend}/>
           </View>
         </View>
       </BottomSheetView>
