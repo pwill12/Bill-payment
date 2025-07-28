@@ -20,7 +20,7 @@ const useTransfer = (amount : number | undefined, type: string | undefined, rece
       });
     },
     onSuccess: () => {
-      QueryClient.invalidateQueries({ queryKey: ["authUser", "receiver"] });
+      QueryClient.invalidateQueries({ queryKey: ["authUser"] });
       Alert.alert("Success", "sent successfully!");
     },
     onError: (error) => {
