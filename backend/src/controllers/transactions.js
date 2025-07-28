@@ -46,7 +46,7 @@ export async function transactions(req, res) {
             const transaction = await sqldb`
                 BEGIN;
                 UPDATE users SET balance = balance - ${amount} WHERE username = ${getbalance[0].username};
-                UPDATE users SET balance = balance   ${amount} WHERE username = ${receiver};
+                UPDATE users SET balance = balance + ${amount} WHERE username = ${receiver};
                 INSERT INTO transactionlog (sender, receiver, type , amount)
                 VALUES ${getbalance[0].username, receiver, type, amount};
                 COMMIT;
