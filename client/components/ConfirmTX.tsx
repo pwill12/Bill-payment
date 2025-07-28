@@ -25,7 +25,7 @@ const ConfirmTransfer = ({
   receiver,
   bank = "Billy",
   amount,
-  type,
+  type="send",
   name,
 }: Props) => {
   const {createsend} = useTransfer(amount, type, receiver)
