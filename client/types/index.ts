@@ -10,11 +10,11 @@ export interface User {
 }
 
 export enum transactiontype {
-    "send","receive","airtime","data"
+    SEND = "send",
+    AIRTIME = "airtime"
 }
 export interface Transferprops {
-    amount: number;
-    sender: string;
-    receiver: string;
-    type: transactiontype;
+    amount?: number;
+    receiver?: string;
+    type?: string;
 }

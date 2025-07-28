@@ -23,6 +23,7 @@ const TransferSummary = () => {
   const { currentUser, isLoading, error } = useCurrentUser();
   const [checkbalance, setcheckbalance] = useState(true);
   const [amount, setamount] = useState<string>("");
+  const parsedamount = parseFloat(amount)
   const bottomSheetRef = useRef<BottomSheet>(null);
   const handleChange = (text: string) => {
     setamount(text);
@@ -106,8 +107,10 @@ const TransferSummary = () => {
         Ref={bottomSheetRef}
         onClose={handleCollapsePress}
         name={`${firstname} ${lastname}`}
-        username={name}
+        receiver={name}
+        type="send"
         amount={amount.trim() ? parseFloat(amount) : 0}
+        // amount={parsedamount}
       />
     </SafeAreaView>
   );
