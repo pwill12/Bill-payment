@@ -23,7 +23,8 @@ const useTransfer = (amount : number | undefined, type: string | undefined, rece
       QueryClient.invalidateQueries({ queryKey: ["authUser", "receiver"] });
       Alert.alert("Success", "sent successfully!");
     },
-    onError: () => {
+    onError: (error) => {
+      console.error(error)
       Alert.alert("Error", "Failed to send. Please try again.");
     },
   });

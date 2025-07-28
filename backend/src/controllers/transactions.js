@@ -26,10 +26,10 @@ export async function transactions(req, res) {
         const { userId } = getAuth(req)
 
         const getbalance = await sqldb`
-            SELECT balance,username FROM users WHERE clerk_id = ${userId}
+            SELECT * FROM users WHERE clerk_id = ${userId}
         `
         const getreceiver = await sqldb`
-            SELECT * FROM users WHERE username = ${receiver}
+            SELECT username FROM users WHERE username = ${receiver}
          `
 
         if (!getreceiver || getreceiver.length === 0) {
