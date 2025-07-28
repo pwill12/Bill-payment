@@ -26,7 +26,7 @@ export async function transactions(req, res) {
         const { userId } = getAuth(req)
 
         const getbalance = await sqldb`
-            SELECT * FROM users WHERE clerk_id = ${userId}
+            SELECT balance,username FROM users WHERE clerk_id = ${userId}
         `
         const getreceiver = await sqldb`
             SELECT username FROM users WHERE username = ${receiver}
@@ -46,9 +46,13 @@ export async function transactions(req, res) {
 
         try {
             await sqldb`BEGIN`
-            await sqldb`UPDATE users SET balance = balance - ${amount} 
+            const balanceCheck = await sqldb`UPDATE users SET balance = balance - ${amount} 
                 WHERE username = ${getbalance[0].username} AND balance >= ${amount}`
-            await sqldb`UPDATE users SET balance = balance   ${amount} WHERE username = ${receiver}`;
+
+            if (balanceCheck.count === 0) {
+                throw new Error("Insufficient balance")
+            }
+            await sqldb`UPDATE users SET balance = balance + ${amount} WHERE username = ${receiver}`;
             const transaction = await sqldb`INSERT INTO transactionlog(sender, receiver, type, amount)
                 VALUES(${getbalance[0].username}, ${receiver}, ${type}, ${amount})`
             await sqldb`COMMIT`;
