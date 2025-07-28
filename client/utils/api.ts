@@ -41,7 +41,7 @@ export const receiverApi = {
 
 export const postApi = {
   sendMoney: (api: AxiosInstance, data: Transferprops) =>
-    api.post("/posts", data),
+    api.post("/send", data),
 //   getPosts: (api: AxiosInstance) => api.get("/posts"),
 //   getUserPosts: (api: AxiosInstance, username: string) => api.get(`/posts/user/${username}`),
 
