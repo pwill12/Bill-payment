@@ -35,17 +35,25 @@ export async function transactions(req, res) {
         if (!getreceiver || getreceiver.length === 0) {
             return res.status(404).json({ message: "Receiver not found" })
         }
-        const senderbal = parseFloat(getbalance[0].balance)
 
-        if (senderbal <= 0 || amount <= 0) {
-            console.log("balance is less than 0")
-            return res.status(400).json({ message: "all fields required" })
+        if (amount <= 0) {
+            return res.status(400).json({ message: "Amount must be positive" })
+        }
+
+        if (getbalance[0].username === receiver) {
+            return res.status(400).json({ message: "Cannot send money to yourself" })
         }
 
         try {
             await sqldb`BEGIN`
-            await sqldb`UPDATE users SET balance = balance - ${amount} WHERE username = ${getbalance[0].username}`;
-            await sqldb`UPDATE users SET balance = balance + ${amount} WHERE username = ${receiver}`;
+            const balanceCheck = await sqldb`UPDATE users SET balance = balance - ${amount} 
+                WHERE username = ${getbalance[0].username} AND balance >= ${amount}`;
+
+            if (balanceCheck.count === 0) {
+                throw new Error("Insufficient balance");
+            }
+
+            await sqldb`UPDATE users SET balance = balance   ${amount} WHERE username = ${receiver}`;
             const transaction = await sqldb`INSERT INTO transactionlog(sender, receiver, type, amount)
                 VALUES(${getbalance[0].username}, ${receiver}, ${type}, ${amount})`
             await sqldb`COMMIT`;
