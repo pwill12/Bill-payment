@@ -43,19 +43,17 @@ export async function transactions(req, res) {
         }
 
         try {
+            await sqldb`BEGIN`
             const transaction = await sqldb`
-                BEGIN;
-                UPDATE users SET balance = balance - ${amount} WHERE username = ${getbalance[0].username};
-                UPDATE users SET balance = balance + ${amount} WHERE username = ${receiver};
-                INSERT INTO transactionlog (sender, receiver, type , amount)
-                VALUES (${getbalance[0].username}, ${receiver}, ${type}, ${amount});
-                COMMIT;
-            `
+                UPDATE users SET balance = balance - ${ amount } WHERE username = ${ getbalance[0].username };
+                UPDATE users SET balance = balance + ${ amount } WHERE username = ${ receiver };
+                INSERT INTO transactionlog(sender, receiver, type, amount)
+                VALUES(${ getbalance[0].username }, ${ receiver }, ${ type }, ${ amount })`
+            await sqldb`COMMIT`;
             res.status(201).json(transaction)
-
         } catch (error) {
             await sqldb`
-                ROLLBACK;
+            ROLLBACK;
             `
             res.status(401).json({ message: "error creating transaction sending" })
             console.log("error sending money", error)
