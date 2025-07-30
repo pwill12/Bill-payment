@@ -9,6 +9,7 @@ import ConfirmTransfer from "@/components/ConfirmTX";
 import BottomSheet from "@gorhom/bottom-sheet";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Feather } from "@expo/vector-icons";
+import { transactiontype } from "@/types";
 
 const TransferSummary = () => {
   const params = useLocalSearchParams();
@@ -23,7 +24,6 @@ const TransferSummary = () => {
   const { currentUser, isLoading, error } = useCurrentUser();
   const [checkbalance, setcheckbalance] = useState(true);
   const [amount, setamount] = useState<string>("");
-  const parsedamount = parseFloat(amount)
   const bottomSheetRef = useRef<BottomSheet>(null);
   const handleChange = (text: string) => {
     setamount(text);
@@ -108,7 +108,8 @@ const TransferSummary = () => {
         onClose={handleCollapsePress}
         name={`${firstname} ${lastname}`}
         receiver={name}
-        type="send"
+        type={transactiontype.SEND}
+        bank="Billy"
         amount={amount.trim() ? parseFloat(amount) : 0}
         // amount={parsedamount}
       />

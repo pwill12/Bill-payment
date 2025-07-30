@@ -12,4 +12,6 @@ export const Assetimages = {
   // Animation OnBoarding App
   // mood_dairy_image: require('./introduction_animation/mood_dairy_image.png'),
   loginimg: require('./images/Login-cuate.png'),
+  success_img: require('./animations/Check Mark.json'),
+
 };

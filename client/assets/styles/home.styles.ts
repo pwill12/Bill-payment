@@ -11,6 +11,10 @@ export const homestyles = StyleSheet.create({
     width: 500 * 0.9,
     height: width,
   },
+  success: {
+    width: 200,
+    height: 200,
+  },
   container: {
     paddingHorizontal: 0,
     backgroundColor: RETROCOLORS.background,

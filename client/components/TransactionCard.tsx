@@ -47,7 +47,7 @@ import { Text, View } from "react-native";
    };
  
    return (
-     <View className="flex-col mt-4 bg-white rounded-xl">
+     <View className="flex-col bg-white rounded-xl">
        {transactionList.map((transaction, index) => (
          <View 
            key={transaction.id}
