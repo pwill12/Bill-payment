@@ -16,5 +16,5 @@ export enum transactiontype {
 export interface Transferprops {
     amount: number;
     receiver: string;
-    type?: string;
+    type?: transactiontype;
 }

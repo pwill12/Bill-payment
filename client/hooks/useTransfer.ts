@@ -1,16 +1,15 @@
 import { transactiontype, Transferprops } from "@/types";
 import { useApiClient } from "@/utils/api";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
+import { navigate } from "expo-router/build/global-state/routing";
 import { Alert } from "react-native";
 
-
-const useTransfer = (amount : number | undefined, type: string | undefined, receiver: string | undefined) => {
+const useTransfer = (
+  amount: number | undefined,
+  type: string | undefined,
+  receiver: string | undefined
+) => {
   const api = useApiClient();
-  // const [amount, setamount] = useState<number>(0);
-  // const [receiver, setreceiver] = useState<string>("");
-  // const [type, settype] = useState<transactiontype>();
-
   const QueryClient = useQueryClient();
 
   const createTransferMutation = useMutation({
@@ -21,20 +20,16 @@ const useTransfer = (amount : number | undefined, type: string | undefined, rece
     },
     onSuccess: () => {
       QueryClient.invalidateQueries({ queryKey: ["authUser"] });
-      Alert.alert("Success", "sent successfully!");
     },
     onError: (error) => {
-      console.error(error)
+      console.error(error);
       Alert.alert("Error", "Failed to send. Please try again.");
     },
   });
 
   const createsend = () => {
     if (!amount || !receiver || !type) {
-      Alert.alert(
-        "Missing required field",
-        "Please enter amount or username!"
-      );
+      Alert.alert("Missing required field", "Please enter amount or username!");
       return;
     }
     const details = {
@@ -49,7 +44,8 @@ const useTransfer = (amount : number | undefined, type: string | undefined, rece
   return {
     type,
     isCreating: createTransferMutation.isPending,
-    createsend
+    createsend,
+    success: createTransferMutation.isSuccess
   };
 };
 

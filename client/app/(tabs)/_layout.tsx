@@ -16,10 +16,10 @@ export default function Mytab() {
         tabBarInactiveTintColor: "#657786",
         tabBarStyle: {
           backgroundColor: "#fff",
-          borderTopWidth: 1,
+          borderTopWidth: 0,
           borderTopColor: "#E1E8ED",
-          height: 50 + insets.bottom,
-          paddingTop: 0,
+          height: 60 + insets.bottom,
+          paddingTop: 1,
         },
         headerShown: false,
       }}

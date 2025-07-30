@@ -23,6 +23,7 @@ const TransferCard = ({ onTransfer, isLoading }: TransferCardProps) => {
     // }
     // setError("");
     onTransfer?.(recipientUsername);
+    setRecipientUsername('')
   };
 
   return (
