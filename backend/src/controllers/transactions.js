@@ -79,10 +79,10 @@ export async function getTransactions(req,res) {
             ORDER BY created_at DESC
         `
         if (getTransactions.length == 0) {
-           return res.status(200).json([])
+           return res.status(200).json({data: []})
         }
 
-        res.status(200).json({getTransactions})
+        res.status(200).json({data : getTransactions})
 
         
     } catch (error) {
