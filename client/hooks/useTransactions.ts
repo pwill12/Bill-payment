@@ -20,5 +20,5 @@ export const useTransactions = (username: string | undefined) => {
     select: (response: transaction) => response.data,
   });
 
-  return { transactionslog, isLoading, error, refetch };
+  return { transactionslog: transactionslog, isLoading, error, refetch };
 };

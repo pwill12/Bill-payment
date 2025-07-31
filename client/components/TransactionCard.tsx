@@ -9,8 +9,8 @@ interface TransactionCardProps {
 
 const TransactionCard = ({ transactions, loading }: TransactionCardProps) => {
 
-  const getStatusStyle = (type: Transactions["type"]) => {
-    switch (type) {
+  const getStatusStyle = (type: Transactions['data']) => {
+    switch (type.type) {
       case "transfer":
         return "bg-green-300 text-green-900";
       case "data":
@@ -32,7 +32,7 @@ const TransactionCard = ({ transactions, loading }: TransactionCardProps) => {
       ) : transactions !== undefined && transactions.length > 0 ? (
         transactions.map((transaction, index) => (
           <View
-            key={transaction.id}
+            key={transaction.data.id}
             className={`p-5 flex-row justify-between ${index === 0 ? "py-4" : ""}`}
           >
             <View className="flex-row items-center gap-2">
@@ -40,20 +40,20 @@ const TransactionCard = ({ transactions, loading }: TransactionCardProps) => {
                 <Feather name="arrow-up" color="green" size={15} />
               </View>
               <View className="flex-col gap-1">
-                <Text className="text-sm">{transaction.receiver}</Text>
+                <Text className="text-sm">{transaction.data.receiver}</Text>
                 <Text className="font-thin text-sm">
-                  {transaction.created_at}
+                  {transaction.data.created_at}
                 </Text>
               </View>
             </View>
             <View className="flex-col gap-1 items-center">
               <Text className="font-semibold text-xl">
-                {transaction.amount}
+                {transaction.data.amount}
               </Text>
               <View
-                className={`p-1 rounded-3xl ${getStatusStyle(transaction.type)}`}
+                className={`p-1 rounded-3xl ${getStatusStyle(transaction.data)}`}
               >
-                <Text className="text-xs font-light">{transaction.type}</Text>
+                <Text className="text-xs font-light">{transaction.data.type}</Text>
               </View>
             </View>
           </View>

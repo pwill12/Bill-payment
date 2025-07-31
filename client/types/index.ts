@@ -2,21 +2,23 @@ export interface User {
   clerk_id: string | null;
   username: string;
   firstname: string | null;
-  lastname: string | null ;
+  lastname: string | null;
   img: string;
   email: string;
   number?: string | null;
-  balance: number
+  balance: number;
 }
 
 export interface Transactions {
-   id: number;
-   sender: string;
-   receiver: string;
-   amount: number;
-   created_at: string;
-   type: 'transfer' | 'airtime' | 'data';
- }
+  data: {
+    id: number;
+    sender: string;
+    receiver: string;
+    amount: number;
+    created_at: string;
+    type: "transfer" | "airtime" | "data";
+  };
+}
 
 export enum categorystyle {
   small = "px-5 py-4",
@@ -24,11 +26,11 @@ export enum categorystyle {
 }
 
 export enum transactiontype {
-    SEND = "send",
-    AIRTIME = "airtime"
+  SEND = "send",
+  AIRTIME = "airtime",
 }
 export interface Transferprops {
-    amount: number;
-    receiver: string;
-    type?: transactiontype;
+  amount: number;
+  receiver: string;
+  type?: transactiontype;
 }
