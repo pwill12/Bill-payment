@@ -7,7 +7,6 @@ import { useSyncDb } from "@/hooks/useRegister";
 import { useUser } from "@clerk/clerk-expo";
 import Balance from "@/components/Balance";
 import CategoryActions from "@/components/CategoryCard";
-import TransactionCard from "@/components/TransactionCard";
 import { navigate } from "expo-router/build/global-state/routing";
 import {
   CategoryProps,
@@ -16,6 +15,7 @@ import {
 } from "@/utils/data";
 import { categorystyle } from "@/types";
 import { useTransactions } from "@/hooks/useTransactions";
+import TransactionCard from "@/components/TransactionCard";
 
 const HomeScreen = () => {
   useSyncDb();
@@ -24,7 +24,7 @@ const HomeScreen = () => {
   const username = user
     ? (user.emailAddresses?.[0]?.emailAddress?.split("@")[0] ?? "")
     : "";
-  const { transactionslog } = useTransactions(username);
+  const { transactionslog,isLoading } = useTransactions(username);
 
   const handleCatPress = (category: CategoryProps) => {
     const page = category?.page;
@@ -74,8 +74,7 @@ const HomeScreen = () => {
             onCategoryPress={handleCatPress}
             bg
           />
-          <TransactionCard transactions={transactionslog} />
-          <TransactionCard />
+          <TransactionCard transactions={transactionslog} loading={isLoading}/>
         </ScrollView>
       </View>
     </SafeAreaView>

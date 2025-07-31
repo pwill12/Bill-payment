@@ -1,12 +1,13 @@
 import { View, Text } from "react-native";
 import React from "react";
 import HeaderName from "../../components/HeaderName";
-import CategoryActions, { categorystyle } from "../../components/CategoryCard";
+import CategoryActions from "../../components/CategoryCard";
 import { SuccessCategory } from "@/utils/data";
 import LottieView from "lottie-react-native";
 import { Assetimages } from "@/assets";
 import { homestyles } from "@/assets/styles/home.styles";
 import { router } from "expo-router";
+import { categorystyle } from "@/types";
 
 interface successtype {
   text: string;
@@ -34,7 +35,6 @@ const Success = ({ text }: successtype) => {
           card
           styles={categorystyle.medium}
         />
-        {/* Implement custom category bg */}
       </View>
     </HeaderName>
   );
