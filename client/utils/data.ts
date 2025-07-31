@@ -1,16 +1,19 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { ExternalPathString, RelativePathString, SitemapType } from "expo-router";
-import { navigate, NavigationOptions } from "expo-router/build/global-state/routing";
 
 export enum Routes {
-  TRANSFER = 'transfer'
+  HOME = "/",
+  AUTH = "(auth)",
+  ONBOARDING = "onboarding",
+  TABS = "(tabs)",
+  TRANSFER = "transfer",
+  TRANSFER_SUMMARY = "transfer/summary",
 }
 export interface CategoryProps {
   id: string;
   name: string;
   icon: React.ComponentProps<typeof MaterialCommunityIcons>["name"];
   size?: number;
-  page?: Routes
+  page?: Routes;
 }
 
 export const PaybillsCategory: CategoryProps[] = [
@@ -22,7 +25,13 @@ export const PaybillsCategory: CategoryProps[] = [
 
 export const SendMoneyorDeposit: CategoryProps[] = [
   { id: "bank", name: "To Bank", icon: "bank-outline", size: 25 },
-  { id: "contact", name: "Username", icon: "contacts-outline", size: 25 ,page: Routes.TRANSFER},
+  {
+    id: "contact",
+    name: "Username",
+    icon: "contacts-outline",
+    size: 25,
+    page: Routes.TRANSFER,
+  },
   {
     id: "credit-card",
     name: "Card Deposit",

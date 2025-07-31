@@ -35,7 +35,11 @@ const ConfirmTransfer = ({
   type,
   name,
 }: Props) => {
-  const { createsend, isCreating , success} = useTransfer(amount, type, receiver);
+  const { createsend, isCreating, success } = useTransfer(
+    amount,
+    type,
+    receiver
+  );
   const { height } = Dimensions.get("screen");
   const renderBackdrop = useCallback(
     (props: any) => (
@@ -48,7 +52,7 @@ const ConfirmTransfer = ({
     []
   );
   if (success) {
-    return <Redirect href={"/success"}/>
+    return <Redirect href={"/success"} />;
   }
   return (
     <BottomSheet
@@ -60,7 +64,13 @@ const ConfirmTransfer = ({
       backdropComponent={renderBackdrop}
     >
       {isCreating ? (
-        <ActivityIndicator size={"large"}/>
+        <BottomSheetView
+          className="flex-1 px-4 justify-center items-center"
+          style={{ minHeight: height * 0.5 }}
+        >
+          <ActivityIndicator size={"large"} />
+          <Text className="mt-4 text-center">Processing your transfer...</Text>
+        </BottomSheetView>
       ) : (
         <BottomSheetView
           className="flex-1 px-4"

@@ -1,7 +1,6 @@
-import { transactiontype, Transferprops } from "@/types";
-import { useApiClient } from "@/utils/api";
+import { Transferprops } from "@/types";
+import { transactionsApi, useApiClient } from "@/utils/api";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { navigate } from "expo-router/build/global-state/routing";
 import { Alert } from "react-native";
 
 const useTransfer = (
@@ -19,7 +18,7 @@ const useTransfer = (
       });
     },
     onSuccess: () => {
-      QueryClient.invalidateQueries({ queryKey: ["authUser"] });
+      QueryClient.invalidateQueries({ queryKey: ["authUser, transactions"] });
     },
     onError: (error) => {
       console.error(error);

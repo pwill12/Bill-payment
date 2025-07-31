@@ -7,11 +7,8 @@ import {
   SendMoneyorDeposit,
   SuccessCategory,
 } from "@/utils/data";
+import { categorystyle } from "@/types";
 
-export enum categorystyle {
-  small = "px-5 py-4",
-  medium = "px-10 py-8",
-}
 interface CategoryActionProps {
   categories?: CategoryProps[];
   onCategoryPress?: (categories: CategoryProps) => void;
@@ -47,7 +44,7 @@ const CategoryActions = ({
           className={`flex-col items-center gap-1 ${card && 'bg-white px-6 py-3 rounded-lg'}`}
           accessible={true}
           accessibilityRole="button"
-          accessibilityLabel={`Pay ${category.name} bills`}
+          accessibilityLabel={`Select ${category.name}`}
           onPress={() => handlePress(category)}
         >
           <View className="items-center bg-green-50 rounded-lg p-2">

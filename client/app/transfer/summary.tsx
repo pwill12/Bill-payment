@@ -63,7 +63,7 @@ const TransferSummary = () => {
 
   return (
     <SafeAreaView className="flex-1 bg-white">
-      <View className="bg-slate-50 gap-4">
+      <View className="bg-slate-50 gap-4 flex-1">
         <View className="flex-row justify-between py-5 px-3 bg-white">
           <TouchableOpacity
             className="flex-row items-center gap-3"

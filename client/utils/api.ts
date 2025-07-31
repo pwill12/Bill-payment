@@ -39,11 +39,8 @@ export const receiverApi = {
     api.get(`/user/find/${username}`),
 };
 
-export const postApi = {
-  sendMoney: (api: AxiosInstance, data: Transferprops) =>
-    api.post("/send", data),
-//   getPosts: (api: AxiosInstance) => api.get("/posts"),
-//   getUserPosts: (api: AxiosInstance, username: string) => api.get(`/posts/user/${username}`),
+export const transactionsApi = {
+  getUserTransactions: (api: AxiosInstance, username: string | undefined) => api.get(`/transactions/${username}`),
 
 };
 

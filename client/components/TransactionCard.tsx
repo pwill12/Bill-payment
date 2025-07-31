@@ -1,45 +1,39 @@
+import { useTransactions } from "@/hooks/useTransactions";
+import { Transactions } from "@/types";
 import { Feather } from "@expo/vector-icons";
 import { Text, View } from "react-native";
-
- interface Transaction {
-   id: string;
-   description: string;
-   timestamp: string;
-   amount: string;
-   status: 'success' | 'failed' | 'pending';
- }
  
  interface TransactionCardProps {
-   transactions?: Transaction[];
+   transactions?: Transactions[];
  }
  
- const TransactionCard = ({ transactions = [] }: TransactionCardProps) => {
-   const defaultTransactions: Transaction[] = [
+ const TransactionCard = ({ transactions = []}: TransactionCardProps) => {
+   const defaultTransactions: Transactions[] = [
      {
-       id: '1',
+       id: 1,
        description: 'Transfer to boku store',
        timestamp: 'july 17, 9pm',
        amount: '-$2,000',
-       status: 'success'
+       type: 'transfer'
      },
      {
-       id: '2', 
-       description: 'Transfer to boku store',
+       id: 2, 
+       description: 'Bought airtime',
        timestamp: 'july 17, 9pm',
-       amount: '-$2,000',
-       status: 'failed'
+       amount: '-$20',
+       type: 'airtime'
      }
    ];
  
    const transactionList = transactions.length > 0 ? transactions : defaultTransactions;
  
-   const getStatusStyle = (status: Transaction['status']) => {
-     switch (status) {
-       case 'success':
+   const getStatusStyle = (type: Transactions['type']) => {
+     switch (type) {
+       case 'transfer':
          return 'bg-green-300 text-green-900';
-       case 'failed':
-         return 'bg-red-300 text-red-900';
-       case 'pending':
+       case 'data':
+         return 'bg-blue-300 text-red-900';
+       case 'airtime':
          return 'bg-yellow-300 text-yellow-900';
        default:
          return 'bg-gray-300 text-gray-900';
@@ -64,9 +58,9 @@ import { Text, View } from "react-native";
            </View>
            <View className="flex-col gap-1 items-center">
              <Text className="font-semibold text-xl">{transaction.amount}</Text>
-             <View className={`p-1 rounded-3xl ${getStatusStyle(transaction.status)}`}>
+             <View className={`p-1 rounded-3xl ${getStatusStyle(transaction.type)}`}>
                <Text className="text-xs font-light">
-                 {transaction.status}
+                 {transaction.type}
                </Text>
              </View>
            </View>

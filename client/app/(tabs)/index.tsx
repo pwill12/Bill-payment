@@ -1,15 +1,12 @@
 import React from "react";
-import {
-  AntDesign,
-  Ionicons,
-} from "@expo/vector-icons";
-import { Image, ScrollView, Text, View } from "react-native";
+import { AntDesign, Ionicons } from "@expo/vector-icons";
+import { Image, RefreshControl, ScrollView, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import SignOutButton from "@/components/SignOutButton";
 import { useSyncDb } from "@/hooks/useRegister";
 import { useUser } from "@clerk/clerk-expo";
 import Balance from "@/components/Balance";
-import CategoryActions, { categorystyle } from "@/components/CategoryCard";
+import CategoryActions from "@/components/CategoryCard";
 import TransactionCard from "@/components/TransactionCard";
 import { navigate } from "expo-router/build/global-state/routing";
 import {
@@ -17,12 +14,16 @@ import {
   PaybillsCategory,
   SendMoneyorDeposit,
 } from "@/utils/data";
+import { categorystyle } from "@/types";
+import { useTransactions } from "@/hooks/useTransactions";
 
 const HomeScreen = () => {
   useSyncDb();
 
   const { user } = useUser();
   const username = user?.emailAddresses[0].emailAddress.split("@")[0];
+  const {transactionslog} = useTransactions(username)
+
 
   const handleCatPress = (category: CategoryProps) => {
     const page = category?.page;
@@ -32,24 +33,33 @@ const HomeScreen = () => {
   };
 
   return (
-    <ScrollView className="flex-1">
-      <SafeAreaView className="bg-gray-50">
-        <View className="flex-col px-3 py-3 gap-4">
-          <View className="flex-row justify-between py-1">
-            <View className="flex-row items-center gap-5">
-              <Image
-                source={{ uri: user?.imageUrl }}
-                className="w-12 h-12 rounded-full"
-              />
-              <Text className="text-lg font-bold">Hi, {username}</Text>
-            </View>
-            <View className="flex-row gap-6 items-center">
-              <AntDesign name="customerservice" size={24} />
-              <Ionicons name="scan" size={24} />
-              <Ionicons name="notifications-outline" size={24} />
-              <SignOutButton />
-            </View>
+    <SafeAreaView className="bg-gray-50">
+      <View className="flex-col px-3 py-3 gap-4">
+        <View className="flex-row justify-between py-1">
+          <View className="flex-row items-center gap-5">
+            <Image
+              source={{ uri: user?.imageUrl }}
+              className="w-12 h-12 rounded-full"
+            />
+            <Text className="text-lg font-bold">Hi, {username}</Text>
           </View>
+          <View className="flex-row gap-6 items-center">
+            <AntDesign name="customerservice" size={24} />
+            <Ionicons name="scan" size={24} />
+            <Ionicons name="notifications-outline" size={24} />
+            <SignOutButton />
+          </View>
+        </View>
+        <ScrollView showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingBottom: 80, gap: 16 }}
+        // refreshControl={
+        //   <RefreshControl
+        //     refreshing={isRefetching}
+        //     onRefresh={handlePullToRefresh}
+        //     tintColor={"#1DA1F2"}
+        //   />
+        // }
+        >
           <Balance />
           <CategoryActions
             type={SendMoneyorDeposit}
@@ -62,11 +72,11 @@ const HomeScreen = () => {
             onCategoryPress={handleCatPress}
             bg
           />
+          <TransactionCard transactions={transactionslog}/>
           <TransactionCard />
-          <TransactionCard />
-        </View>
-      </SafeAreaView>
-    </ScrollView>
+        </ScrollView>
+      </View>
+    </SafeAreaView>
   );
 };
 
