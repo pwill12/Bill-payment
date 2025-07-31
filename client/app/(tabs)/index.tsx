@@ -21,9 +21,10 @@ const HomeScreen = () => {
   useSyncDb();
 
   const { user } = useUser();
-  const username = user?.emailAddresses[0].emailAddress.split("@")[0];
-  const {transactionslog} = useTransactions(username)
-
+  const username = user
+    ? (user.emailAddresses?.[0]?.emailAddress?.split("@")[0] ?? "")
+    : "";
+  const { transactionslog } = useTransactions(username);
 
   const handleCatPress = (category: CategoryProps) => {
     const page = category?.page;
@@ -50,15 +51,16 @@ const HomeScreen = () => {
             <SignOutButton />
           </View>
         </View>
-        <ScrollView showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: 80, gap: 16 }}
-        // refreshControl={
-        //   <RefreshControl
-        //     refreshing={isRefetching}
-        //     onRefresh={handlePullToRefresh}
-        //     tintColor={"#1DA1F2"}
-        //   />
-        // }
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ paddingBottom: 80, gap: 16 }}
+          // refreshControl={
+          //   <RefreshControl
+          //     refreshing={isRefetching}
+          //     onRefresh={handlePullToRefresh}
+          //     tintColor={"#1DA1F2"}
+          //   />
+          // }
         >
           <Balance />
           <CategoryActions
@@ -72,7 +74,7 @@ const HomeScreen = () => {
             onCategoryPress={handleCatPress}
             bg
           />
-          <TransactionCard transactions={transactionslog}/>
+          <TransactionCard transactions={transactionslog} />
           <TransactionCard />
         </ScrollView>
       </View>

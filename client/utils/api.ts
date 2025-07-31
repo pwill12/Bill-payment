@@ -1,6 +1,5 @@
 import axios, { AxiosInstance } from "axios";
 import { useAuth } from "@clerk/clerk-expo";
-import { Transferprops } from "@/types";
 
 export const API_BASE_URL = "https://bill-payment-one.vercel.app/api";
 // ! 🔥 localhost api would not work on your actual physical device

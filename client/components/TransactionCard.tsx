@@ -1,4 +1,3 @@
-import { useTransactions } from "@/hooks/useTransactions";
 import { Transactions } from "@/types";
 import { Feather } from "@expo/vector-icons";
 import { Text, View } from "react-native";
@@ -7,25 +6,19 @@ import { Text, View } from "react-native";
    transactions?: Transactions[];
  }
  
- const TransactionCard = ({ transactions = []}: TransactionCardProps) => {
+ const TransactionCard = ({ transactions }: TransactionCardProps) => {
    const defaultTransactions: Transactions[] = [
      {
        id: 1,
-       description: 'Transfer to boku store',
-       timestamp: 'july 17, 9pm',
-       amount: '-$2,000',
+       receiver: 'Transfer to boku store',
+       sender: 'prinsolo',
+       created_at: 'july 17, 9pm',
+       amount: 20,
        type: 'transfer'
      },
-     {
-       id: 2, 
-       description: 'Bought airtime',
-       timestamp: 'july 17, 9pm',
-       amount: '-$20',
-       type: 'airtime'
-     }
    ];
  
-   const transactionList = transactions.length > 0 ? transactions : defaultTransactions;
+   const transactionList = transactions ? transactions : defaultTransactions;
  
    const getStatusStyle = (type: Transactions['type']) => {
      switch (type) {
@@ -52,8 +45,8 @@ import { Text, View } from "react-native";
                <Feather name="arrow-up" color="green" size={15}/>
              </View>
              <View className="flex-col gap-1">
-               <Text className="text-sm">{transaction.description}</Text>
-               <Text className="font-thin text-sm">{transaction.timestamp}</Text>
+               <Text className="text-sm">{transaction.receiver}</Text>
+               <Text className="font-thin text-sm">{transaction.created_at}</Text>
              </View>
            </View>
            <View className="flex-col gap-1 items-center">

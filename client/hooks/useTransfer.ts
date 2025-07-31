@@ -1,5 +1,5 @@
 import { Transferprops } from "@/types";
-import { transactionsApi, useApiClient } from "@/utils/api";
+import { useApiClient } from "@/utils/api";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Alert } from "react-native";
 
@@ -18,7 +18,7 @@ const useTransfer = (
       });
     },
     onSuccess: () => {
-      QueryClient.invalidateQueries({ queryKey: ["authUser, transactions"] });
+      QueryClient.invalidateQueries({ queryKey: ["authUser", "transactions"] });
     },
     onError: (error) => {
       console.error(error);

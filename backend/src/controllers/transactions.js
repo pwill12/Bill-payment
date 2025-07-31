@@ -75,13 +75,14 @@ export async function getTransactions(req,res) {
     try {
         const { username } = req.params
         const getTransactions = await sqldb`
-            SELECT * FROM transactions WHERE username OR receiver = ${username}
+            SELECT * FROM transactionlog WHERE sender = ${username} OR receiver = ${username}
+            ORDER BY created_at DESC
         `
         if (getTransactions.length == 0) {
-            return res.status(201).json({ message: "no transaction found" })
+           return res.status(200).json({ data: [] })
         }
 
-        res.status(200).json(getTransactions[0])
+        res.status(200).json({data: getTransactions})
 
         
     } catch (error) {

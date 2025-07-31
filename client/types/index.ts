@@ -11,9 +11,10 @@ export interface User {
 
 export interface Transactions {
    id: number;
-   description: string;
-   timestamp: string;
-   amount: string;
+   sender: string;
+   receiver: string;
+   amount: number;
+   created_at: string;
    type: 'transfer' | 'airtime' | 'data';
  }
 

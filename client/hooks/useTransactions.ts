@@ -3,7 +3,7 @@ import { transactionsApi, useApiClient } from "../utils/api";
 import { Transactions } from "@/types";
 
 interface transaction {
-  data: Transactions[]
+  data: Transactions[];
 }
 export const useTransactions = (username: string | undefined) => {
   const api = useApiClient();
@@ -14,8 +14,9 @@ export const useTransactions = (username: string | undefined) => {
     error,
     refetch,
   } = useQuery({
-    queryKey: ["transactions"],
-    queryFn: () => transactionsApi.getUserTransactions(api, username),
+    queryKey: ["transactions", username],
+    queryFn: () => transactionsApi.getUserTransactions(api, username!),
+    enabled: Boolean(username),
     select: (response: transaction) => response.data,
   });
 
