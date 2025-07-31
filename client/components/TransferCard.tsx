@@ -28,10 +28,11 @@ const TransferCard = ({ onTransfer, isLoading }: TransferCardProps) => {
 
   return (
     <View className="flex-col gap-6 rounded-xl bg-white px-3 py-7">
-      <Text className="font-semibold text-2xl">Recipient Account</Text>
+      <Text className="font-semibold text-xl">Recipient Account</Text>
       <TextInputs
         value={recipientUsername}
         onChange={handleChange}
+        border
       />
       <TransactionButton
         title={isLoading ? "Processing..." : "Next"}

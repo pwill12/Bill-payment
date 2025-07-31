@@ -1,14 +1,13 @@
 import { View, Text } from "react-native";
 import React from "react";
 import HeaderName from "../../components/HeaderName";
-import { Feather } from "@expo/vector-icons";
-import CategoryActions, { categorystyle } from "../../components/CategoryCard";
+import CategoryActions from "../../components/CategoryCard";
 import { SuccessCategory } from "@/utils/data";
 import LottieView from "lottie-react-native";
 import { Assetimages } from "@/assets";
 import { homestyles } from "@/assets/styles/home.styles";
-import { Redirect } from "expo-router";
-import { navigate } from "expo-router/build/global-state/routing";
+import { router } from "expo-router";
+import { categorystyle } from "@/types";
 
 interface successtype {
   text: string;
@@ -16,7 +15,7 @@ interface successtype {
 
 const Success = ({ text }: successtype) => {
   const handlePress = () => {
-    navigate('/')
+    router.push('/')
   }
   return (
     <HeaderName showhistorybutton done="Done" onPress={handlePress}>
@@ -36,7 +35,6 @@ const Success = ({ text }: successtype) => {
           card
           styles={categorystyle.medium}
         />
-        {/* Implement custom category bg */}
       </View>
     </HeaderName>
   );

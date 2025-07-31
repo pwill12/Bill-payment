@@ -9,7 +9,7 @@ export async function transactionsTable() {
                 amount DECIMAL(20,2) NOT NULL,
                 sender VARCHAR(20) NULL,
                 receiver VARCHAR(20) NULL,
-                created_at DATE NOT NULL DEFAULT CURRENT_DATE
+                created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
                 )`;
         console.log("transaction table created successfully");
     } catch (error) {
@@ -67,6 +67,25 @@ export async function transactions(req, res) {
 
     } catch (error) {
         console.log(error)
+        res.status(500).json({ message: "internal server error" })
+    }
+}
+
+export async function getTransactions(req,res) {
+    try {
+        const { username } = req.params
+        const getTransactions = await sqldb`
+            SELECT * FROM transactionlog WHERE sender = ${username} OR receiver = ${username}
+            ORDER BY created_at DESC
+        `
+        if (getTransactions.length == 0) {
+           return res.status(200).json({ data: [] })
+        }
+
+        res.status(200).json({data: getTransactions})
+
+        
+    } catch (error) {
         res.status(500).json({ message: "internal server error" })
     }
 }

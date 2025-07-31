@@ -39,7 +39,7 @@ const TransferPageCard = () => {
       headertext="Transfer to User Account"
       onPress={handlePress}
     >
-      <View className="bg-blue-100 px-3 py-4 flex-row gap-2 items-center rounded-lg ">
+      <View className="bg-blue-50 px-3 py-4 flex-row gap-2 items-center rounded-xl ">
         <MaterialCommunityIcons name="bank-transfer" size={21} />
         <Text>Free transfer for today 3</Text>
       </View>

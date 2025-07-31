@@ -33,8 +33,8 @@ export const homestyles = StyleSheet.create({
   },
   border: {
     borderStyle: "solid",
-    borderBottomColor: "lightblue",
-    borderBottomWidth: 1,
+    borderColor: "red"
+    // borderBottomColor: "lightblue",
   },
   modalView: {
     // margin: 20,
