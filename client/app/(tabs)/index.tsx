@@ -25,6 +25,7 @@ const HomeScreen = () => {
     ? (user.emailAddresses?.[0]?.emailAddress?.split("@")[0] ?? "")
     : "";
   const { transactionslog,isLoading } = useTransactions(username);
+  console.log(transactionslog)
 
   const handleCatPress = (category: CategoryProps) => {
     const page = category?.page;
