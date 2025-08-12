@@ -43,7 +43,7 @@ const TransferPageCard = () => {
         <MaterialCommunityIcons name="bank-transfer" size={21} />
         <Text>Free transfer for today 3</Text>
       </View>
-      <TransferCard onTransfer={HandleTransfer} isLoading={loading} />
+      <TransferCard onTransfer={HandleTransfer} isLoading={loading}/>
     </HeaderName>
   );
 };

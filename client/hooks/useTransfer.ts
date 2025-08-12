@@ -1,6 +1,7 @@
 import { Transferprops } from "@/types";
 import { useApiClient } from "@/utils/api";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { router } from "expo-router";
 import { Alert } from "react-native";
 
 const useTransfer = (
@@ -19,6 +20,14 @@ const useTransfer = (
     },
     onSuccess: () => {
       QueryClient.invalidateQueries({ queryKey: ["authUser", "transactions"] });
+      router.push({
+      pathname: "/success",
+      params: {
+        name: receiver,
+        amount: amount,
+        type: type,
+      },
+    });
     },
     onError: (error) => {
       console.error(error);
@@ -43,8 +52,7 @@ const useTransfer = (
   return {
     type,
     isCreating: createTransferMutation.isPending,
-    createsend,
-    success: createTransferMutation.isSuccess
+    createsend
   };
 };
 

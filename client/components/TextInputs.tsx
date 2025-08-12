@@ -14,7 +14,7 @@ const TextInputs = ({ onChange, value, error , placeholdervalue , multiline , bo
     <View>
       <TextInput
         placeholder={!placeholdervalue ? "Enter recipent username" : placeholdervalue}
-        className={`font-medium text-lg bg-gray-50 py-4 px-3 ${border ? "rounded-md focus:border-2 border-green-100" : "border-b-2 border-blue-50"}`}
+        className={`font-medium text-lg bg-gray-50 py-4 px-3 ${border ? "border focus:border-green-200 border-gray-100 rounded-md": "border-b-2 border-blue-50"}`}
         onChangeText={onChange}
         value={value}
         multiline={multiline}

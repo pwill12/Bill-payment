@@ -40,6 +40,7 @@ export const receiverApi = {
 
 export const transactionsApi = {
   getUserTransactions: (api: AxiosInstance, username: string | undefined) => api.get(`/transactions/${username}`),
+  getTransaction: (api: AxiosInstance, id: number | undefined) => api.get(`/transaction/${id}`),
 
 };
 

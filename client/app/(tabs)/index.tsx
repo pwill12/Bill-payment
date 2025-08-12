@@ -25,7 +25,6 @@ const HomeScreen = () => {
     ? (user.emailAddresses?.[0]?.emailAddress?.split("@")[0] ?? "")
     : "";
   const { transactionslog,isLoading } = useTransactions(username);
-  console.log(transactionslog)
 
   const handleCatPress = (category: CategoryProps) => {
     const page = category?.page;
@@ -35,7 +34,7 @@ const HomeScreen = () => {
   };
 
   return (
-    <SafeAreaView className="bg-gray-50">
+    <SafeAreaView className="bg-gray-50 flex-1">
       <View className="flex-col px-3 py-3 gap-4">
         <View className="flex-row justify-between py-1">
           <View className="flex-row items-center gap-5">
@@ -75,7 +74,7 @@ const HomeScreen = () => {
             onCategoryPress={handleCatPress}
             bg
           />
-          <TransactionCard transactions={transactionslog} loading={isLoading}/>
+          <TransactionCard transactions={transactionslog} loading={isLoading} username={username}/>
         </ScrollView>
       </View>
     </SafeAreaView>
