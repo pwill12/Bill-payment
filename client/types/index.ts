@@ -10,14 +10,12 @@ export interface User {
 }
 
 export interface Transactions {
-  data: {
     id: number;
     sender: string;
     receiver: string;
     amount: number;
     created_at: string;
     type: "transfer" | "airtime" | "data";
-  };
 }
 
 export enum categorystyle {

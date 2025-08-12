@@ -14,7 +14,6 @@ import { Ref, useCallback } from "react";
 import TransactionButton, { ButtonSize, COLORS } from "./TransactionButton";
 import useTransfer from "@/hooks/useTransfer";
 import { transactiontype } from "@/types";
-import { Redirect } from "expo-router";
 
 interface Props {
   name: string | undefined;
@@ -35,7 +34,7 @@ const ConfirmTransfer = ({
   type,
   name,
 }: Props) => {
-  const { createsend, isCreating, success } = useTransfer(
+  const { createsend, isCreating} = useTransfer(
     amount,
     type,
     receiver
@@ -51,9 +50,7 @@ const ConfirmTransfer = ({
     ),
     []
   );
-  if (success) {
-    return <Redirect href={"/success"} />;
-  }
+  
   return (
     <BottomSheet
       ref={Ref}

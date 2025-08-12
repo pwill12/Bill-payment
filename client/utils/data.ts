@@ -7,6 +7,7 @@ export enum Routes {
   TABS = "(tabs)",
   TRANSFER = "transfer",
   TRANSFER_SUMMARY = "transfer/summary",
+  TRANSACTION_DETAILS = 'transaction-details'
 }
 export interface CategoryProps {
   id: string;
@@ -48,5 +49,5 @@ export const SuccessCategory: CategoryProps[] = [
     icon: "account-plus",
     size: 21,
   },
-  { id: "details", name: "View details", icon: "details", size: 21 },
+  { id: "details", name: "View details", icon: "details", size: 21 , page: Routes.TRANSACTION_DETAILS},
 ];

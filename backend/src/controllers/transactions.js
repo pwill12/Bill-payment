@@ -89,3 +89,25 @@ export async function getTransactions(req,res) {
         res.status(500).json({ message: "internal server error" })
     }
 }
+
+export async function findTransaction(req, res) {
+
+    try {
+
+        const { id } = req.params
+
+        const findtransaction = await sqldb`
+            SELECT * FROM transactionlog WHERE id = ${id}
+        `;
+
+        if (findtransaction.length == 0) {
+            return res.status(404).json({ message: "no transaction found" })
+        }
+
+        res.status(200).json(findtransaction[0])
+
+    } catch (error) {
+        res.status(500).json({ message: "internal server error" })
+    }
+}
+
