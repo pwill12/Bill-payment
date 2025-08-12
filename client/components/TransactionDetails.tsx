@@ -1,15 +1,22 @@
-import { View, Text } from "react-native";
+import { View, Text, ActivityIndicator } from "react-native";
 import React from "react";
 import HeaderName from "./HeaderName";
 import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
 import { useGetTransaction } from "@/hooks/useTransactions";
 
 interface details {
-  id: number
+  id?: number;
 }
-const TransactionDetails = ({id}: details) => {
-  const {transaction_details} = useGetTransaction(id)
-  console.log(transaction_details)
+const TransactionDetails = ({ id }: details) => {
+  const { transaction_details, isLoading } = useGetTransaction(id);
+  if (isLoading) {
+    return (
+      <View className="flex-1 px-4 justify-center items-center">
+        <ActivityIndicator size={"large"} />
+        <Text className="mt-4 text-center">Processing your transfer...</Text>
+      </View>
+    );
+  }
   return (
     <HeaderName
       headertext="Transaction Details"
@@ -26,7 +33,9 @@ const TransactionDetails = ({id}: details) => {
           />
         </View>
         <Text className="font-semibold text-xl">Transfer to will</Text>
-        <Text className="font-bold text-3xl">${transaction_details?.amount}</Text>
+        <Text className="font-bold text-3xl">
+          ${transaction_details?.amount}
+        </Text>
         <View className="flex-row items-center gap-2">
           <Feather
             name="check"
@@ -55,7 +64,9 @@ const TransactionDetails = ({id}: details) => {
           <Text className="text-xs color-slate-400">Transfer successful</Text>
         </View>
         <View className="bg-gray-100 p-3 rounded-3xl">
-            <Text className="text-sm text-gray-600">The recipient account is expected to be credited within seconds</Text>
+          <Text className="text-sm text-gray-600">
+            The recipient account is expected to be credited within seconds
+          </Text>
         </View>
       </View>
     </HeaderName>

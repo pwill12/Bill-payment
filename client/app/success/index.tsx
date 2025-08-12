@@ -15,7 +15,6 @@ const Success = () => {
     ? params.amount[0]
     : params.amount;
   const param_id = Array.isArray(params.id) ? params.id[0] : params.id;
-  const id = parseFloat(param_id);
 
   const handlecategory = (category: CategoryProps) => {
     const page = category?.page;
@@ -24,7 +23,7 @@ const Success = () => {
         router.push({
           pathname: "/transaction-details",
           params: {
-            id: id,
+            id: param_id,
           },
         });
     }

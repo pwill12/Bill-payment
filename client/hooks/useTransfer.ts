@@ -26,10 +26,10 @@ const useTransfer = (
         name: receiver,
         amount: amount,
         type: type,
-        id: createTransferMutation.data?.data.id
+        id: createTransferMutation.data?.data
       },
     });
-    console.log(createTransferMutation.data?.data)
+    console.log(createTransferMutation)
     },
     onError: (error) => {
       console.error(error);
@@ -55,7 +55,6 @@ const useTransfer = (
     type,
     isCreating: createTransferMutation.isPending,
     createsend,
-    id: createTransferMutation.data?.data.id
   };
 };
 
