@@ -1,6 +1,7 @@
-import { Transactions, transactiontype } from "@/types";
+import { Transactions } from "@/types";
 import { formatDate } from "@/utils/dateFormat";
 import { Feather } from "@expo/vector-icons";
+import { router } from "expo-router";
 import { navigate } from "expo-router/build/global-state/routing";
 import { ActivityIndicator, Text, TouchableOpacity, View } from "react-native";
 
@@ -28,10 +29,15 @@ const TransactionCard = ({
     }
   };
 
-  const handlePress = (id: Transactions) => {
-    console.log(id.amount)
-    navigate('/transaction-details')
-  }
+  const handlePress = (category: Transactions) => {
+    console.log(category.id);
+    router.push({
+      pathname: "/transaction-details",
+      params: {
+        id: category.id,
+      },
+    });
+  };
 
   return (
     <View className="rounded-xl flex-col">
@@ -45,50 +51,52 @@ const TransactionCard = ({
             key={transaction.id}
             onPress={() => handlePress(transaction)}
           >
-          <View
-            // key={transaction.id}
-            className={`p-5 flex-row justify-between ${index === 0 ? "py-4" : ""}`}
-          >
-            <View className="flex-row items-center gap-2">
-              <View className="size-12 justify-center items-center bg-green-100 rounded-full">
-                <Feather name="arrow-up" color="green" size={15} />
+            <View
+              // key={transaction.id}
+              className={`p-5 flex-row justify-between ${index === 0 ? "py-4" : ""}`}
+            >
+              <View className="flex-row items-center gap-2">
+                <View className="size-12 justify-center items-center bg-green-100 rounded-full">
+                  <Feather name="arrow-up" color="green" size={15} />
+                </View>
+                <View className="flex-col gap-1">
+                  {transaction.sender === username ? (
+                    <Text className="text-sm">
+                      Transfer to {transaction.receiver}
+                    </Text>
+                  ) : (
+                    <Text className="text-sm">
+                      Received from {transaction.sender}
+                    </Text>
+                  )}
+                  <Text className="font-thin text-sm">
+                    {formatDate(transaction.created_at)}
+                  </Text>
+                </View>
               </View>
-              <View className="flex-col gap-1">
-                {transaction.sender === username ? (
-                  <Text className="text-sm">
-                    Transfer to {transaction.receiver}
+              <View className="flex-col gap-1 items-center">
+                <View className="flex-row items-center">
+                  <Feather name="dollar-sign" />
+                  {transaction.sender === username ? (
+                    <Text className="text-red-400 font-medium text-xl">
+                      -{transaction.amount}
+                    </Text>
+                  ) : (
+                    <Text className="text-green-400 font-medium text-xl">
+                      +{transaction.amount}
+                    </Text>
+                  )}
+                </View>
+                <View
+                  className={`p-1 rounded-3xl ${getStatusStyle(transaction.type)}`}
+                >
+                  <Text className="text-xs font-light px-1">
+                    {transaction.type}
                   </Text>
-                ) : (
-                  <Text className="text-sm">
-                    Received from {transaction.sender}
-                  </Text>
-                )}
-                <Text className="font-thin text-sm">
-                  {formatDate(transaction.created_at)}
-                </Text>
+                </View>
               </View>
             </View>
-            <View className="flex-col gap-1 items-center">
-              <View className="flex-row items-center">
-              <Feather name="dollar-sign"/>
-                {transaction.sender === username ? (
-                  <Text className="text-red-400 font-medium text-xl">
-                    -{transaction.amount}
-                  </Text>
-                ) : (
-                  <Text className="text-green-400 font-medium text-xl">
-                    +{transaction.amount}
-                  </Text>
-                )}
-              </View>
-              <View
-                className={`p-1 rounded-3xl ${getStatusStyle(transaction.type)}`}
-              >
-                <Text className="text-xs font-light px-1">{transaction.type}</Text>
-              </View>
-            </View>
-          </View>
-        </TouchableOpacity>
+          </TouchableOpacity>
         ))
       ) : (
         <View>

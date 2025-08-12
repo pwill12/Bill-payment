@@ -56,7 +56,7 @@ export async function transactions(req, res) {
             const transaction = await sqldb`INSERT INTO transactionlog(sender, receiver, type, amount)
                 VALUES(${getbalance[0].username}, ${receiver}, ${type}, ${amount})`
             await sqldb`COMMIT`;
-            res.status(201).json(transaction)
+            return res.status(201).json(transaction)
         } catch (error) {
             await sqldb`
             ROLLBACK;

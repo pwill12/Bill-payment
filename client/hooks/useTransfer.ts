@@ -7,7 +7,7 @@ import { Alert } from "react-native";
 const useTransfer = (
   amount: number | undefined,
   type: string | undefined,
-  receiver: string | undefined
+  receiver: string | undefined,
 ) => {
   const api = useApiClient();
   const QueryClient = useQueryClient();
@@ -26,8 +26,10 @@ const useTransfer = (
         name: receiver,
         amount: amount,
         type: type,
+        id: createTransferMutation.data?.data.id
       },
     });
+    console.log(createTransferMutation.data?.data)
     },
     onError: (error) => {
       console.error(error);
@@ -52,7 +54,8 @@ const useTransfer = (
   return {
     type,
     isCreating: createTransferMutation.isPending,
-    createsend
+    createsend,
+    id: createTransferMutation.data?.data.id
   };
 };
 

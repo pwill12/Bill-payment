@@ -37,7 +37,7 @@ const ConfirmTransfer = ({
   const { createsend, isCreating} = useTransfer(
     amount,
     type,
-    receiver
+    receiver,
   );
   const { height } = Dimensions.get("screen");
   const renderBackdrop = useCallback(
