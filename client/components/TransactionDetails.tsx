@@ -9,6 +9,7 @@ interface details {
 }
 const TransactionDetails = ({id}: details) => {
   const {transaction_details} = useGetTransaction(id)
+  console.log(transaction_details)
   return (
     <HeaderName
       headertext="Transaction Details"
