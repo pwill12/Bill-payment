@@ -26,10 +26,10 @@ const useTransfer = (
         name: receiver,
         amount: amount,
         type: type,
-        id: createTransferMutation.data?.data
+        id: createTransferMutation.data?.data.id
       },
     });
-    console.log(createTransferMutation)
+    console.log(createTransferMutation.data?.data.id)
     },
     onError: (error) => {
       console.error(error);
