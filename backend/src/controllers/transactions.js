@@ -54,7 +54,9 @@ export async function transactions(req, res) {
             }
             await sqldb`UPDATE users SET balance = balance + ${amount} WHERE username = ${receiver}`;
             const transaction = await sqldb`INSERT INTO transactionlog(sender, receiver, type, amount)
-                VALUES(${getbalance[0].username}, ${receiver}, ${type}, ${amount})`
+                VALUES(${getbalance[0].username}, ${receiver}, ${type}, ${amount})
+                RETURNING id
+            `
             await sqldb`COMMIT`;
             return res.status(201).json(transaction)
         } catch (error) {
@@ -71,7 +73,7 @@ export async function transactions(req, res) {
     }
 }
 
-export async function getTransactions(req,res) {
+export async function getTransactions(req, res) {
     try {
         const { username } = req.params
         const getTransactions = await sqldb`
@@ -79,12 +81,11 @@ export async function getTransactions(req,res) {
             ORDER BY created_at DESC
         `
         if (getTransactions.length == 0) {
-           return res.status(200).json({data: []})
+            return res.status(200).json({ data: [] })
         }
 
-        res.status(200).json({data : getTransactions})
+        res.status(200).json({ data: getTransactions })
 
-        
     } catch (error) {
         res.status(500).json({ message: "internal server error" })
     }

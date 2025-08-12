@@ -2,7 +2,6 @@ import { Transactions } from "@/types";
 import { formatDate } from "@/utils/dateFormat";
 import { Feather } from "@expo/vector-icons";
 import { router } from "expo-router";
-import { navigate } from "expo-router/build/global-state/routing";
 import { ActivityIndicator, Text, TouchableOpacity, View } from "react-native";
 
 interface TransactionCardProps {
@@ -28,13 +27,12 @@ const TransactionCard = ({
         return "bg-gray-200 text-gray-50";
     }
   };
-
-  const handlePress = (category: Transactions) => {
-    console.log(category.id);
+  const handlePress = (transaction: Transactions) => {
+    if (__DEV__) console.debug("[TransactionCard] id:", transaction.id);
     router.push({
       pathname: "/transaction-details",
       params: {
-        id: category.id,
+        id: String(transaction.id),
       },
     });
   };
@@ -83,7 +81,7 @@ const TransactionCard = ({
                     </Text>
                   ) : (
                     <Text className="text-green-400 font-medium text-xl">
-                      +{transaction.amount}
+                      {transaction.amount}
                     </Text>
                   )}
                 </View>
