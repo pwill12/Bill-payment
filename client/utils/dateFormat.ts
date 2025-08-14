@@ -1,4 +1,4 @@
-import { differenceInMinutes, differenceInHours, differenceInDays } from "date-fns";
+import { differenceInMinutes, differenceInHours, differenceInDays, differenceInCalendarMonths, differenceInCalendarYears, getHours, toDate } from "date-fns";
 
 // Format a number to a shorter format (e.g., 1000 -> 1K)
 export const formatNumber = (num: number): string => {
@@ -7,8 +7,8 @@ export const formatNumber = (num: number): string => {
 };
 
 //  Format a date to a short relative format (e.g., 2m, 1h, 3d)
-export const formatDate = (dateString: string): string => {
-  const date = new Date(dateString);
+export const formatDate = (dateString?: string): string => {
+  const date = new Date(dateString!);
   const now = new Date();
 
   const minutes = differenceInMinutes(now, date);
@@ -20,4 +20,11 @@ export const formatDate = (dateString: string): string => {
   if (hours < 24) return `${hours}h`;
   if (days < 7) return `${days}d`;
   return `${Math.floor(days / 7)}w`;
+};
+
+export const Monthdate = (dateString?: string): string => {
+  const date = new Date(dateString!).toDateString();
+  const time = new Date(dateString!).toLocaleTimeString();
+
+  return `${date}, ${time}`;
 };
