@@ -79,6 +79,7 @@ export async function getTransactions(req, res) {
         const getTransactions = await sqldb`
             SELECT * FROM transactionlog WHERE sender = ${username} OR receiver = ${username}
             ORDER BY created_at DESC
+            LIMIT 3;
         `
         if (getTransactions.length == 0) {
             return res.status(200).json({ data: [] })

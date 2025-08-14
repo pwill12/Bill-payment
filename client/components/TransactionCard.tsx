@@ -2,7 +2,13 @@ import { Transactions } from "@/types";
 import { formatDate } from "@/utils/dateFormat";
 import { Feather } from "@expo/vector-icons";
 import { router } from "expo-router";
-import { ActivityIndicator, Text, TouchableOpacity, View } from "react-native";
+import {
+  ActivityIndicator,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 interface TransactionCardProps {
   transactions?: Transactions[];
@@ -38,7 +44,7 @@ const TransactionCard = ({
   };
 
   return (
-    <View className="rounded-xl flex-col">
+    <View className="rounded-xl flex-col bg-white">
       {loading ? (
         <View className="flex-1 px-4 justify-center items-center min-h-72">
           <ActivityIndicator size={"large"} />
@@ -55,7 +61,9 @@ const TransactionCard = ({
             >
               <View className="flex-row items-center gap-2">
                 <View className="size-12 justify-center items-center bg-green-100 rounded-full">
-                  <Feather name="arrow-up" color="green" size={15} />
+                  {transaction.sender === username ? 
+                  <Feather name="arrow-up" color="green" size={15} />: <Feather name="arrow-down" color="green" size={15} />
+                }
                 </View>
                 <View className="flex-col gap-1">
                   {transaction.sender === username ? (

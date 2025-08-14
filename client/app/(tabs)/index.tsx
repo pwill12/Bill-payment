@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { AntDesign, Ionicons } from "@expo/vector-icons";
 import { Image, RefreshControl, ScrollView, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -16,6 +16,7 @@ import {
 import { categorystyle } from "@/types";
 import { useTransactions } from "@/hooks/useTransactions";
 import TransactionCard from "@/components/TransactionCard";
+import { useCurrentUser } from "@/hooks/useCurrentuser";
 
 const HomeScreen = () => {
   useSyncDb();
@@ -24,13 +25,24 @@ const HomeScreen = () => {
   const username = user
     ? (user.emailAddresses?.[0]?.emailAddress?.split("@")[0] ?? "")
     : "";
-  const { transactionslog,isLoading } = useTransactions(username);
+  const { transactionslog,isLoading ,refetch} = useTransactions(username);
+  const { refetch: refetchbalance} = useCurrentUser();
+
+  const [isRefetching, setIsRefetching] = useState(false);
+
 
   const handleCatPress = (category: CategoryProps) => {
     const page = category?.page;
     {
       page && navigate(`/${page}`);
     }
+  };
+
+  const handlePullToRefresh = async () => {
+    setIsRefetching(true);
+    await refetch();
+    await refetchbalance();
+    setIsRefetching(false);
   };
 
   return (
@@ -54,13 +66,13 @@ const HomeScreen = () => {
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ paddingBottom: 80, gap: 16 }}
-          // refreshControl={
-          //   <RefreshControl
-          //     refreshing={isRefetching}
-          //     onRefresh={handlePullToRefresh}
-          //     tintColor={"#1DA1F2"}
-          //   />
-          // }
+          refreshControl={
+            <RefreshControl
+              refreshing={isRefetching}
+              onRefresh={handlePullToRefresh}
+              tintColor={"#1DA1F2"}
+            />
+          }
         >
           <Balance />
           <CategoryActions

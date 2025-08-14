@@ -18,7 +18,7 @@ const useTransfer = (
         headers: { "Content-Type": "application/json" },
       });
     },
-    onSuccess: () => {
+    onSuccess: (response) => {
       QueryClient.invalidateQueries({ queryKey: ["authUser", "transactions"] });
       router.push({
       pathname: "/success",
@@ -26,10 +26,9 @@ const useTransfer = (
         name: receiver,
         amount: amount,
         type: type,
-        id: createTransferMutation.data?.data.id
+        id: response.data.id
       },
     });
-    console.log(createTransferMutation.data?.data.id)
     },
     onError: (error) => {
       console.error(error);

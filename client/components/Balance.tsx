@@ -6,6 +6,7 @@ import { useCurrentUser } from "@/hooks/useCurrentuser";
 
 const Balance = () => {
   const { currentUser, isLoading } = useCurrentUser();
+
   return (
     <View className="px-5 py-5 bg-green-500 rounded-2xl justify-center">
       <View className="flex-row justify-between mb-3">
