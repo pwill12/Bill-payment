@@ -52,7 +52,7 @@ export async function transactions(req, res) {
             if (balanceCheck.count === 0) {
                 throw new Error("Insufficient balance")
             }
-            await sqldb`UPDATE users SET balance = balance + ${amount} WHERE username = ${receiver}`;
+            await sqldb`UPDATE users SET balance = balance   ${amount} WHERE username = ${receiver}`;
             const [transaction] = await sqldb`INSERT INTO transactionlog(sender, receiver, type, amount)
                 VALUES(${getbalance[0].username}, ${receiver}, ${type}, ${amount})
                 RETURNING id
@@ -76,10 +76,14 @@ export async function transactions(req, res) {
 export async function getTransactions(req, res) {
     try {
         const { username } = req.params
+        const limitParam = Number.parseInt((req.query.limit ?? "3") , 10);
+        const offsetParam = Number.parseInt((req.query.offset ?? "0") , 10);
+        const limit = Number.isFinite(limitParam) && limitParam > 0 && limitParam <= 100 ? limitParam : 3;
+        const offset = Number.isFinite(offsetParam) && offsetParam >= 0 ? offsetParam : 0;
         const getTransactions = await sqldb`
             SELECT * FROM transactionlog WHERE sender = ${username} OR receiver = ${username}
             ORDER BY created_at DESC
-            LIMIT 3;
+            LIMIT ${limit} OFFSET ${offset};
         `
         if (getTransactions.length == 0) {
             return res.status(200).json({ data: [] })

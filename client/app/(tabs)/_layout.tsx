@@ -28,7 +28,8 @@ export default function Mytab() {
         name="index"
         options={{
           title: "Home",
-          tabBarIcon: ({ color, size }) => <Feather name="home" size={size} color={color} />,
+          headerTitleStyle: {color: 'red'},
+          tabBarIcon: ({ color, size }) => <Feather name="home" size={size} color='light-green' />,
         }}
       />
       <Tabs.Screen
@@ -38,10 +39,10 @@ export default function Mytab() {
           tabBarIcon: ({ color, size }) => <Feather name="gift" size={size} color={color} />,
         }}
       />
-      {/* <Tabs.Screen
-        name="index"
+      <Tabs.Screen
+        name="cards"
         options={{
-          title: "home",
+          title: "Card",
           tabBarIcon: ({ color, size }) => (
             <Feather name="home" size={20} color={color} />
           ),
@@ -53,7 +54,7 @@ export default function Mytab() {
           title: "profile",
           tabBarIcon: ({ color, size }) => <Feather name="user" size={size} color={color} />,
         }}
-      /> */}
+      />
     </Tabs>
   );
 }
