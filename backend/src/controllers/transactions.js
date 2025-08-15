@@ -75,9 +75,16 @@ export async function transactions(req, res) {
 
 export async function getTransactions(req, res) {
     try {
+        const { userId } = getAuth(req);
         const { username } = req.params
-        const limitParam = Number.parseInt((req.query.limit ?? "3") , 10);
-        const offsetParam = Number.parseInt((req.query.offset ?? "0") , 10);
+        const me = await sqldb`
+        SELECT username FROM users WHERE clerk_id = ${userId}
+        `;
+        if (me[0].username !== username) {
+            return res.status(403).json({ message: "forbidden" });
+        }
+        const limitParam = Number.parseInt((req.query.limit ?? "3"), 10);
+        const offsetParam = Number.parseInt((req.query.offset ?? "0"), 10);
         const limit = Number.isFinite(limitParam) && limitParam > 0 && limitParam <= 100 ? limitParam : 3;
         const offset = Number.isFinite(offsetParam) && offsetParam >= 0 ? offsetParam : 0;
         const getTransactions = await sqldb`
