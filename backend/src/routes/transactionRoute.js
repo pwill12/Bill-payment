@@ -5,7 +5,7 @@ import { protectRoute } from "../middlewares/authorization.js";
 const router = express.Router()
 
 router.post("/send",protectRoute, transactions)
-router.get("/transactions/:username",protectRoute, getTransactions)
-router.get("/transaction/:id", findTransaction)
+router.get("/transactions/:username", getTransactions)
+router.get("/transaction/:id",protectRoute, findTransaction)
 
 export default router;
