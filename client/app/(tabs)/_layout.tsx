@@ -1,5 +1,5 @@
 import { useAuth } from "@clerk/clerk-expo";
-import { Feather } from "@expo/vector-icons";
+import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
 import { Redirect, Tabs } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -12,10 +12,15 @@ export default function Mytab() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: "#1DA1F2",
-        tabBarInactiveTintColor: "#657786",
+        animation: 'shift',
+        transitionSpec: {
+          animation: 'spring',
+          config: {mass: 1}
+        },
+        tabBarActiveTintColor: "lightgreen",
+        tabBarInactiveTintColor: "lightgray",
         tabBarStyle: {
-          backgroundColor: "#fff",
+          backgroundColor: "white",
           borderTopWidth: 0,
           borderTopColor: "#E1E8ED",
           height: 60 + insets.bottom,
@@ -28,7 +33,7 @@ export default function Mytab() {
         name="index"
         options={{
           title: "Home",
-          tabBarIcon: ({ color, size }) => <Feather name="home" size={size} color={color} />,
+          tabBarIcon: ({color, size}) => <MaterialCommunityIcons name="home-outline" color={color} size={size}/>,
         }}
       />
       <Tabs.Screen
@@ -38,12 +43,12 @@ export default function Mytab() {
           tabBarIcon: ({ color, size }) => <Feather name="gift" size={size} color={color} />,
         }}
       />
-      {/* <Tabs.Screen
-        name="index"
+      <Tabs.Screen
+        name="cards"
         options={{
-          title: "home",
+          title: "Card",
           tabBarIcon: ({ color, size }) => (
-            <Feather name="home" size={20} color={color} />
+            <MaterialCommunityIcons name="credit-card" size={size} color={color} />
           ),
         }}
       />
@@ -53,7 +58,7 @@ export default function Mytab() {
           title: "profile",
           tabBarIcon: ({ color, size }) => <Feather name="user" size={size} color={color} />,
         }}
-      /> */}
+      />
     </Tabs>
   );
 }

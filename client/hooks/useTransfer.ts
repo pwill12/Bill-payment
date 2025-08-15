@@ -19,7 +19,8 @@ const useTransfer = (
       });
     },
     onSuccess: (response) => {
-      QueryClient.invalidateQueries({ queryKey: ["authUser", "transactions"] });
+      QueryClient.invalidateQueries({ queryKey: ["authUser"] });
+      QueryClient.invalidateQueries({ queryKey: ["transactions"] });
       router.push({
       pathname: "/success",
       params: {
