@@ -4,6 +4,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import {
   CategoryProps,
   PaybillsCategory,
+  RewardsCard,
   SendMoneyorDeposit,
   SuccessCategory,
 } from "@/utils/data";
@@ -15,10 +16,12 @@ interface CategoryActionProps {
   type:
     | typeof PaybillsCategory
     | typeof SuccessCategory
+    | typeof RewardsCard
     | typeof SendMoneyorDeposit;
   styles?: categorystyle;
   bg?: boolean;
   card?: boolean;
+  rewardstyle?: boolean
 }
 
 const CategoryActions = ({
@@ -27,7 +30,8 @@ const CategoryActions = ({
   type,
   styles,
   bg,
-  card
+  card,
+  rewardstyle
 }: CategoryActionProps) => {
   const Categories = categories || type;
 
@@ -36,12 +40,12 @@ const CategoryActions = ({
   };
   return (
     <View
-      className={`${styles ? styles : "py-4 px-5"} flex-row ${bg && "bg-white"} items-center mt-0 ${card ? 'gap-3' : "justify-between"} rounded-lg`}
+      className={`${styles ? styles : "py-4 px-5"} flex-row ${bg && "bg-white"} items-center mt-0 ${card ? 'gap-3' : rewardstyle ? 'gap-2 justify-between' : "justify-between"} rounded-lg`}
     >
       {Categories.map((category) => (
         <TouchableOpacity
           key={category.id}
-          className={`flex-col items-center gap-1 ${card && 'bg-white px-6 py-3 rounded-lg'}`}
+          className={`flex-col items-center gap-1 ${card ? 'bg-white px-6 py-3 rounded-lg' : rewardstyle ? 'bg-white rounded-xl px-4 py-5' : ''}`}
           accessible={true}
           accessibilityRole="button"
           accessibilityLabel={`Select ${category.name}`}

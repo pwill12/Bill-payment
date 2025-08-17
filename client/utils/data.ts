@@ -51,3 +51,15 @@ export const SuccessCategory: CategoryProps[] = [
   },
   { id: "details", name: "View details", icon: "details", size: 21 , page: Routes.TRANSACTION_DETAILS},
 ];
+
+export const RewardsCard: CategoryProps[] = [
+  { id: "bonus", name: "Friday Bonus", icon: "cash", size: 21 },
+  {
+    id: "refer",
+    name: "Refer Friend",
+    icon: "account",
+    size: 21,
+  },
+  { id: "spin", name: "Spin & Win", icon: "cash", size: 21 , page: Routes.TRANSACTION_DETAILS},
+  { id: "play", name: "play & Win", icon: "cash", size: 21 , page: Routes.TRANSACTION_DETAILS},
+];

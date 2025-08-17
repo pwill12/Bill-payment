@@ -17,6 +17,7 @@ export default function Mytab() {
           animation: 'spring',
           config: {mass: 1}
         },
+        tabBarVisibilityAnimationConfig: {hide: {animation: 'timing'}},
         tabBarActiveTintColor: "lightgreen",
         tabBarInactiveTintColor: "lightgray",
         tabBarStyle: {

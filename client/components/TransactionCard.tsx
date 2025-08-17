@@ -4,6 +4,7 @@ import { Feather } from "@expo/vector-icons";
 import { router } from "expo-router";
 import {
   ActivityIndicator,
+  Dimensions,
   ScrollView,
   Text,
   TouchableOpacity,
@@ -14,12 +15,14 @@ interface TransactionCardProps {
   transactions?: Transactions[];
   loading: boolean;
   username: string;
+  loadpage?: () => void;
 }
 
 const TransactionCard = ({
   transactions,
   loading,
   username,
+  loadpage
 }: TransactionCardProps) => {
   const getStatusStyle = (type: Transactions["type"]) => {
     switch (type) {
@@ -43,73 +46,89 @@ const TransactionCard = ({
     });
   };
 
+  const { height } = Dimensions.get("screen");
+
   return (
-    <View className="rounded-xl flex-col bg-white">
-      {loading ? (
-        <View className="flex-1 px-4 justify-center items-center min-h-72">
-          <ActivityIndicator size={"large"} />
-        </View>
-      ) : transactions !== undefined && transactions.length > 0 ? (
-        transactions.map((transaction, index) => (
-          <TouchableOpacity
-            key={transaction.id}
-            onPress={() => handlePress(transaction)}
-          >
-            <View
-              // key={transaction.id}
-              className={`p-5 flex-row justify-between ${index === 0 ? "py-4" : ""}`}
-            >
-              <View className="flex-row items-center gap-2">
-                <View className="size-12 justify-center items-center bg-green-100 rounded-full">
-                  {transaction.sender === username ? 
-                  <Feather name="arrow-up" color="green" size={15} />: <Feather name="arrow-down" color="green" size={15} />
-                }
-                </View>
-                <View className="flex-col gap-1">
-                  {transaction.sender === username ? (
-                    <Text className="text-sm">
-                      Transfer to {transaction.receiver}
-                    </Text>
-                  ) : (
-                    <Text className="text-sm">
-                      Received from {transaction.sender}
-                    </Text>
-                  )}
-                  <Text className="font-thin text-sm">
-                    {formatDate(transaction.created_at)}
-                  </Text>
-                </View>
-              </View>
-              <View className="flex-col gap-1 items-center">
-                <View className="flex-row items-center">
-                  <Feather name="dollar-sign" />
-                  {transaction.sender === username ? (
-                    <Text className="text-red-400 font-medium text-xl">
-                      -{transaction.amount}
-                    </Text>
-                  ) : (
-                    <Text className="text-green-400 font-medium text-xl">
-                      {transaction.amount}
-                    </Text>
-                  )}
-                </View>
+    <ScrollView
+      style={{ maxHeight: height * 0.76 }}
+      showsVerticalScrollIndicator={false}
+    >
+      <View className="rounded-xl flex-col bg-white">
+        {loading ? (
+          <View className="flex-1 px-4 justify-center items-center bg-gray-50">
+            <ActivityIndicator size={"large"} />
+          </View>
+        ) : transactions !== undefined && transactions.length > 0 ? (
+          <View>
+            {transactions.map((transaction, index) => (
+              <TouchableOpacity
+                key={transaction.id}
+                onPress={() => handlePress(transaction)}
+              >
                 <View
-                  className={`p-1 rounded-3xl ${getStatusStyle(transaction.type)}`}
+                  className={`p-3 flex-row justify-between ${index === 0 ? "py-4" : ""}`}
                 >
-                  <Text className="text-xs font-light px-1">
-                    {transaction.type}
-                  </Text>
+                  <View className="flex-row items-center gap-2">
+                    <View className="size-12 justify-center items-center bg-green-100 rounded-full">
+                      {transaction.sender === username ? (
+                        <Feather name="arrow-up" color="green" size={15} />
+                      ) : (
+                        <Feather name="arrow-down" color="green" size={15} />
+                      )}
+                    </View>
+                    <View className="flex-col gap-1">
+                      {transaction.sender === username ? (
+                        <Text className="text-sm">
+                          Transfer to {transaction.receiver}
+                        </Text>
+                      ) : (
+                        <Text className="text-sm">
+                          Received from {transaction.sender}
+                        </Text>
+                      )}
+                      <Text className="font-thin text-sm">
+                        {formatDate(transaction.created_at)}
+                      </Text>
+                    </View>
+                  </View>
+                  <View className="flex-col gap-1 items-center">
+                    <View className="flex-row items-center">
+                      <Feather name="dollar-sign" />
+                      {transaction.sender === username ? (
+                        <Text className="text-red-400 font-medium text-xl">
+                          -{transaction.amount}
+                        </Text>
+                      ) : (
+                        <Text className="text-green-400 font-medium text-xl">
+                          {transaction.amount}
+                        </Text>
+                      )}
+                    </View>
+                    <View
+                      className={`p-1 rounded-3xl ${getStatusStyle(transaction.type)}`}
+                    >
+                      <Text className="text-xs font-light px-1">
+                        {transaction.type}
+                      </Text>
+                    </View>
+                  </View>
                 </View>
-              </View>
-            </View>
-          </TouchableOpacity>
-        ))
-      ) : (
-        <View>
-          <Text>no transactions</Text>
-        </View>
-      )}
-    </View>
+              </TouchableOpacity>
+            ))}
+            <TouchableOpacity className="flex-row items-center gap-2 py-1 justify-center border border-gray-100 w-32 self-center mb-4 rounded-lg"
+            onPress={loadpage}
+            >
+              <Feather name="search" />
+              <Text className="text-sm">load more</Text>
+            </TouchableOpacity>
+          </View>
+        ) : (
+          <View className="items-center bg-gray-50">
+            <Text>no transactions</Text>
+          </View>
+        )}
+      </View>
+    </ScrollView>
   );
 };
 

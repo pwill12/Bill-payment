@@ -21,6 +21,7 @@ export interface Transactions {
 export enum categorystyle {
   small = "px-5 py-4",
   medium = "px-8 py-5",
+  none = "p-0 "
 }
 
 export enum transactiontype {
