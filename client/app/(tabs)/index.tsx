@@ -1,96 +1,58 @@
-import React, { useState } from "react";
-import { AntDesign, Ionicons } from "@expo/vector-icons";
-import { Image, RefreshControl, ScrollView, Text, View } from "react-native";
+import { View, Text, TouchableOpacity, Dimensions } from "react-native";
+import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import SignOutButton from "@/components/SignOutButton";
-import { useSyncDb } from "@/hooks/useRegister";
-import { useUser } from "@clerk/clerk-expo";
-import Balance from "@/components/Balance";
+import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
 import CategoryActions from "@/components/CategoryCard";
-import { navigate } from "expo-router/build/global-state/routing";
-import {
-  CategoryProps,
-  PaybillsCategory,
-  SendMoneyorDeposit,
-} from "@/utils/data";
+import { BonusCard, RewardsCard } from "@/utils/data";
 import { categorystyle } from "@/types";
-import { useTransactions } from "@/hooks/useTransactions";
-import TransactionCard from "@/components/TransactionCard";
-import { useCurrentUser } from "@/hooks/useCurrentuser";
+import TransactionButton, { ButtonSize } from "@/components/TransactionButton";
+import BonusReward from "@/components/BonusReward";
 
-const HomeScreen = () => {
-  useSyncDb();
-
-  const { user } = useUser();
-  const username = user
-    ? (user.emailAddresses?.[0]?.emailAddress?.split("@")[0] ?? "")
-    : "";
-  const { transactionslog,isLoading ,refetch} = useTransactions(username);
-  const { refetch: refetchbalance} = useCurrentUser();
-
-  const [isRefetching, setIsRefetching] = useState(false);
-
-
-  const handleCatPress = (category: CategoryProps) => {
-    const page = category?.page;
-    {
-      page && navigate(`/${page}`);
-    }
-  };
-
-  const handlePullToRefresh = async () => {
-    setIsRefetching(true);
-    await refetch();
-    await refetchbalance();
-    setIsRefetching(false);
-  };
+const rewards = () => {
+  const { height } = Dimensions.get("screen");
 
   return (
-    <SafeAreaView className="bg-gray-50 flex-1">
-      <View className="flex-col px-3 py-3 gap-4">
-        <View className="flex-row justify-between py-1">
-          <View className="flex-row items-center gap-5">
-            <Image
-              source={{ uri: user?.imageUrl }}
-              className="w-12 h-12 rounded-full"
-            />
-            <Text className="text-lg font-bold">Hi, {username}</Text>
+    <SafeAreaView
+      className="flex-1 bg-teal-100 rounded-b-3xl"
+      style={{ maxHeight: height * 0.265 }}
+    >
+      <View className="p-3 gap-4">
+        <View className="flex flex-row justify-between py-3 items-center">
+          <Text className="font-bold text-3xl">Rewards</Text>
+          <TouchableOpacity>
+            <MaterialCommunityIcons name="menu" size={20} />
+          </TouchableOpacity>
+        </View>
+        <View className="px-2 gap-2">
+          <View className="flex-row justify-between">
+            <Text className="text-gray-600">Cashback</Text>
+            <Text>Voucher</Text>
           </View>
-          <View className="flex-row gap-6 items-center">
-            <AntDesign name="customerservice" size={24} />
-            <Ionicons name="scan" size={24} />
-            <Ionicons name="notifications-outline" size={24} />
-            <SignOutButton />
+          <View className="flex-row justify-between">
+            <View className="flex-row items-center">
+              <Feather name="dollar-sign" size={24} />
+              <Text className="text-2xl font-bold">2</Text>
+            </View>
+            <Feather name="gift" size={24} />
           </View>
         </View>
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ paddingBottom: 80, gap: 16 }}
-          refreshControl={
-            <RefreshControl
-              refreshing={isRefetching}
-              onRefresh={handlePullToRefresh}
-              tintColor={"#1DA1F2"}
-            />
-          }
-        >
-          <Balance />
+        <View className="">
           <CategoryActions
-            type={SendMoneyorDeposit}
-            onCategoryPress={handleCatPress}
-            bg
-            styles={categorystyle.medium}
+            type={RewardsCard}
+            styles={categorystyle.none}
+            rewardstyle
           />
-          <CategoryActions
-            type={PaybillsCategory}
-            onCategoryPress={handleCatPress}
-            bg
-          />
-          <TransactionCard transactions={transactionslog} loading={isLoading} username={username}/>
-        </ScrollView>
+        </View>
+        <View className="flex-col gap-2">
+          <View className="flex-row gap-1">
+            <Text className="text-sm">Welcome Bonus</Text>
+            <TransactionButton disabled title="total bonus" size={ButtonSize.xs}/>
+          </View>
+          <BonusReward type={BonusCard}/>
+        </View>
       </View>
     </SafeAreaView>
   );
 };
 
-export default HomeScreen;
+export default rewards;

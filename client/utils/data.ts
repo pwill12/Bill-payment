@@ -15,6 +15,7 @@ export interface CategoryProps {
   icon: React.ComponentProps<typeof MaterialCommunityIcons>["name"];
   size?: number;
   page?: Routes;
+  text?: string;
 }
 
 export const PaybillsCategory: CategoryProps[] = [
@@ -50,4 +51,28 @@ export const SuccessCategory: CategoryProps[] = [
     size: 21,
   },
   { id: "details", name: "View details", icon: "details", size: 21 , page: Routes.TRANSACTION_DETAILS},
+];
+
+export const RewardsCard: CategoryProps[] = [
+  { id: "bonus", name: "Friday Bonus", icon: "cash", size: 21 },
+  {
+    id: "refer",
+    name: "Refer Friend",
+    icon: "account",
+    size: 21,
+  },
+  { id: "spin", name: " Spin & Win", icon: "cash", size: 21 , page: Routes.TRANSACTION_DETAILS},
+  { id: "play", name: "play & Win", icon: "cash", size: 21 , page: Routes.TRANSACTION_DETAILS},
+];
+
+export const BonusCard: CategoryProps[] = [
+  { id: "data", name: "Data Offers at lowes", icon: "wallet", size: 21 , text: 'Recharge Data & Earn Now'},
+  {
+    id: "electricity",
+    name: "Eclectricity Payment",
+    icon: "lightbulb",
+    size: 21,
+    text: 'Fast&Easy Electricity Bill Pay'
+  },
+  { id: "betting", name: "Betting Payment", icon: "cash", size: 21 , text: 'Fund betting account with $1 or more'},
 ];

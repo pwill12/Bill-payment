@@ -7,6 +7,6 @@ const router = Router()
 router.post("/users", protectRoute, insertUsers)
 router.get("/user/find",protectRoute, findUser)
 router.get("/user/find/:receiver",protectRoute, findReceivers)
-
+router.get("/user/customercode",protectRoute, findReceivers)
 
 export default router
