@@ -131,33 +131,53 @@ export async function CreatePaystackCode(req, res) {
 
     try {
 
-        const { email , firstName, lastName} = req.body
-
-        const data = {
-            email,firstName,lastName
-        }
+        const { userId } = getAuth(req)
 
         const finduser = await sqldb`
-            SELECT * FROM users WHERE email = ${email}
+            SELECT * FROM users WHERE clerk_id = ${userId}
         `;
 
         if (finduser.length == 0) {
             return res.status(404).json({ message: "no user found" })
         }
 
-        const postdata = await axios.post(`${PAYSTACK_API}/customer`, {
+        if (findUser[0].customer_code) {
+            return res.status(200).json({
+                message: "customer already exists",
+                customer_code: finduser[0].customer_code
+            });
+        }
+
+        if (!process.env.PAYSTACK_SECRET) {
+            return res.status(500).json({ message: "PAYSTACK_SECRET is not configured" });
+        }
+
+        const data = {
+            email: finduser[0].email,
+            first_name: finduser[0].firstName ?? undefined,
+            last_name: finduser[0].lastName ?? undefined,
+        };
+
+        const postdata = await axios.post(`${PAYSTACK_API}/customer`, data, {
             method: 'POST',
             headers: {
                 Authorization: `Bearer ${process.env.PAYSTACK_SECRET}`,
                 'Content-Type': 'application/json'
-            }
-        }, data)
+            }, timeout: 15000
+        })
 
-        if (!postdata.status) {
-            res.status(401).json({message: "error creating user"})
+        const customerCode = postdata?.data?.data?.customer_code;
+        if (customerCode) {
+            await sqldb`
+                UPDATE users
+                SET customer_code = ${customerCode}
+                WHERE clerk_id = ${userId}
+             `;
         }
-
-        return res.status(200).json(postdata[0])
+        return res.status(200).json({
+            customer_code: customerCode,
+            provider: postdata.data
+        })
 
     } catch (error) {
         res.status(500).json({ message: "internal server error" })
