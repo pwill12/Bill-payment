@@ -1,5 +1,7 @@
 import { sqldb } from "../config/db.js";
 import { clerkClient, getAuth } from "@clerk/express";
+import axios from 'axios'
+import "dotenv/config"
 
 export async function createUsersTable() {
 
@@ -24,24 +26,24 @@ export async function createUsersTable() {
     }
 }
 
-export async function addCustomercode(req,res) {
+export async function addCustomercode() {
     try {
         await sqldb`
             ALTER TABLE users
-            ADD COLUMN customer_code VARCHAR(50)
+            ADD COLUMN IF NOT EXISTS customer_code VARCHAR(50)
         `
         await sqldb`
             ALTER TABLE users
-            ADD COLUMN acct_name VARCHAR(50)
+            ADD COLUMN IF NOT EXISTS acct_name VARCHAR(50)
         `
         await sqldb`
             ALTER TABLE users
-            ADD COLUMN acct_num VARCHAR(50)
+            ADD COLUMN IF NOT EXISTS acct_num VARCHAR(50)
         `
-        console.log('column customer_code added')
+        console.log('Ensured user columns: customer_code, acct_name, acct_num')
     } catch (error) {
-        console.error("Error while creating customer_code column", error);
-        process.exit(1)
+        console.error("Error ensuring user columns", error);
+        throw error
     }
 }
 
@@ -117,6 +119,45 @@ export async function findReceivers(req, res) {
         }
 
         res.status(200).json(finduser[0])
+
+    } catch (error) {
+        res.status(500).json({ message: "internal server error" })
+    }
+}
+
+const PAYSTACK_API = "https://api.paystack.co"
+
+export async function CreatePaystackCode(req, res) {
+
+    try {
+
+        const { email , firstName, lastName} = req.body
+
+        const data = {
+            email,firstName,lastName
+        }
+
+        const finduser = await sqldb`
+            SELECT * FROM users WHERE email = ${email}
+        `;
+
+        if (finduser.length == 0) {
+            return res.status(404).json({ message: "no user found" })
+        }
+
+        const postdata = await axios.post(`${PAYSTACK_API}/customer`, {
+            method: 'POST',
+            headers: {
+                Authorization: `Bearer ${process.env.PAYSTACK_SECRET}`,
+                'Content-Type': 'application/json'
+            }
+        }, data)
+
+        if (!postdata.status) {
+            res.status(401).json({message: "error creating user"})
+        }
+
+        return res.status(200).json(postdata[0])
 
     } catch (error) {
         res.status(500).json({ message: "internal server error" })
