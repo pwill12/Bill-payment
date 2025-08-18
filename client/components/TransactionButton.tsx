@@ -3,18 +3,20 @@ import React from "react";
 
 export enum COLORS {
   lightblue = "bg-blue-300",
-  lightgreen = "bg-green-50"
+  lightgreen = "bg-green-50",
 }
 
 export enum TEXTCOLORS {
-  green = "color-green-400"
+  green = "color-green-400",
 }
 
 export enum ButtonSize {
   small = "px-4",
   medium = "px-6",
   large = "px-8",
-  xl = "px-10"
+  xl = "px-10",
+  xs = "px-1 py-0",
+  custom = "px-6 py-1",
 }
 
 interface TransactionButtonProps {
@@ -23,7 +25,7 @@ interface TransactionButtonProps {
   disabled?: boolean;
   size?: ButtonSize;
   color?: COLORS;
-  textcolor?: TEXTCOLORS
+  textcolor?: TEXTCOLORS;
 }
 
 const TransactionButton = ({
@@ -32,7 +34,7 @@ const TransactionButton = ({
   disabled,
   size,
   color,
-  textcolor
+  textcolor,
 }: TransactionButtonProps) => {
   return (
     <TouchableOpacity
@@ -40,7 +42,9 @@ const TransactionButton = ({
       onPress={onPress}
       disabled={disabled}
     >
-      <Text className={`text-xl ${disabled ? "text-gray-500" : textcolor ? textcolor : "text-white"}`}>
+      <Text
+        className={`${size === ButtonSize.xs ? "text-xs" : size === ButtonSize.custom ? "text-xs" : "text-xl"} ${disabled ? "text-gray-500" : textcolor ? textcolor : "text-white"}`}
+      >
         {title}
       </Text>
     </TouchableOpacity>

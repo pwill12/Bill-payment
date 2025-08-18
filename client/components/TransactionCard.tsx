@@ -57,7 +57,7 @@ const TransactionCard = ({
     >
       <View className="rounded-xl flex-col bg-white">
         {loading ? (
-          <View className="flex-1 px-4 justify-center items-center bg-gray-50">
+          <View className="px-4 justify-center items-center bg-gray-50">
             <ActivityIndicator size={"large"} />
           </View>
         ) : transactions !== undefined && transactions.length > 0 ? (
@@ -117,13 +117,15 @@ const TransactionCard = ({
                 </View>
               </TouchableOpacity>
             ))}
-            <TouchableOpacity
-              className="flex-row items-center gap-2 py-1 justify-center border border-gray-100 w-32 self-center mb-4 rounded-lg"
-              onPress={loadpage}
-            >
-              <Feather name="search" />
-              <Text className="text-sm">load more</Text>
-            </TouchableOpacity>
+            {showload && loadpage ? (
+              <TouchableOpacity
+                className="flex-row items-center gap-2 py-1 justify-center border border-gray-100 w-32 self-center mb-4 rounded-lg"
+                onPress={loadpage}
+              >
+                <Feather name="search" />
+                <Text className="text-sm">load more</Text>
+              </TouchableOpacity>
+            ) : null}
           </View>
         ) : (
           <View className="items-center bg-gray-50">

@@ -24,6 +24,28 @@ export async function createUsersTable() {
     }
 }
 
+export async function addCustomercode(req,res) {
+    try {
+        await sqldb`
+            ALTER TABLE users
+            ADD COLUMN customer_code VARCHAR(50)
+        `
+        await sqldb`
+            ALTER TABLE users
+            ADD COLUMN acct_name VARCHAR(50)
+        `
+        await sqldb`
+            ALTER TABLE users
+            ADD COLUMN acct_num VARCHAR(50)
+        `
+        console.log('column customer_code added')
+    } catch (error) {
+        console.error("Error while creating customer_code column", error);
+        process.exit(1)
+    }
+}
+
+
 export async function insertUsers(req, res) {
 
     try {

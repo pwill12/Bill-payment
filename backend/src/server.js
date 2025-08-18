@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import { clerkMiddleware } from "@clerk/express";
 import dotenv from 'dotenv'
-import { createUsersTable } from "./controllers/users.js";
+import { addCustomercode, createUsersTable } from "./controllers/users.js";
 import userRoute from "./routes/userRoute.js";
 import transactionRoute from "./routes/transactionRoute.js";
 
@@ -31,6 +31,7 @@ app.use("/api", userRoute)
 app.use("/api", transactionRoute)
 
 // MODIFY()
+addCustomercode()
 
 createUsersTable().then(() => {
     if (process.env.NODE_ENV !== 'production') {

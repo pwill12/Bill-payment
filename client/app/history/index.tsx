@@ -12,21 +12,19 @@ const TransactionHistory = () => {
     ? params.username[0]
     : params.username;
   const [moredata, setmoredata] = useState<number>(10);
-  const { transactionslog, isLoading } = useTransactions(username, moredata);
-  const [data , setdata] = useState<Transactions[] | undefined>([...transactionslog as any[]])
+  const { transactionslog, isLoading , refetch} = useTransactions(username, moredata);
   const handleloadmore = () => {
-    setmoredata((prev) => prev + 1);
-    setdata([...transactionslog as any[], transactionslog])
+    setmoredata((prev) => prev + 10);
+    void refetch();
   };
-  // const copied : Transactions[] | undefined = [...transactionslog as any[], ...[transactionslog]]
-  console.log(data)
   return (
     <HeaderName headertext="Transaction History">
       <TransactionCard
-        transactions={data}
+        transactions={transactionslog}
         loading={isLoading}
         username={username}
         loadpage={handleloadmore}
+        showload
       />
     </HeaderName>
   );
