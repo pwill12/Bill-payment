@@ -60,6 +60,6 @@ export const RewardsCard: CategoryProps[] = [
     icon: "account",
     size: 21,
   },
-  { id: "spin", name: "Spin & Win", icon: "cash", size: 21 , page: Routes.TRANSACTION_DETAILS},
+  { id: "spin", name: " Spin & Win", icon: "cash", size: 21 , page: Routes.TRANSACTION_DETAILS},
   { id: "play", name: "play & Win", icon: "cash", size: 21 , page: Routes.TRANSACTION_DETAILS},
 ];

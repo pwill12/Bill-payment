@@ -13,16 +13,18 @@ import {
 
 interface TransactionCardProps {
   transactions?: Transactions[];
-  loading: boolean;
+  loading?: boolean;
   username: string;
   loadpage?: () => void;
+  showload?: boolean;
 }
 
 const TransactionCard = ({
   transactions,
   loading,
   username,
-  loadpage
+  loadpage,
+  showload,
 }: TransactionCardProps) => {
   const getStatusStyle = (type: Transactions["type"]) => {
     switch (type) {
@@ -115,8 +117,9 @@ const TransactionCard = ({
                 </View>
               </TouchableOpacity>
             ))}
-            <TouchableOpacity className="flex-row items-center gap-2 py-1 justify-center border border-gray-100 w-32 self-center mb-4 rounded-lg"
-            onPress={loadpage}
+            <TouchableOpacity
+              className="flex-row items-center gap-2 py-1 justify-center border border-gray-100 w-32 self-center mb-4 rounded-lg"
+              onPress={loadpage}
             >
               <Feather name="search" />
               <Text className="text-sm">load more</Text>

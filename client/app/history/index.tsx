@@ -4,24 +4,26 @@ import HeaderName from "@/components/HeaderName";
 import TransactionCard from "@/components/TransactionCard";
 import { useTransactions } from "@/hooks/useTransactions";
 import { useLocalSearchParams } from "expo-router";
+import { Transactions } from "@/types";
 
 const TransactionHistory = () => {
   const params = useLocalSearchParams();
   const username = Array.isArray(params.username)
     ? params.username[0]
     : params.username;
-  let loadmore = 10;
-  const [moredata, setmoredata] = useState(loadmore)
-  console.log(moredata)
+  const [moredata, setmoredata] = useState<number>(10);
   const { transactionslog, isLoading } = useTransactions(username, moredata);
-  const [data, setdata] = useState(transactionslog)
+  const [data , setdata] = useState<Transactions[] | undefined>([...transactionslog as any[]])
   const handleloadmore = () => {
-    setmoredata(loadmore+=1);
+    setmoredata((prev) => prev + 1);
+    setdata([...transactionslog as any[], transactionslog])
   };
+  // const copied : Transactions[] | undefined = [...transactionslog as any[], ...[transactionslog]]
+  console.log(data)
   return (
     <HeaderName headertext="Transaction History">
       <TransactionCard
-        transactions={transactionslog}
+        transactions={data}
         loading={isLoading}
         username={username}
         loadpage={handleloadmore}

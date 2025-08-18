@@ -11,7 +11,7 @@ interface transaction {
 interface transactiondetail {
     data: Transactions
 }
-export const useTransactions = (username: string | undefined, limit?: number) => {
+export const useTransactions = (username: string | undefined, limit: number = 10) => {
   const api = useApiClient();
 
   const {
@@ -21,7 +21,7 @@ export const useTransactions = (username: string | undefined, limit?: number) =>
     refetch,
   } = useQuery({
     queryKey: ["transactions", username , limit],
-    queryFn: () => transactionsApi.getUserTransactions(api, username!, limit!),
+    queryFn: () => transactionsApi.getUserTransactions(api, username!, limit),
     enabled: Boolean(username),
     select: (response: transaction) => response.data.data,
   });

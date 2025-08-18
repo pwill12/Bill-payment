@@ -25,7 +25,7 @@ const HomeScreen = () => {
   const username = user
     ? (user.emailAddresses?.[0]?.emailAddress?.split("@")[0] ?? "")
     : "";
-  const { transactionslog,isLoading ,refetch} = useTransactions(username, 3);
+  const { transactionslog,isLoading ,refetch} = useTransactions(username, 4);
   const { refetch: refetchbalance} = useCurrentUser();
 
   const [isRefetching, setIsRefetching] = useState(false);
@@ -65,6 +65,7 @@ const HomeScreen = () => {
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ paddingBottom: 80, gap: 16 }}
+          pagingEnabled
           refreshControl={
             <RefreshControl
               refreshing={isRefetching}
