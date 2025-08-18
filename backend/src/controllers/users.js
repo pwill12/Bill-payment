@@ -141,7 +141,7 @@ export async function CreatePaystackCode(req, res) {
             return res.status(404).json({ message: "no user found" })
         }
 
-        if (findUser[0].customer_code) {
+        if (finduser[0].customer_code) {
             return res.status(200).json({
                 message: "customer already exists",
                 customer_code: finduser[0].customer_code
