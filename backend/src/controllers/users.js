@@ -216,7 +216,7 @@ export async function CreatePaystackAcct(req, res) {
         if (!finduser[0].customer_code) {
             return res.status(409).json({ message: "customer_code not found for user. Create customer first." });
         }
-        const preferred_banked = preferred_bank || "titan-paystack";
+        const effectivePreferredBank = preferred_bank || "titan-paystack";
 
         if (!process.env.PAYSTACK_SECRET) {
             return res.status(500).json({ message: "PAYSTACK_SECRET is not configured" });
@@ -224,7 +224,7 @@ export async function CreatePaystackAcct(req, res) {
 
         const data = {
             customer: finduser[0].customer_code,
-            ...(preferred_banked ? { preferred_bank } : {})
+            preferred_bank: effectivePreferredBank
         };
 
         const postdata = await axios.post(`${PAYSTACK_API}/dedicated_account`, data, {
