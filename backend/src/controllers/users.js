@@ -2,6 +2,7 @@ import { sqldb } from "../config/db.js";
 import { clerkClient, getAuth } from "@clerk/express";
 import axios from 'axios'
 import "dotenv/config"
+import { normalizePhonenum } from "../utils/convertnum.js";
 
 export async function createUsersTable() {
 
@@ -152,13 +153,15 @@ export async function CreatePaystackCode(req, res) {
             return res.status(500).json({ message: "PAYSTACK_SECRET is not configured" });
         }
 
-        const {phone} = req.body
+        const phoneInput = req.body?.phone;
+        const candidatePhone = phoneInput ?? finduser[0]?.number;
+        const normalizedPhone = candidatePhone ? normalizePhonenum(candidatePhone) : undefined;
 
         const data = {
             email: finduser[0].email,
             first_name: finduser[0].firstName ?? undefined,
             last_name: finduser[0].lastName ?? undefined,
-            phone: phone ?? "08081234678"
+            ...(normalizedPhone ? { phone: normalizedPhone } : {})
         };
 
         const postdata = await axios.post(`${PAYSTACK_API}/customer`, data, {

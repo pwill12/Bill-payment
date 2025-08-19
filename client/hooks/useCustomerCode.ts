@@ -4,12 +4,12 @@ import { useAuth } from "@clerk/clerk-expo";
 import { useApiClient, userApi } from "../utils/api";
 import { useSyncDb } from "./useRegister";
 
-export const useCustomerCode = () => {
+export const useCustomerCode = (phone? : string) => {
   const { usercreated } = useSyncDb()
   const api = useApiClient();
 
   const syncUserMutation = useMutation({
-    mutationFn: () => userApi.AddcustomerCode(api),
+    mutationFn: () => userApi.AddcustomerCode(api, {phone}),
     onSuccess: (response: any) =>
       console.log("Customer Code Added:", response.data),
     onError: (error: any) => console.error("error creating customer", error),
