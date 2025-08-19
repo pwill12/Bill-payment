@@ -190,3 +190,63 @@ export async function CreatePaystackCode(req, res) {
     }
 }
 
+export async function CreatePaystackAcct(req, res) {
+
+    try {
+
+        const { userId } = getAuth(req)
+
+        const finduser = await sqldb`
+            SELECT * FROM users WHERE clerk_id = ${userId}
+        `;
+
+        if (finduser.length == 0) {
+            return res.status(404).json({ message: "no user found" })
+        }
+
+        if (finduser[0].account_number) {
+            return res.status(200).json({
+                message: "acct_num already exists",
+                customer_code: finduser[0].account_number
+            });
+        }
+
+        if (!process.env.PAYSTACK_SECRET) {
+            return res.status(500).json({ message: "PAYSTACK_SECRET is not configured" });
+        }
+
+        const {preferred_bank} = req.body
+
+        const data = {
+            customer_code: finduser[0].customer_code,
+            preferred_bank: preferred_bank
+        };
+
+        const postdata = await axios.post(`${PAYSTACK_API}/customer`, data, {
+            method: 'POST',
+            headers: {
+                Authorization: `Bearer ${process.env.PAYSTACK_SECRET}`,
+                'Content-Type': 'application/json'
+            }, timeout: 15000
+        })
+
+        const createdacctnum = postdata?.data?.data?.account_number;
+        const createdacct = postdata?.data?.data?.account_name;
+        if (createdacct && createdacctnum) {
+            await sqldb`
+                UPDATE users
+                SET acct_num = ${createdacctnum}, acct_name = ${createdacct}
+                WHERE clerk_id = ${userId}
+             `;
+        }
+        return res.status(200).json({
+            account_number: createdacctnum,
+            account_name: createdacct,
+            provider: postdata.data
+        })
+
+    } catch (error) {
+        res.status(500).json({ message: "internal server error" })
+    }
+}
+
