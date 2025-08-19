@@ -2,27 +2,24 @@ import { useEffect } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useAuth } from "@clerk/clerk-expo";
 import { useApiClient, userApi } from "../utils/api";
+import { useSyncDb } from "./useRegister";
 
-export const useSyncDb = () => {
-  const { isSignedIn } = useAuth();
+export const useCustomerCode = () => {
+  const { usercreated } = useSyncDb()
   const api = useApiClient();
 
   const syncUserMutation = useMutation({
-    mutationFn: () => userApi.syncUser(api),
+    mutationFn: () => userApi.AddcustomerCode(api),
     onSuccess: (response: any) =>
-      console.log("User synced successfully:", response.data),
+      console.log("Customer Code Added:", response.data),
     onError: (error: any) => console.error("User sync failed:", error),
   });
-  // auto-sync user when signed in
-
+  // auto-create customer code
   useEffect(() => {
-    // if user is signed in and user is not synced yet, sync user
-    if (isSignedIn && !syncUserMutation.data) {
+    if (usercreated !== undefined) {
       syncUserMutation.mutate();
     }
-  }, [isSignedIn]);
+  }, [usercreated]);
 
-  return {
-    usercreated: syncUserMutation.data,
-  };
+  return null;
 };
