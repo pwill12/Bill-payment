@@ -29,9 +29,11 @@ export const useApiClient = (): AxiosInstance => {
 
 export const userApi = {
   syncUser: (api: AxiosInstance) => api.post("/users"),
-  AddcustomerCode: (api: AxiosInstance, phone?: string) => api.post("/user/customercode", phone),
+  AddcustomerCode: (api: AxiosInstance, phone?: string) =>
+    api.post("/user/customercode", phone),
   getCurrentUser: (api: AxiosInstance) => api.get("/user/find"),
-  //   updateProfile: (api: AxiosInstance, data: any) => api.put("/users/profile", data),
+  createpaystack: (api: AxiosInstance, preferred_bank: string) =>
+    api.post("/user/createpaystack", preferred_bank),
 };
 
 export const receiverApi = {
@@ -40,8 +42,11 @@ export const receiverApi = {
 };
 
 export const transactionsApi = {
-  getUserTransactions: (api: AxiosInstance, username: string | undefined, limit: number) =>
-    api.get(`/transactions/${username}?limit=${limit}`),
+  getUserTransactions: (
+    api: AxiosInstance,
+    username: string | undefined,
+    limit: number
+  ) => api.get(`/transactions/${username}?limit=${limit}`),
   getTransaction: (api: AxiosInstance, id: number | undefined) =>
     api.get(`/transaction/${id}`),
 };

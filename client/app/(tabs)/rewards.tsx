@@ -3,7 +3,6 @@ import { AntDesign, Ionicons } from "@expo/vector-icons";
 import { Image, RefreshControl, ScrollView, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import SignOutButton from "@/components/SignOutButton";
-import { useSyncDb } from "@/hooks/useRegister";
 import { useUser } from "@clerk/clerk-expo";
 import Balance from "@/components/Balance";
 import CategoryActions from "@/components/CategoryCard";
@@ -17,10 +16,10 @@ import { categorystyle } from "@/types";
 import { useTransactions } from "@/hooks/useTransactions";
 import TransactionCard from "@/components/TransactionCard";
 import { useCurrentUser } from "@/hooks/useCurrentuser";
-import { useCustomerCode } from "@/hooks/useCustomerCode";
+import { useCreatePaystack } from "@/hooks/useCreatePaystack";
 
 const HomeScreen = () => {
-  useCustomerCode();
+  useCreatePaystack("wema-bank");
 
   const { user } = useUser();
   const username = user
