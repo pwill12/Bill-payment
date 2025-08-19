@@ -204,10 +204,10 @@ export async function CreatePaystackAcct(req, res) {
             return res.status(404).json({ message: "no user found" })
         }
 
-        if (finduser[0].account_number) {
+        if (finduser[0].acct_num) {
             return res.status(200).json({
                 message: "acct_num already exists",
-                customer_code: finduser[0].account_number
+                acct_num: finduser[0].acct_num
             });
         }
 
@@ -218,7 +218,7 @@ export async function CreatePaystackAcct(req, res) {
         const {preferred_bank} = req.body
 
         const data = {
-            customer_code: finduser[0].customer_code,
+            customer: finduser[0].customer_code,
             preferred_bank: preferred_bank
         };
 

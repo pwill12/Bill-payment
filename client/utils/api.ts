@@ -33,7 +33,7 @@ export const userApi = {
     api.post("/user/customercode", phone),
   getCurrentUser: (api: AxiosInstance) => api.get("/user/find"),
   createpaystack: (api: AxiosInstance, preferred_bank: string) =>
-    api.post("/user/createpaystack", preferred_bank),
+    api.post("/user/createpaystack", {preferred_bank}),
 };
 
 export const receiverApi = {
