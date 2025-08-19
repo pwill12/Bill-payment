@@ -12,7 +12,7 @@ export const useCustomerCode = () => {
     mutationFn: () => userApi.AddcustomerCode(api),
     onSuccess: (response: any) =>
       console.log("Customer Code Added:", response.data),
-    onError: (error: any) => console.error("User sync failed:", error),
+    onError: (error: any) => console.error("error creating customer", error),
   });
   // auto-create customer code
   useEffect(() => {

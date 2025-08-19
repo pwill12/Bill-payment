@@ -152,10 +152,13 @@ export async function CreatePaystackCode(req, res) {
             return res.status(500).json({ message: "PAYSTACK_SECRET is not configured" });
         }
 
+        const {phone} = req.body
+
         const data = {
             email: finduser[0].email,
             first_name: finduser[0].firstName ?? undefined,
             last_name: finduser[0].lastName ?? undefined,
+            phone: phone ?? "08081234678"
         };
 
         const postdata = await axios.post(`${PAYSTACK_API}/customer`, data, {
