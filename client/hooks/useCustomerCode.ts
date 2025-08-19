@@ -20,5 +20,8 @@ export const useCustomerCode = (phone? : string) => {
     }
   }, [usercreated]);
 
-  return null;
+  return {
+    customer_code: syncUserMutation.data
+  }
+  ;
 };
