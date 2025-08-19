@@ -222,7 +222,7 @@ export async function CreatePaystackAcct(req, res) {
             preferred_bank: preferred_bank
         };
 
-        const postdata = await axios.post(`${PAYSTACK_API}/customer`, data, {
+        const postdata = await axios.post(`${PAYSTACK_API}/dedicated_account`, data, {
             method: 'POST',
             headers: {
                 Authorization: `Bearer ${process.env.PAYSTACK_SECRET}`,
