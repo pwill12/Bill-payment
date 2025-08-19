@@ -16,7 +16,7 @@ export enum ButtonSize {
   large = "px-8",
   xl = "px-10",
   xs = "px-1 py-0",
-  custom = "px-6 py-1",
+  custom = "px-7 py-2",
 }
 
 interface TransactionButtonProps {
@@ -38,7 +38,7 @@ const TransactionButton = ({
 }: TransactionButtonProps) => {
   return (
     <TouchableOpacity
-      className={`items-center justify-center rounded-full py-3 shadow-sm ${size} ${disabled ? "bg-gray-200" : color ? color : "bg-green-400"}`}
+      className={`items-center justify-center rounded-full shadow-sm ${size ?? "py-3"} ${disabled ? "bg-gray-200" : color ? color : "bg-green-400"}`}
       onPress={onPress}
       disabled={disabled}
     >

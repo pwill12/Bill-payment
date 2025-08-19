@@ -20,7 +20,6 @@ import { useCurrentUser } from "@/hooks/useCurrentuser";
 import { useCustomerCode } from "@/hooks/useCustomerCode";
 
 const HomeScreen = () => {
-  useSyncDb();
   useCustomerCode();
 
   const { user } = useUser();
