@@ -207,8 +207,8 @@ export async function CreatePaystackAcct(req, res) {
         if (finduser[0].acct_num) {
             return res.status(200).json({
                 message: "acct_num already exists",
-                acct_num: finduser[0].acct_num,
-                acct_name: finduser[0].acct_name
+                account_number: finduser[0].acct_num,
+                account_name: finduser[0].acct_name
             });
         }
 
