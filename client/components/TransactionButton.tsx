@@ -16,6 +16,7 @@ export enum ButtonSize {
   large = "px-8",
   xl = "px-10",
   xs = "px-1 py-0",
+  xss = "px-0 py-0",
   custom = "px-7 py-2",
 }
 
@@ -43,7 +44,7 @@ const TransactionButton = ({
       disabled={disabled}
     >
       <Text
-        className={`${size === ButtonSize.xs ? "text-xs" : size === ButtonSize.custom ? "text-xs" : "text-xl"} ${disabled ? "text-gray-500" : textcolor ? textcolor : "text-white"}`}
+        className={`${size === ButtonSize.xs || ButtonSize.xss ? "text-xs" : size === ButtonSize.custom ? "text-xs" : "text-xl"} ${disabled ? "text-gray-500" : textcolor ? textcolor : "text-white"}`}
       >
         {title}
       </Text>

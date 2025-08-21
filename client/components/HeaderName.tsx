@@ -25,7 +25,7 @@ const HeaderName = ({
     <SafeAreaView className={`flex-1 ${done ? "bg-gray-50" : "bg-white"}`}>
       <View className="bg-gray-50 gap-4 flex-1 sticky">
         <View
-          className={`flex-row py-5 px-3 ${done ? "justify-end" : "justify-between"} ${done ? "" : "bg-white"}`}
+          className={`flex-row py-5 px-4 ${done ? "justify-end" : "justify-between"} ${done ? "" : "bg-white"}`}
         >
           {headertext && (
             <TouchableOpacity
@@ -53,7 +53,7 @@ const HeaderName = ({
             </TouchableOpacity>
           )}
         </View>
-        <View className="px-3 gap-4">{children}</View>
+        <View className="px-4 gap-4">{children}</View>
       </View>
     </SafeAreaView>
   );
