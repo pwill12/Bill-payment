@@ -9,8 +9,7 @@ const UppdateProfile = () => {
   const params = useLocalSearchParams();
   const data = Array.isArray(params.data) ? params.data[0] : params.data;
   const name = Array.isArray(params.name) ? params.name[0] : params.name;
-  const firstname = Array.isArray(params.name) ? params.name[0] : params.name;
-  const [values, setvalues] = useState<string>(name === ProfileName.FULL_NAME ? )
+  const [values, setvalues] = useState<string>(data)
 
 
   const handleChange = (text: string) => {
