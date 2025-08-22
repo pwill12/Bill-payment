@@ -159,8 +159,8 @@ export async function CreatePaystackCode(req, res) {
 
         const data = {
             email: finduser[0].email,
-            first_name: finduser[0].firstName || null,
-            last_name: finduser[0].lastName || null,
+            first_name: finduser[0].firstName ?? null,
+            last_name: finduser[0].lastName ?? null,
             ...(normalizedPhone ? { phone: normalizedPhone } : {})
         };
 

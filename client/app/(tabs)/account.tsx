@@ -3,10 +3,9 @@ import TransactionButton, { ButtonSize } from "@/components/TransactionButton";
 import { useCurrentUser } from "@/hooks/useCurrentuser";
 import { Profile } from "@/utils/data";
 import { Feather } from "@expo/vector-icons";
-import { navigate } from "expo-router/build/global-state/routing";
+import { router } from "expo-router";
 import React from "react";
 import {
-  Dimensions,
   Image,
   ScrollView,
   Text,
@@ -22,7 +21,7 @@ const Account = () => {
     <SafeAreaView className=" bg-gray-50">
       <View className="flex-col gap-4 px-4 py-3">
         <View className="flex-row justify-between">
-          <TouchableOpacity className="flex-row gap-3 items-center" onPress={()=> navigate('/profile')}>
+          <TouchableOpacity className="flex-row gap-3 items-center" onPress={()=> router.push('/profile')}>
             <Image
               source={{ uri: currentUser?.img }}
               className="w-11 h-11 rounded-full"

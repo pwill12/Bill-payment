@@ -24,13 +24,11 @@ export enum ProfileName {
   FULL_NAME = 'Full Name',
   MOBILE_NUMBER = 'Mobile Number',
   EMAIL = 'Email',
-  IMG = 'IMG'
 }
 
 export interface ProfileProps {
   id: number;
   name: ProfileName;
-  type?: string;
 }
 
 export const PaybillsCategory: CategoryProps[] = [
@@ -111,6 +109,12 @@ export const ProfileCards1: ProfileProps[] = [
 ]
 
 export const ProfileCards2: ProfileProps[] = [
+  {id: 1, name: ProfileName.FULL_NAME},
+  {id: 2, name: ProfileName.MOBILE_NUMBER},
+  {id: 3, name: ProfileName.EMAIL},
+]
+
+export const UpdateCard: ProfileProps[] = [
   {id: 1, name: ProfileName.FULL_NAME},
   {id: 2, name: ProfileName.MOBILE_NUMBER},
   {id: 3, name: ProfileName.EMAIL},

@@ -44,7 +44,7 @@ const TransactionButton = ({
       disabled={disabled}
     >
       <Text
-        className={`${size === ButtonSize.xs || ButtonSize.xss ? "text-xs" : size === ButtonSize.custom ? "text-xs" : "text-xl"} ${disabled ? "text-gray-500" : textcolor ? textcolor : "text-white"}`}
+        className={`${(size === ButtonSize.xs || size === ButtonSize.xss) ? "text-xs" : size === ButtonSize.custom ? "text-xs" : "text-xl"} ${disabled ? "text-gray-500" : textcolor ? textcolor : "text-white"}`}
       >
         {title}
       </Text>

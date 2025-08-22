@@ -6,7 +6,6 @@ import SignOutButton from "@/components/SignOutButton";
 import { useUser } from "@clerk/clerk-expo";
 import Balance from "@/components/Balance";
 import CategoryActions from "@/components/CategoryCard";
-import { navigate } from "expo-router/build/global-state/routing";
 import {
   CategoryProps,
   PaybillsCategory,
@@ -17,6 +16,7 @@ import { useTransactions } from "@/hooks/useTransactions";
 import TransactionCard from "@/components/TransactionCard";
 import { useCurrentUser } from "@/hooks/useCurrentuser";
 import { useSyncDb } from "@/hooks/useRegister";
+import { router } from "expo-router";
 
 const HomeScreen = () => {
   useSyncDb()
@@ -33,7 +33,7 @@ const HomeScreen = () => {
   const handleCatPress = (category: CategoryProps) => {
     const page = category?.page;
     {
-      page && navigate(`/${page}`);
+      page && router.push(`/${page}`);
     }
   };
 
