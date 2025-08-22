@@ -7,9 +7,10 @@ interface TransferCardProps {
   onTransfer?: (username: string) => void;
   isLoading?: boolean;
   errors?: boolean;
+  onChange?: string;
 }
 
-const TransferCard = ({ onTransfer, isLoading }: TransferCardProps) => {
+const TransferCard = ({ onTransfer, isLoading , onChange}: TransferCardProps) => {
   const [recipientUsername, setRecipientUsername] = useState("");
 
   const handleChange = (text: string) => {
