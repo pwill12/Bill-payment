@@ -4,16 +4,25 @@ import HeaderName from "@/components/HeaderName";
 import { useLocalSearchParams } from "expo-router";
 import TextInputs from "@/components/TextInputs";
 import { ProfileName } from "@/utils/data";
+import TransactionButton from "@/components/TransactionButton";
 
 const UppdateProfile = () => {
   const params = useLocalSearchParams();
-  const data = Array.isArray(params.data) ? params.data[0] : params.data;
-  const name = Array.isArray(params.name) ? params.name[0] : params.name;
-  const [values, setvalues] = useState<string>(data)
+  const rawData = Array.isArray(params.data) ? params.data[0] : params.data;
+  const rawName = Array.isArray(params.name) ? params.name[0] : params.name;
+  const name = (rawName ?? "") as ProfileName;
+  const [value, setValue] = useState<string>(rawData ?? "");
 
+  const [firstName, setFirstName] = useState<string>(
+    () => (rawData ?? "").split(" ")[0] ?? ""
+  );
+  const [lastName, setLastName] = useState<string>(() => {
+    const parts = (rawData ?? "").split(" ");
+    return parts.slice(1).join(" ") || "";
+  });
 
   const handleChange = (text: string) => {
-    setvalues(text)
+    setValue(text);
   };
 
   return (
@@ -26,20 +35,21 @@ const UppdateProfile = () => {
             : "Update Profile"
       }
     >
-      <View className="">
-        <View className="gap-4">
-          <Text className="font-semibold text-2xl">Current {name}</Text>
-          {name === ProfileName.FULL_NAME ? (
-            <View className="gap-3">
-              <Text>First Name</Text>
-              <TextInputs value={values.split(' ')[0]} onChange={handleChange} border />
-              <Text>Last Name</Text>
-              <TextInputs value={values.split(' ')[1]} onChange={handleChange} border />
-            </View>
-          ) : (
-            <TextInputs value={values} onChange={handleChange} />
-          )}
-        </View>
+      <View className="gap-5">
+        <Text className="font-semibold text-xl">
+          Please fill in your {name}
+        </Text>
+        {name === ProfileName.FULL_NAME ? (
+          <View className="gap-3">
+            <Text>First Name</Text>
+            <TextInputs value={firstName} border onChange={setFirstName}/>
+            <Text>Last Name</Text>
+            <TextInputs value={lastName} border onChange={setLastName}/>
+          </View>
+        ) : (
+          <TextInputs value={value} onChange={handleChange} />
+        )}
+        <TransactionButton title="Save" />
       </View>
     </HeaderName>
   );

@@ -1,4 +1,4 @@
-import { View, Text, Image, TouchableOpacity } from "react-native";
+import { View, Text, Image, TouchableOpacity, Alert } from "react-native";
 import React from "react";
 import { User } from "@/types";
 import { Feather } from "@expo/vector-icons";
@@ -50,13 +50,17 @@ const ProfileCard = ({
                 <Text>{category.name}</Text>
                 <TouchableOpacity
                   className="flex-row items-center gap-1"
-                  onPress={() =>
-                    handleUpdate(
-                      displayUserdata(category?.name, currentUser),
-                      category.name
-                    )
-                  }
-                  // disabled={category.name === ProfileName.EMAIL}
+                  onPress={() => {
+                    if (category.name === ProfileName.USERNAME) {
+                      Alert.alert("Username Copied");
+                    } else {
+                      handleUpdate(
+                        displayUserdata(category?.name, currentUser),
+                        category.name
+                      );
+                    }
+                  }}
+                  disabled={category.name === ProfileName.ACCOUNT_TIER}
                 >
                   <Text className="text-gray-400">
                     {displayUserdata(category?.name, currentUser)}
