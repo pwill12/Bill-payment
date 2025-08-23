@@ -15,7 +15,7 @@ export async function createUsersTable() {
         lastName VARCHAR(255) NULL,
         balance DECIMAL(20,2) DEFAULT 100.00,
         email VARCHAR(255) UNIQUE NULL,
-        number VARCHAR(12) UNIQUE NULL,
+        number VARCHAR(15) UNIQUE NULL,
         bvn VARCHAR(11) UNIQUE NULL,
         img VARCHAR(255) UNIQUE NULL,
         created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
@@ -42,7 +42,7 @@ export async function addCustomercode() {
             ADD COLUMN IF NOT EXISTS acct_num VARCHAR(50)
         `
         await sqldb`
-            ALTER TABLE users ALTER COLUMN number TYPE VARCHAR(12);
+            ALTER TABLE users ALTER COLUMN number TYPE VARCHAR(15);
         `
         console.log('Ensured user columns: customer_code, acct_name, acct_num, number')
     } catch (error) {
