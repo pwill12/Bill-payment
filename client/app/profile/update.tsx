@@ -25,7 +25,11 @@ const UppdateProfile = () => {
   });
 
   const handleChange = (text: string) => {
-    setValue(text.replace(/[^\d]/g, ""));
+    if (name === ProfileName.MOBILE_NUMBER) {
+      setValue(text.replace(/[^\d]/g, ""));
+    } else {
+      setValue(text);
+    }
   };
 
   const getData = (): UpdateUser => {
