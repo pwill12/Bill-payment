@@ -35,7 +35,7 @@ export interface Transferprops {
 }
 
 export interface UpdateUser {
-  firstName: string;
-  lastName: string;
-  number: number;
+  firstName?: string;
+  lastName?: string;
+  number?: string;
 }

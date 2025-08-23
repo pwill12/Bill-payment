@@ -7,6 +7,7 @@ import { ProfileName } from "@/utils/data";
 import TransactionButton from "@/components/TransactionButton";
 import { useUpdateuser } from "@/hooks/useUpdateuser";
 import { UpdateUser } from "@/types";
+import NumberInputs from "@/components/NumberInputs";
 
 const UppdateProfile = () => {
   const params = useLocalSearchParams();
@@ -14,8 +15,6 @@ const UppdateProfile = () => {
   const rawName = Array.isArray(params.name) ? params.name[0] : params.name;
   const name = (rawName ?? "") as ProfileName;
   const [value, setValue] = useState<string>(rawData ?? "");
-  const [number, setNumber] = useState<number>();
-
 
   const [firstName, setFirstName] = useState<string>(
     () => (rawData ?? "").split(" ")[0] ?? ""
@@ -26,16 +25,22 @@ const UppdateProfile = () => {
   });
 
   const handleChange = (text: string) => {
-    setValue(text);
+    setValue(text.replace(/[^\d]/g, ""));
   };
-  if (name=== ProfileName.MOBILE_NUMBER) {
-    setNumber(parseFloat(value))
-  }
 
-  const data = {
-    firstName,number: number,lastName
-  } as UpdateUser
-  const {creatUpdateuser} = useUpdateuser(data)
+  const getData = (): UpdateUser => {
+    switch (name) {
+      case ProfileName.FULL_NAME:
+        return { firstName, lastName };
+      case ProfileName.MOBILE_NUMBER:
+        return { number: value };
+      // case ProfileName.EMAIL:
+      //   return { email: value };
+      default:
+        return {};
+    }
+  };
+  const { creatUpdateuser } = useUpdateuser(getData());
 
   return (
     <HeaderName
@@ -54,14 +59,20 @@ const UppdateProfile = () => {
         {name === ProfileName.FULL_NAME ? (
           <View className="gap-3">
             <Text>First Name</Text>
-            <TextInputs value={firstName} border onChange={setFirstName}/>
+            <TextInputs value={firstName} border onChange={setFirstName} />
             <Text>Last Name</Text>
-            <TextInputs value={lastName} border onChange={setLastName}/>
+            <TextInputs value={lastName} border onChange={setLastName} />
           </View>
+        ) : name === ProfileName.MOBILE_NUMBER ? (
+          <NumberInputs onchange={handleChange} value={value} />
         ) : (
           <TextInputs value={value} onChange={handleChange} />
         )}
-        <TransactionButton title="Save" onPress={creatUpdateuser}/>
+        <TransactionButton
+          title="Save"
+          onPress={creatUpdateuser}
+          disabled={name === ProfileName.EMAIL}
+        />
       </View>
     </HeaderName>
   );

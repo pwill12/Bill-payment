@@ -132,13 +132,20 @@ export const UpdateUsers = async (req, res) => {
         const { firstName, lastName, number } = req.body
         const UpdatedUser = await sqldb`
             UPDATE users 
-            SET firstName = ${firstName}, lastName = ${lastName}, number = ${number} 
+            SET firstName = ${firstName ?? null}, lastName = ${lastName ?? null}, number = ${number ?? null} 
             WHERE clerk_id = ${userId}
             RETURNING *
         `;
-        res.status(200).json({ message: "user updated successfully", data: UpdatedUser })
+        if (UpdatedUser.length === 0) {
+            return res.status(404).json({ message: "no user found" });
+        }
+        res.status(200).json({ message: "user updated successfully", data: UpdatedUser[0] })
     } catch (error) {
-        res.status(500).json({ message: "internal server error" })
+        if (error?.code === "23505") {
+            return res.status(409).json({ message: "phone number already in use" });
+        }
+        console.error("UpdateUsers error:", error);
+        res.status(500).json({ message: "internal server error" });
     }
 }
 

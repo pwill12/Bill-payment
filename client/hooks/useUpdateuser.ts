@@ -16,8 +16,19 @@ export const useUpdateuser = (data: UpdateUser) => {
   // auto-sync user when signed in
 
   const creatUpdateuser = () => {
-    if (!data.firstName || !data.lastName || !data.number) {
-      Alert.alert("Missing required field", "Please enter details");
+    // Validate only the fields that are present
+    if (data.number !== undefined && !data.number.trim()) {
+      Alert.alert("Invalid number", "Please enter a valid mobile number");
+      return;
+    }
+    
+    if (data.firstName !== undefined && !data.firstName.trim()) {
+      Alert.alert("Missing required field", "Please enter first name");
+      return;
+    }
+    
+    if (data.lastName !== undefined && !data.lastName.trim()) {
+      Alert.alert("Missing required field", "Please enter last name");
       return;
     }
     createUpdateMutation.mutate(data);
