@@ -31,10 +31,10 @@ export const useApiClient = (): AxiosInstance => {
 
 export const userApi = {
   syncUser: (api: AxiosInstance) => api.post("/users"),
-  AddcustomerCode: (api: AxiosInstance, phone?: string) =>
-    api.post("/user/customercode", phone),
+  AddcustomerCode: (api: AxiosInstance) =>
+    api.post("/user/customercode"),
   getCurrentUser: (api: AxiosInstance) => api.get("/user/find"),
-  createpaystack: (api: AxiosInstance, preferred_bank: string) =>
+  createpaystack: (api: AxiosInstance, preferred_bank?: string) =>
     api.post("/user/createpaystack", {preferred_bank}),
   updateuser: (api: AxiosInstance, userdata: UpdateUser) =>
     api.post("/user/createpaystack", {userdata}),

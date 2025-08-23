@@ -3,25 +3,33 @@ import { useMutation } from "@tanstack/react-query";
 import { useApiClient, userApi } from "../utils/api";
 import { useSyncDb } from "./useRegister";
 
-export const useCustomerCode = (phone? : string) => {
-  const { usercreated } = useSyncDb()
+export const useCustomerCode = () => {
+  const { usercreated } = useSyncDb();
+  const user = usercreated?.data
   const api = useApiClient();
 
   const syncUserMutation = useMutation({
-    mutationFn: () => userApi.AddcustomerCode(api, phone),
+    mutationFn: () => userApi.AddcustomerCode(api),
     onSuccess: (response: any) =>
       console.log("Customer Code Added:", response.data),
     onError: (error: any) => console.error("error creating customer", error),
   });
   // auto-create customer code
   useEffect(() => {
-    if (usercreated !== undefined) {
-      syncUserMutation.mutate();
-    }
+    const ready =
+       Boolean(user?.firstName?.trim()) &&
+       Boolean(user?.lastName?.trim()) &&
+       Boolean(user?.number?.trim());
+     if (
+       ready &&
+       !syncUserMutation.isPending &&
+       syncUserMutation.status !== "success"
+     ) {
+       syncUserMutation.mutate();
+     }
   }, [usercreated]);
 
-     return {
-     customer_code: syncUserMutation.data?.data?.customer_code,
-   };
-  ;
+  return {
+    customer_code: syncUserMutation.data?.data?.customer_code,
+  };
 };
