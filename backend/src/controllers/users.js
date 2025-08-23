@@ -42,7 +42,7 @@ export async function addCustomercode() {
             ADD COLUMN IF NOT EXISTS acct_num VARCHAR(50)
         `
         await sqldb`
-            ALTER TABLE users ALTER COLUMN number TYPE VARCHAR(15);
+            ALTER TABLE users ALTER COLUMN number TYPE VARCHAR(12);
         `
         console.log('Ensured user columns: customer_code, acct_name, acct_num, number')
     } catch (error) {
@@ -148,13 +148,8 @@ export const UpdateUsers = async (req, res) => {
             sets.push(sqldb`lastName = ${ln && ln.length ? ln : null}`);
         }
         if (Object.prototype.hasOwnProperty.call(body, "number")) {
-            const raw = typeof number === "string" ? number.trim() : null;
-            const normalized =
-                raw && raw.length > 0 ? normalizePhonenum(raw) : null;
-            if (raw && !normalized) {
-                return res.status(400).json({ message: "invalid phone number" });
-            }
-            sets.push(sqldb`number = ${normalized}`);
+            const nm = typeof number === "string" ? number.trim() : null;
+            sets.push(sqldb`number = ${nm && nm.length ? nm : null}`);
         }
 
         if (sets.length === 0) {
@@ -208,15 +203,11 @@ export async function CreatePaystackCode(req, res) {
         if (!process.env.PAYSTACK_SECRET) {
             return res.status(500).json({ message: "PAYSTACK_SECRET is not configured" });
         }
-
-        const candidatePhone = finduser[0].number;
-        const normalizedPhone = candidatePhone ? normalizePhonenum(candidatePhone) : null;
-
         const data = {
             email: finduser[0].email,
-            first_name: finduser[0].firstName ?? null,
-            last_name: finduser[0].lastName ?? null,
-            phone: normalizedPhone
+            first_name: finduser[0].firstName,
+            last_name: finduser[0].lastName,
+            phone: finduser[0].number
         };
 
         const postdata = await axios.post(`${PAYSTACK_API}/customer`, data, {
