@@ -41,7 +41,10 @@ export async function addCustomercode() {
             ALTER TABLE users
             ADD COLUMN IF NOT EXISTS acct_num VARCHAR(50)
         `
-        console.log('Ensured user columns: customer_code, acct_name, acct_num')
+        await sqldb`
+            ALTER TABLE users ALTER COLUMN number TYPE VARCHAR(12);
+        `
+        console.log('Ensured user columns: customer_code, acct_name, acct_num, number')
     } catch (error) {
         console.error("Error ensuring user columns", error);
         throw error
@@ -126,6 +129,54 @@ export async function findReceivers(req, res) {
     }
 }
 
+export const UpdateUsers = async (req, res) => {
+    try {
+        const { userId } = getAuth(req);
+        if (!userId) return res.status(401).json({ message: "unauthorized" });
+
+        const body = req.body ?? {};
+        const { firstName, lastName, number } = body;
+
+        // Build SET only for fields present in the payload
+        const sets = [];
+        if (Object.prototype.hasOwnProperty.call(body, "firstName")) {
+            const fn = typeof firstName === "string" ? firstName.trim() : null;
+            sets.push(sqldb`firstName = ${fn && fn.length ? fn : null}`);
+        }
+        if (Object.prototype.hasOwnProperty.call(body, "lastName")) {
+            const ln = typeof lastName === "string" ? lastName.trim() : null;
+            sets.push(sqldb`lastName = ${ln && ln.length ? ln : null}`);
+        }
+        if (Object.prototype.hasOwnProperty.call(body, "number")) {
+            const nm = typeof number === "string" ? number.trim() : null;
+            sets.push(sqldb`number = ${nm && nm.length ? nm : null}`);
+        }
+
+        if (sets.length === 0) {
+            return res.status(400).json({ message: "no fields to update" });
+        }
+
+        const updated = await sqldb`
+            UPDATE users
+            SET ${sqldb(sets)}
+            WHERE clerk_id = ${userId}
+            RETURNING *
+        `;
+        if (updated.length === 0) {
+            return res.status(404).json({ message: "no user found" });
+        }
+        return res.status(200).json({ message: "user updated successfully", data: updated[0] });
+    } catch (error) {
+        if (error?.code === "23505") {
+            return res.status(409).json({ message: "phone number already in use" });
+        }
+        if (error?.code === "22001") {
+            return res.status(400).json({ message: "invalid field length" });
+        }
+        console.error("UpdateUsers error:", error);
+        return res.status(500).json({ message: "internal server error" });
+    }
+};
 const PAYSTACK_API = "https://api.paystack.co"
 
 export async function CreatePaystackCode(req, res) {
@@ -152,16 +203,11 @@ export async function CreatePaystackCode(req, res) {
         if (!process.env.PAYSTACK_SECRET) {
             return res.status(500).json({ message: "PAYSTACK_SECRET is not configured" });
         }
-
-        const phoneInput = req.body?.phone;
-        const candidatePhone = phoneInput ?? finduser[0]?.number;
-        const normalizedPhone = candidatePhone ? normalizePhonenum(candidatePhone) : undefined;
-
         const data = {
             email: finduser[0].email,
-            first_name: finduser[0].firstName ?? undefined,
-            last_name: finduser[0].lastName ?? undefined,
-            ...(normalizedPhone ? { phone: normalizedPhone } : {})
+            first_name: finduser[0].firstName,
+            last_name: finduser[0].lastName,
+            phone: finduser[0].number
         };
 
         const postdata = await axios.post(`${PAYSTACK_API}/customer`, data, {

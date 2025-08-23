@@ -1,10 +1,8 @@
-import { View, Text, ScrollView } from "react-native";
 import React, { useState } from "react";
 import HeaderName from "@/components/HeaderName";
 import TransactionCard from "@/components/TransactionCard";
 import { useTransactions } from "@/hooks/useTransactions";
 import { useLocalSearchParams } from "expo-router";
-import { Transactions } from "@/types";
 
 const TransactionHistory = () => {
   const params = useLocalSearchParams();

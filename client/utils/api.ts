@@ -1,11 +1,13 @@
 import axios, { AxiosInstance } from "axios";
 import { useAuth } from "@clerk/clerk-expo";
+import { UpdateUser } from "@/types";
 
 export const API_BASE_URL = "https://bill-payment-one.vercel.app/api";
 // ! 🔥 localhost api would not work on your actual physical device
 // const API_BASE_URL = "http://localhost:5001/api";
 
 // this will basically create an authenticated api, pass the token into our headers
+
 export const createApiClient = (
   getToken: () => Promise<string | null>
 ): AxiosInstance => {
@@ -34,6 +36,8 @@ export const userApi = {
   getCurrentUser: (api: AxiosInstance) => api.get("/user/find"),
   createpaystack: (api: AxiosInstance, preferred_bank: string) =>
     api.post("/user/createpaystack", {preferred_bank}),
+  updateuser: (api: AxiosInstance, userdata: UpdateUser) =>
+    api.post("/user/createpaystack", {userdata}),
 };
 
 export const receiverApi = {

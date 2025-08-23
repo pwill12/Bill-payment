@@ -12,11 +12,6 @@ export default function Mytab() {
   return (
     <Tabs
       screenOptions={{
-        animation: 'shift',
-        transitionSpec: {
-          animation: 'spring',
-          config: {mass: 1}
-        },
         tabBarVisibilityAnimationConfig: {hide: {animation: 'timing'}},
         tabBarActiveTintColor: "lightgreen",
         tabBarInactiveTintColor: "lightgray",

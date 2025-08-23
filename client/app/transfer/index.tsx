@@ -20,8 +20,8 @@ const TransferPageCard = () => {
     await fetchUsersandCache(username);
   };
 
-  useEffect(() => {
 
+  useEffect(() => {
     if (data?.clerk_id === userId) {
       Alert.alert("You cannot send to yourself")
     }

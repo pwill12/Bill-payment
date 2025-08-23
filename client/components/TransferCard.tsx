@@ -32,6 +32,7 @@ const TransferCard = ({ onTransfer, isLoading }: TransferCardProps) => {
         value={recipientUsername}
         onChange={handleChange}
         border
+        placeholdervalue="Enter Username"
       />
       <TransactionButton
         title={isLoading ? "Processing..." : "Next"}
