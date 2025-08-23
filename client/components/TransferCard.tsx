@@ -7,10 +7,9 @@ interface TransferCardProps {
   onTransfer?: (username: string) => void;
   isLoading?: boolean;
   errors?: boolean;
-  onChange?: string;
 }
 
-const TransferCard = ({ onTransfer, isLoading , onChange}: TransferCardProps) => {
+const TransferCard = ({ onTransfer, isLoading }: TransferCardProps) => {
   const [recipientUsername, setRecipientUsername] = useState("");
 
   const handleChange = (text: string) => {
@@ -33,6 +32,7 @@ const TransferCard = ({ onTransfer, isLoading , onChange}: TransferCardProps) =>
         value={recipientUsername}
         onChange={handleChange}
         border
+        placeholdervalue="Enter Username"
       />
       <TransactionButton
         title={isLoading ? "Processing..." : "Next"}

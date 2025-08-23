@@ -126,6 +126,22 @@ export async function findReceivers(req, res) {
     }
 }
 
+export const UpdateUsers = async (req, res) => {
+    try {
+        const { userId } = getAuth(req)
+        const { firstName, lastName, number } = req.body
+        const UpdatedUser = await sqldb`
+            UPDATE users 
+            SET firstName = ${firstName}, lastName = ${lastName}, number = ${number} 
+            WHERE clerk_id = ${userId}
+            RETURNING *
+        `;
+        res.status(200).json({ message: "user updated successfully", data: UpdatedUser })
+    } catch (error) {
+        res.status(500).json({ message: "internal server error" })
+    }
+}
+
 const PAYSTACK_API = "https://api.paystack.co"
 
 export async function CreatePaystackCode(req, res) {

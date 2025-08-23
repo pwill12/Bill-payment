@@ -18,10 +18,10 @@ const TextInputs = ({
   multiline,
   border,
 }: textInputprops) => {
+  
   return (
     <View>
-      <View
-        className={`flex-row justify-between items-center`}>
+      <View className={`flex-row justify-between items-center`}>
         <TextInput
           placeholder={placeholdervalue ?? "Enter Text"}
           className={`font-medium text-lg flex-1 px-3 py-4

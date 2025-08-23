@@ -5,6 +5,8 @@ import { useLocalSearchParams } from "expo-router";
 import TextInputs from "@/components/TextInputs";
 import { ProfileName } from "@/utils/data";
 import TransactionButton from "@/components/TransactionButton";
+import { useUpdateuser } from "@/hooks/useUpdateuser";
+import { UpdateUser } from "@/types";
 
 const UppdateProfile = () => {
   const params = useLocalSearchParams();
@@ -12,6 +14,8 @@ const UppdateProfile = () => {
   const rawName = Array.isArray(params.name) ? params.name[0] : params.name;
   const name = (rawName ?? "") as ProfileName;
   const [value, setValue] = useState<string>(rawData ?? "");
+  const [number, setNumber] = useState<number>();
+
 
   const [firstName, setFirstName] = useState<string>(
     () => (rawData ?? "").split(" ")[0] ?? ""
@@ -24,6 +28,14 @@ const UppdateProfile = () => {
   const handleChange = (text: string) => {
     setValue(text);
   };
+  if (name=== ProfileName.MOBILE_NUMBER) {
+    setNumber(parseFloat(value))
+  }
+
+  const data = {
+    firstName,number: number,lastName
+  } as UpdateUser
+  const {creatUpdateuser} = useUpdateuser(data)
 
   return (
     <HeaderName
@@ -49,7 +61,7 @@ const UppdateProfile = () => {
         ) : (
           <TextInputs value={value} onChange={handleChange} />
         )}
-        <TransactionButton title="Save" />
+        <TransactionButton title="Save" onPress={creatUpdateuser}/>
       </View>
     </HeaderName>
   );

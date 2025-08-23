@@ -20,13 +20,12 @@ const TransferPageCard = () => {
     await fetchUsersandCache(username);
   };
 
-  useEffect(() => {
 
+  useEffect(() => {
     if (data?.clerk_id === userId) {
       Alert.alert("You cannot send to yourself")
     }
     else if (data?.username) {
-      HandleTransfer('');
       router.push({
         pathname: "/transfer/summary",
         params: { name: data?.username, firstname: data?.firstname, lastname: data?.lastname, img: data?.img },

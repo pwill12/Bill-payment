@@ -33,3 +33,9 @@ export interface Transferprops {
   receiver: string;
   type?: transactiontype;
 }
+
+export interface UpdateUser {
+  firstName: string;
+  lastName: string;
+  number: number;
+}
