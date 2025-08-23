@@ -41,7 +41,10 @@ export async function addCustomercode() {
             ALTER TABLE users
             ADD COLUMN IF NOT EXISTS acct_num VARCHAR(50)
         `
-        console.log('Ensured user columns: customer_code, acct_name, acct_num')
+        await sqldb`
+            ALTER TABLE users ALTER COLUMN number TYPE VARCHAR(15);
+        `
+        console.log('Ensured user columns: customer_code, acct_name, acct_num, number')
     } catch (error) {
         console.error("Error ensuring user columns", error);
         throw error
@@ -138,15 +141,20 @@ export const UpdateUsers = async (req, res) => {
         const sets = [];
         if (Object.prototype.hasOwnProperty.call(body, "firstName")) {
             const fn = typeof firstName === "string" ? firstName.trim() : null;
-            sets.push(sqldb`firstName = ${fn}`);
+            sets.push(sqldb`firstName = ${fn && fn.length ? fn : null}`);
         }
         if (Object.prototype.hasOwnProperty.call(body, "lastName")) {
             const ln = typeof lastName === "string" ? lastName.trim() : null;
-            sets.push(sqldb`lastName = ${ln}`);
+            sets.push(sqldb`lastName = ${ln && ln.length ? ln : null}`);
         }
         if (Object.prototype.hasOwnProperty.call(body, "number")) {
-            const num = typeof number === "string" ? number.trim() : null;
-            sets.push(sqldb`number = ${num}`);
+            const raw = typeof number === "string" ? number.trim() : null;
+            const normalized =
+                raw && raw.length > 0 ? normalizePhonenum(raw) : null;
+            if (raw && !normalized) {
+                return res.status(400).json({ message: "invalid phone number" });
+            }
+            sets.push(sqldb`number = ${normalized}`);
         }
 
         if (sets.length === 0) {
@@ -166,6 +174,9 @@ export const UpdateUsers = async (req, res) => {
     } catch (error) {
         if (error?.code === "23505") {
             return res.status(409).json({ message: "phone number already in use" });
+        }
+        if (error?.code === "22001") {
+            return res.status(400).json({ message: "invalid field length" });
         }
         console.error("UpdateUsers error:", error);
         return res.status(500).json({ message: "internal server error" });
