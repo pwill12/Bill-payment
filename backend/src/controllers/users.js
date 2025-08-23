@@ -15,7 +15,7 @@ export async function createUsersTable() {
         lastName VARCHAR(255) NULL,
         balance DECIMAL(20,2) DEFAULT 100.00,
         email VARCHAR(255) UNIQUE NULL,
-        number VARCHAR(11) UNIQUE NULL,
+        number VARCHAR(12) UNIQUE NULL,
         bvn VARCHAR(11) UNIQUE NULL,
         img VARCHAR(255) UNIQUE NULL,
         created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP

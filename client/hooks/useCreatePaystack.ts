@@ -3,7 +3,7 @@ import { useCustomerCode } from "./useCustomerCode";
 import { useMutation } from "@tanstack/react-query";
 import { useEffect } from "react";
 
-export const useCreatePaystack = (preferred_bank: string) => {
+export const useCreatePaystack = (preferred_bank?: string) => {
   const { customer_code } = useCustomerCode();
   const api = useApiClient();
 
@@ -18,7 +18,7 @@ export const useCreatePaystack = (preferred_bank: string) => {
     if (customer_code !== undefined) {
       syncUserMutation.mutate();
     }
-  }, [customer_code]);
+  }, [customer_code, syncUserMutation]);
 
   return null;
 };

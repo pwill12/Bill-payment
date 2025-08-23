@@ -17,9 +17,10 @@ import TransactionCard from "@/components/TransactionCard";
 import { useCurrentUser } from "@/hooks/useCurrentuser";
 import { useSyncDb } from "@/hooks/useRegister";
 import { router } from "expo-router";
+import { useCreatePaystack } from "@/hooks/useCreatePaystack";
 
 const HomeScreen = () => {
-  useSyncDb()
+  useCreatePaystack()
 
   const { user } = useUser();
   const username = user
