@@ -19,7 +19,7 @@ import { router } from "expo-router";
 import { useCreatePaystack } from "@/hooks/useCreatePaystack";
 
 const HomeScreen = () => {
-  useCreatePaystack('test-bank')
+  useCreatePaystack()
 
   const { user } = useUser();
   const username = user

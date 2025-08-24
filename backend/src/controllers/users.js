@@ -274,6 +274,7 @@ export async function CreatePaystackAcct(req, res) {
 
         const postdata = await axios.post(`${PAYSTACK_API}/dedicated_account`, data, {
             headers: {
+                method: 'POST',
                 Authorization: `Bearer ${process.env.PAYSTACK_SECRET}`,
                 'Content-Type': 'application/json'
             }, timeout: 15000
