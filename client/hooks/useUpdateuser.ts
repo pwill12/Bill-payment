@@ -36,8 +36,8 @@ export const useUpdateuser = (data: UpdateUser) => {
       return;
     }
     const updata = {
-      firstname: data.firstName,
-      lastname: data.lastName,
+      firstName: data.firstName,
+      lastName: data.lastName,
       number: data.number
     } as UpdateUser
     createUpdateMutation.mutate(updata);

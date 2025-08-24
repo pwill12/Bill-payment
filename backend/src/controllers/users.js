@@ -2,7 +2,6 @@ import { sqldb } from "../config/db.js";
 import { clerkClient, getAuth } from "@clerk/express";
 import axios from 'axios'
 import "dotenv/config"
-import { normalizePhonenum } from "../utils/convertnum.js";
 
 export async function createUsersTable() {
 
@@ -138,39 +137,25 @@ export const UpdateUsers = async (req, res) => {
         const { firstName, lastName, number } = body;
 
         // Build SET only for fields present in the payload
-        let sets
-        if (Object.prototype.hasOwnProperty.call(body, "firstName")) {
-            const fn = typeof firstName === "string" ? firstName.trim() : null;
-            sets = await sqldb`
-            UPDATE users
-            SET firstName = ${fn}
-            WHERE clerk_id = ${userId}
-            RETURNING *
-        `;
-        }
-        if (Object.prototype.hasOwnProperty.call(body, "lastName")) {
-            const ln = typeof lastName === "string" ? lastName.trim() : null;
-            sets = await sqldb`
-            UPDATE users
-            SET lastName = ${ln}
-            WHERE clerk_id = ${userId}
-            RETURNING *
-            `
-        }
-        if (Object.prototype.hasOwnProperty.call(body, "number")) {
-            const nm = typeof number === "string" ? number.trim() : null;
-            sets = await sqldb`
-            UPDATE users
-            SET number = ${nm}
-            WHERE clerk_id = ${userId}
-            RETURNING *
-            `
-        }
+        const data = await sqldb.begin(async (tx) => {
+            if (Object.prototype.hasOwnProperty.call(body, "firstName")) {
+                const fn = typeof firstName === "string" ? firstName.trim() : null;
+                await tx`UPDATE users SET firstName = ${fn} WHERE clerk_id = ${userId} RETURNING *`;
+            }
+            if (Object.prototype.hasOwnProperty.call(body, "lastName")) {
+                const ln = typeof lastName === "string" ? lastName.trim() : null;
+                await tx`UPDATE users SET lastName = ${ln} WHERE clerk_id = ${userId} RETURNING *`;
+            }
+            if (Object.prototype.hasOwnProperty.call(body, "number")) {
+                const nm = typeof number === "string" ? number.trim() : null;
+                await tx`UPDATE users SET number = ${nm} WHERE clerk_id = ${userId} RETURNING *`;
+            }
+        });
 
-        if (sets.length === 0) {
-            return res.status(404).json({ message: "operation not successful" });
+        if (data.length === 0) {
+            return res.status(404).json({ message: "no user found" });
         }
-        return res.status(200).json({ message: "user updated successfully", data: sets[0] });
+        return res.status(200).json({ message: "user updated successfully", data: data[0] });
     } catch (error) {
         if (error?.code === "23505") {
             return res.status(409).json({ message: "phone number already in use" });
