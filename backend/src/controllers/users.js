@@ -144,7 +144,7 @@ export const UpdateUsers = async (req, res) => {
         if (!hasAny) {
             return res.status(400).json({ message: "no fields to update" });
         }
-        const updatedRow = await sqldb.begin(async (tx) => {
+        const updatedRow = await sqldb(async (tx) => {
             let last = null;
             if (Object.prototype.hasOwnProperty.call(body, "firstName")) {
                 const fn = typeof firstName === "string" ? firstName.trim() : null;
