@@ -2,7 +2,6 @@ import { sqldb } from "../config/db.js";
 import { clerkClient, getAuth } from "@clerk/express";
 import axios from 'axios'
 import "dotenv/config"
-import { normalizePhonenum } from "../utils/convertnum.js";
 
 export async function createUsersTable() {
 
@@ -137,35 +136,37 @@ export const UpdateUsers = async (req, res) => {
         const body = req.body ?? {};
         const { firstName, lastName, number } = body;
 
-        // Build SET only for fields present in the payload
-        const sets = [];
-        if (Object.prototype.hasOwnProperty.call(body, "firstName")) {
-            const fn = typeof firstName === "string" ? firstName.trim() : null;
-            sets.push(sqldb`firstName = ${fn && fn.length ? fn : null}`);
-        }
-        if (Object.prototype.hasOwnProperty.call(body, "lastName")) {
-            const ln = typeof lastName === "string" ? lastName.trim() : null;
-            sets.push(sqldb`lastName = ${ln && ln.length ? ln : null}`);
-        }
-        if (Object.prototype.hasOwnProperty.call(body, "number")) {
-            const nm = typeof number === "string" ? number.trim() : null;
-            sets.push(sqldb`number = ${nm && nm.length ? nm : null}`);
-        }
-
-        if (sets.length === 0) {
+        // Apply only provided fields atomically and return the final row
+        const hasAny =
+            Object.prototype.hasOwnProperty.call(body, "firstName") ||
+            Object.prototype.hasOwnProperty.call(body, "lastName") ||
+            Object.prototype.hasOwnProperty.call(body, "number");
+        if (!hasAny) {
             return res.status(400).json({ message: "no fields to update" });
         }
-
-        const updated = await sqldb`
-            UPDATE users
-            SET ${sqldb(sets)}
-            WHERE clerk_id = ${userId}
-            RETURNING *
-        `;
-        if (updated.length === 0) {
+        const updatedRow = await sqldb.begin(async (tx) => {
+            let last = null;
+            if (Object.prototype.hasOwnProperty.call(body, "firstName")) {
+                const fn = typeof firstName === "string" ? firstName.trim() : null;
+                const rows = await tx`UPDATE users SET firstName = ${fn} WHERE clerk_id = ${userId} RETURNING *`;
+                last = rows[0] ?? last;
+            }
+            if (Object.prototype.hasOwnProperty.call(body, "lastName")) {
+                const ln = typeof lastName === "string" ? lastName.trim() : null;
+                const rows = await tx`UPDATE users SET lastName = ${ln} WHERE clerk_id = ${userId} RETURNING *`;
+                last = rows[0] ?? last;
+            }
+            if (Object.prototype.hasOwnProperty.call(body, "number")) {
+                const nm = typeof number === "string" ? number.trim() : null;
+                const rows = await tx`UPDATE users SET number = ${nm} WHERE clerk_id = ${userId} RETURNING *`;
+                last = rows[0] ?? last;
+            }
+            return last;
+        });
+        if (!updatedRow) {
             return res.status(404).json({ message: "no user found" });
         }
-        return res.status(200).json({ message: "user updated successfully", data: updated[0] });
+        return res.status(200).json({ message: "user updated successfully", data: updatedRow });
     } catch (error) {
         if (error?.code === "23505") {
             return res.status(409).json({ message: "phone number already in use" });
@@ -205,8 +206,8 @@ export async function CreatePaystackCode(req, res) {
         }
         const data = {
             email: finduser[0].email,
-            first_name: finduser[0].firstName,
-            last_name: finduser[0].lastName,
+            first_name: finduser[0].firstname,
+            last_name: finduser[0].lastname,
             phone: finduser[0].number
         };
 
