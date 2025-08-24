@@ -35,7 +35,7 @@ export const userApi = {
     api.post("/user/customercode"),
   getCurrentUser: (api: AxiosInstance) => api.get("/user/find"),
   createpaystack: (api: AxiosInstance, preferred_bank?: string) =>
-    api.post("/user/createpaystack", {preferred_bank}),
+    api.post("/user/createpaystack", preferred_bank),
   updateuser: (api: AxiosInstance, userdata: UpdateUser) =>
     api.put("/user/update", userdata),
 };

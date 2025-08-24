@@ -15,12 +15,11 @@ import { categorystyle } from "@/types";
 import { useTransactions } from "@/hooks/useTransactions";
 import TransactionCard from "@/components/TransactionCard";
 import { useCurrentUser } from "@/hooks/useCurrentuser";
-import { useSyncDb } from "@/hooks/useRegister";
 import { router } from "expo-router";
 import { useCreatePaystack } from "@/hooks/useCreatePaystack";
 
 const HomeScreen = () => {
-  useCreatePaystack()
+  useCreatePaystack('test-bank')
 
   const { user } = useUser();
   const username = user

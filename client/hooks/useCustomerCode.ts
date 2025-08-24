@@ -5,7 +5,7 @@ import { useSyncDb } from "./useRegister";
 
 export const useCustomerCode = () => {
   const { usercreated } = useSyncDb();
-  const user = usercreated?.data
+  const user = usercreated?.data?.user
   const api = useApiClient();
 
   const syncUserMutation = useMutation({
@@ -17,8 +17,8 @@ export const useCustomerCode = () => {
   // auto-create customer code
   useEffect(() => {
     const ready =
-       Boolean(user?.firstName?.trim()) &&
-       Boolean(user?.lastName?.trim()) &&
+       Boolean(user?.firstname?.trim()) &&
+       Boolean(user?.lastname?.trim()) &&
        Boolean(user?.number?.trim());
      if (
        ready &&

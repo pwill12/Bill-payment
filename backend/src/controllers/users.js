@@ -256,11 +256,12 @@ export async function CreatePaystackAcct(req, res) {
             });
         }
 
-        const { preferred_bank } = req.body
         if (!finduser[0].customer_code) {
             return res.status(409).json({ message: "customer_code not found for user. Create customer first." });
         }
-        const effectivePreferredBank = preferred_bank || "titan-paystack";
+        const { preferred_bank } = req.body
+
+        const effectivePreferredBank = preferred_bank || "test-bank";
 
         if (!process.env.PAYSTACK_SECRET) {
             return res.status(500).json({ message: "PAYSTACK_SECRET is not configured" });
