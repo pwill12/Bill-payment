@@ -144,29 +144,26 @@ export const UpdateUsers = async (req, res) => {
         if (!hasAny) {
             return res.status(400).json({ message: "no fields to update" });
         }
-        const updatedRow = await sqldb(async (tx) => {
-            let last = null;
-            if (Object.prototype.hasOwnProperty.call(body, "firstName")) {
-                const fn = typeof firstName === "string" ? firstName.trim() : null;
-                const rows = await tx`UPDATE users SET firstName = ${fn} WHERE clerk_id = ${userId} RETURNING *`;
-                last = rows[0] ?? last;
-            }
-            if (Object.prototype.hasOwnProperty.call(body, "lastName")) {
-                const ln = typeof lastName === "string" ? lastName.trim() : null;
-                const rows = await tx`UPDATE users SET lastName = ${ln} WHERE clerk_id = ${userId} RETURNING *`;
-                last = rows[0] ?? last;
-            }
-            if (Object.prototype.hasOwnProperty.call(body, "number")) {
-                const nm = typeof number === "string" ? number.trim() : null;
-                const rows = await tx`UPDATE users SET number = ${nm} WHERE clerk_id = ${userId} RETURNING *`;
-                last = rows[0] ?? last;
-            }
-            return last;
-        });
-        if (!updatedRow) {
+        let last
+        if (Object.prototype.hasOwnProperty.call(body, "firstName")) {
+            const fn = typeof firstName === "string" ? firstName.trim() : null;
+            const rows = await sqldb`UPDATE users SET firstName = ${fn} WHERE clerk_id = ${userId} RETURNING *`;
+            last = rows[0] ?? last;
+        }
+        if (Object.prototype.hasOwnProperty.call(body, "lastName")) {
+            const ln = typeof lastName === "string" ? lastName.trim() : null;
+            const rows = await sqldb`UPDATE users SET lastName = ${ln} WHERE clerk_id = ${userId} RETURNING *`;
+            last = rows[0] ?? last;
+        }
+        if (Object.prototype.hasOwnProperty.call(body, "number")) {
+            const nm = typeof number === "string" ? number.trim() : null;
+            const rows = await sqldb`UPDATE users SET number = ${nm} WHERE clerk_id = ${userId} RETURNING *`;
+            last = rows[0] ?? last;
+        }
+        if (!last) {
             return res.status(404).json({ message: "no user found" });
         }
-        return res.status(200).json({ message: "user updated successfully", data: updatedRow });
+        return res.status(200).json({ message: "user updated successfully", data: last[0] });
     } catch (error) {
         if (error?.code === "23505") {
             return res.status(409).json({ message: "phone number already in use" });
