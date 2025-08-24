@@ -138,34 +138,39 @@ export const UpdateUsers = async (req, res) => {
         const { firstName, lastName, number } = body;
 
         // Build SET only for fields present in the payload
-        const sets = [];
+        let sets
         if (Object.prototype.hasOwnProperty.call(body, "firstName")) {
             const fn = typeof firstName === "string" ? firstName.trim() : null;
-            sets.push(sqldb`firstName = ${fn && fn.length ? fn : null}`);
-        }
-        if (Object.prototype.hasOwnProperty.call(body, "lastName")) {
-            const ln = typeof lastName === "string" ? lastName.trim() : null;
-            sets.push(sqldb`lastName = ${ln && ln.length ? ln : null}`);
-        }
-        if (Object.prototype.hasOwnProperty.call(body, "number")) {
-            const nm = typeof number === "string" ? number.trim() : null;
-            sets.push(sqldb`number = ${nm && nm.length ? nm : null}`);
-        }
-
-        if (sets.length === 0) {
-            return res.status(400).json({ message: "no fields to update" });
-        }
-
-        const updated = await sqldb`
+            sets = await sqldb`
             UPDATE users
-            SET ${sqldb(sets)}
+            SET firstName = ${fn}
             WHERE clerk_id = ${userId}
             RETURNING *
         `;
-        if (updated.length === 0) {
-            return res.status(404).json({ message: "no user found" });
         }
-        return res.status(200).json({ message: "user updated successfully", data: updated[0] });
+        if (Object.prototype.hasOwnProperty.call(body, "lastName")) {
+            const ln = typeof lastName === "string" ? lastName.trim() : null;
+            sets = await sqldb`
+            UPDATE users
+            SET lastName = ${ln}
+            WHERE clerk_id = ${userId}
+            RETURNING *
+            `
+        }
+        if (Object.prototype.hasOwnProperty.call(body, "number")) {
+            const nm = typeof number === "string" ? number.trim() : null;
+            sets = await sqldb`
+            UPDATE users
+            SET number = ${nm}
+            WHERE clerk_id = ${userId}
+            RETURNING *
+            `
+        }
+
+        if (sets.length === 0) {
+            return res.status(404).json({ message: "operation not successful" });
+        }
+        return res.status(200).json({ message: "user updated successfully", data: sets[0] });
     } catch (error) {
         if (error?.code === "23505") {
             return res.status(409).json({ message: "phone number already in use" });
@@ -205,8 +210,8 @@ export async function CreatePaystackCode(req, res) {
         }
         const data = {
             email: finduser[0].email,
-            first_name: finduser[0].firstName,
-            last_name: finduser[0].lastName,
+            first_name: finduser[0].firstname,
+            last_name: finduser[0].lastname,
             phone: finduser[0].number
         };
 

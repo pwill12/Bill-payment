@@ -1,14 +1,18 @@
 import { UpdateUser } from "@/types";
 import { useApiClient, userApi } from "@/utils/api";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Alert } from "react-native";
 
 export const useUpdateuser = (data: UpdateUser) => {
   const api = useApiClient();
+  const QueryClient = useQueryClient();
+
 
   const createUpdateMutation = useMutation({
     mutationFn: (datas: UpdateUser) => userApi.updateuser(api, datas),
     onSuccess: (response) => {
+      QueryClient.invalidateQueries({ queryKey: ["authUser"] });
+
       return response;
     },
     onError: (error: any) => console.error("User sync failed:", error),
@@ -31,7 +35,12 @@ export const useUpdateuser = (data: UpdateUser) => {
       Alert.alert("Missing required field", "Please enter last name");
       return;
     }
-    createUpdateMutation.mutate(data);
+    const updata = {
+      firstname: data.firstName,
+      lastname: data.lastName,
+      number: data.number
+    } as UpdateUser
+    createUpdateMutation.mutate(updata);
   };
 
   return {
