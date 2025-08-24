@@ -1,6 +1,7 @@
 import { UpdateUser } from "@/types";
 import { useApiClient, userApi } from "@/utils/api";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { router } from "expo-router";
 import { Alert } from "react-native";
 
 export const useUpdateuser = (data: UpdateUser) => {
@@ -12,6 +13,13 @@ export const useUpdateuser = (data: UpdateUser) => {
     mutationFn: (datas: UpdateUser) => userApi.updateuser(api, datas),
     onSuccess: (response) => {
       QueryClient.invalidateQueries({ queryKey: ["authUser"] });
+      Alert.alert("User Update", "user info updated", [
+      {
+        text: "Ok",
+        style: "destructive",
+        onPress: () => router.push('/profile'),
+      },
+    ]);
 
       return response;
     },

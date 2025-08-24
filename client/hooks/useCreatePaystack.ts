@@ -5,12 +5,13 @@ import { useEffect } from "react";
 
 export const useCreatePaystack = (preferred_bank?: string) => {
   const { customer_code } = useCustomerCode();
+  console.log(customer_code)
   const api = useApiClient();
 
   const syncUserMutation = useMutation({
     mutationFn: () => userApi.createpaystack(api, preferred_bank),
     onSuccess: (response: any) =>
-      console.log("Paystack Acct created:", response.data),
+      console.log("Paystack Acct created:", response),
     onError: (error: any) => console.error("error creating customer", error),
   });
   // auto-create customer code
@@ -18,7 +19,7 @@ export const useCreatePaystack = (preferred_bank?: string) => {
     if (customer_code !== undefined) {
       syncUserMutation.mutate();
     }
-  }, [customer_code, syncUserMutation]);
+  }, [customer_code]);
 
   return null;
 };
