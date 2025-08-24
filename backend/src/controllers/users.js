@@ -136,26 +136,37 @@ export const UpdateUsers = async (req, res) => {
         const body = req.body ?? {};
         const { firstName, lastName, number } = body;
 
-        // Build SET only for fields present in the payload
-        const data = await sqldb.begin(async (tx) => {
+        // Apply only provided fields atomically and return the final row
+        const hasAny =
+            Object.prototype.hasOwnProperty.call(body, "firstName") ||
+            Object.prototype.hasOwnProperty.call(body, "lastName") ||
+            Object.prototype.hasOwnProperty.call(body, "number");
+        if (!hasAny) {
+            return res.status(400).json({ message: "no fields to update" });
+        }
+        const updatedRow = await sqldb.begin(async (tx) => {
+            let last = null;
             if (Object.prototype.hasOwnProperty.call(body, "firstName")) {
                 const fn = typeof firstName === "string" ? firstName.trim() : null;
-                await tx`UPDATE users SET firstName = ${fn} WHERE clerk_id = ${userId} RETURNING *`;
+                const rows = await tx`UPDATE users SET firstName = ${fn} WHERE clerk_id = ${userId} RETURNING *`;
+                last = rows[0] ?? last;
             }
             if (Object.prototype.hasOwnProperty.call(body, "lastName")) {
                 const ln = typeof lastName === "string" ? lastName.trim() : null;
-                await tx`UPDATE users SET lastName = ${ln} WHERE clerk_id = ${userId} RETURNING *`;
+                const rows = await tx`UPDATE users SET lastName = ${ln} WHERE clerk_id = ${userId} RETURNING *`;
+                last = rows[0] ?? last;
             }
             if (Object.prototype.hasOwnProperty.call(body, "number")) {
                 const nm = typeof number === "string" ? number.trim() : null;
-                await tx`UPDATE users SET number = ${nm} WHERE clerk_id = ${userId} RETURNING *`;
+                const rows = await tx`UPDATE users SET number = ${nm} WHERE clerk_id = ${userId} RETURNING *`;
+                last = rows[0] ?? last;
             }
+            return last;
         });
-
-        if (data.length === 0) {
+        if (!updatedRow) {
             return res.status(404).json({ message: "no user found" });
         }
-        return res.status(200).json({ message: "user updated successfully", data: data[0] });
+        return res.status(200).json({ message: "user updated successfully", data: updatedRow });
     } catch (error) {
         if (error?.code === "23505") {
             return res.status(409).json({ message: "phone number already in use" });
