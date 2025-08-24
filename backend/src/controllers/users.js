@@ -163,7 +163,7 @@ export const UpdateUsers = async (req, res) => {
         if (!last) {
             return res.status(404).json({ message: "no user found" });
         }
-        return res.status(200).json({ message: "user updated successfully", data: last[0] });
+        return res.status(200).json({ message: "user updated successfully", data: last });
     } catch (error) {
         if (error?.code === "23505") {
             return res.status(409).json({ message: "phone number already in use" });
