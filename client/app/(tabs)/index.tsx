@@ -16,10 +16,10 @@ import { useTransactions } from "@/hooks/useTransactions";
 import TransactionCard from "@/components/TransactionCard";
 import { useCurrentUser } from "@/hooks/useCurrentuser";
 import { router } from "expo-router";
-import { useCreatePaystack } from "@/hooks/useCreatePaystack";
+import { Validatepaystack } from "@/hooks/useValidate";
 
 const HomeScreen = () => {
-  useCreatePaystack()
+  Validatepaystack()
 
   const { user } = useUser();
   const username = user

@@ -34,10 +34,10 @@ export const userApi = {
   AddcustomerCode: (api: AxiosInstance) =>
     api.post("/user/customercode"),
   getCurrentUser: (api: AxiosInstance) => api.get("/user/find"),
-  createpaystack: (api: AxiosInstance, preferred_bank?: string) =>
-    api.post("/user/createpaystack", preferred_bank),
   updateuser: (api: AxiosInstance, userdata: UpdateUser) =>
     api.put("/user/update", userdata),
+  validateuser: (api: AxiosInstance) =>
+    api.put("/user/validatepaystack"),
 };
 
 export const receiverApi = {

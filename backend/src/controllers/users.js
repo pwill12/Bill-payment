@@ -302,40 +302,51 @@ export async function ValidateCustomer(req, res) {
 }
 
 export async function Webhookpaystack(req, res) {
-    const hash = crypto.createHmac('sha512', PAYSTACK_SECRET).update(req.body).digest('hex');
-    if (hash == req.headers['x-paystack-signature']) {
-        let event;
-        try {
-            event = JSON.parse(req.body.toString('utf8'));
-        } catch {
-            return res.sendStatus(400);
-        }
-
-        if (event?.event === 'customeridentification.success') {
-            const customer_code = event?.data?.customer?.customer_code ?? event?.data?.customer_code;
-            if (!customer_code) return res.sendStatus(202);
-            const rows = await sqldb`SELECT id, acct_num FROM users WHERE customer_code = ${customer_code}`;
-            if (rows.length && rows[0].acct_num) return res.sendStatus(200);
-            try {
-                const postdata = await axios.post(`${PAYSTACK_API}/dedicated_account`, { customer: customer_code }, {
-                    headers: {
-                        Authorization: `Bearer ${PAYSTACK_SECRET}`,
-                        'Content-Type': 'application/json'
-                    }, timeout: 15000
-                });
-                const acct_num = postdata?.data?.data?.account_number;
-                const acct_name = postdata?.data?.data?.account_name;
-                if (acct_num && acct_name && rows.length) {
-                    await sqldb`UPDATE users SET acct_num = ${acct_num}, acct_name = ${acct_name} WHERE id = ${rows[0].id}`;
-                }
-            } catch (e) {
-                console.error('Webhookpaystack: failed to create dedicated account', e?.response?.data ?? e);
-            }
-            return res.sendStatus(200);
-        }
-        if (event?.event === 'customeridentification.failed') {
-            return res.status(200).json({ reason: event?.data?.reason });
-        }
+    const signature = String(req.get('x-paystack-signature') || "");
+    const raw = Buffer.isBuffer(req.body)
+        ? req.body
+        : (req.rawBody && Buffer.isBuffer(req.rawBody) ? req.rawBody : null);
+    if (!raw || !signature) {
+        return res.sendStatus(400);
     }
-    res.send(200)
+    const computed = crypto.createHmac('sha512', PAYSTACK_SECRET).update(raw).digest('hex');
+    const expected = Buffer.from(computed, 'utf8');
+    const provided = Buffer.from(signature, 'utf8');
+    if (expected.length !== provided.length || !crypto.timingSafeEqual(expected, provided)) {
+        return res.sendStatus(401);
+    }
+
+    let event;
+    try {
+        event = JSON.parse(raw.toString('utf8'));
+    } catch {
+        return res.sendStatus(400);
+    }
+
+    if (event?.event === 'customeridentification.success') {
+        const customer_code = event?.data?.customer?.customer_code ?? event?.data?.customer_code;
+        if (!customer_code) return res.sendStatus(202);
+        const rows = await sqldb`SELECT id, acct_num FROM users WHERE customer_code = ${customer_code}`;
+        if (rows.length && rows[0].acct_num) return res.sendStatus(200);
+        try {
+            const postdata = await axios.post(`${PAYSTACK_API}/dedicated_account`, { customer: customer_code }, {
+                headers: {
+                    Authorization: `Bearer ${PAYSTACK_SECRET}`,
+                    'Content-Type': 'application/json'
+                }, timeout: 15000
+            });
+            const acct_num = postdata?.data?.data?.account_number;
+            const acct_name = postdata?.data?.data?.account_name;
+            if (acct_num && acct_name && rows.length) {
+                await sqldb`UPDATE users SET acct_num = ${acct_num}, acct_name = ${acct_name} WHERE id = ${rows[0].id}`;
+            }
+        } catch (e) {
+            console.error('Webhookpaystack: failed to create dedicated account', e?.response?.data ?? e);
+        }
+        return res.sendStatus(200);
+    }
+    if (event?.event === 'customeridentification.failed') {
+        return res.status(200).json({ reason: event?.data?.reason });
+    }
+    return res.sendStatus(200)
 }
