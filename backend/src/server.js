@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import { clerkMiddleware } from "@clerk/express";
 import dotenv from 'dotenv'
-import { addCustomercode, createUsersTable } from "./controllers/users.js";
+import { addCustomercode, createUsersTable, Webhookpaystack } from "./controllers/users.js";
 import userRoute from "./routes/userRoute.js";
 import transactionRoute from "./routes/transactionRoute.js";
 
@@ -12,6 +12,11 @@ dotenv.config()
 
 const app = express();
 
+app.use(
+    "/api/paystack-webhook",
+    raw({ type: "application/json" }),
+    Webhookpaystack
+);
 app.use(express.json());
 
 app.use(clerkMiddleware())
@@ -19,7 +24,7 @@ app.use(clerkMiddleware())
 const Port = process.env.Port || 8080
 
 app.use(cors({
-    origin: ['https://bill-payment-one.vercel.app' ,'http://localhost:8080'],
+    origin: ['https://bill-payment-one.vercel.app', 'http://localhost:8080'],
     methods: 'GET, PUT, POST, PATCH, HEAD'
 }))
 
