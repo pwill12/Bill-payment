@@ -1,7 +1,13 @@
 import { sqldb } from "../config/db.js";
 import { clerkClient, getAuth } from "@clerk/express";
 import axios from 'axios'
+import crypto from 'crypto'
 import "dotenv/config"
+
+const PAYSTACK_SECRET = process.env.PAYSTACK_SECRET
+if (!PAYSTACK_SECRET) {
+    throw new Error("Missing PAYSTACK_SECRET environment variable")
+}
 
 export async function createUsersTable() {
 
@@ -144,26 +150,55 @@ export const UpdateUsers = async (req, res) => {
         if (!hasAny) {
             return res.status(400).json({ message: "no fields to update" });
         }
+        const finduser = await sqldb`
+            SELECT * FROM users WHERE clerk_id = ${userId}
+        `;
+        if (finduser.length == 0) {
+            return res.status(404).json({ message: "no user found" })
+        }
         let last
+        let updatedpaystack
+        const paystackPayload = {};
         if (Object.prototype.hasOwnProperty.call(body, "firstName")) {
             const fn = typeof firstName === "string" ? firstName.trim() : null;
             const rows = await sqldb`UPDATE users SET firstName = ${fn} WHERE clerk_id = ${userId} RETURNING *`;
+            paystackPayload.first_name = fn;
             last = rows[0] ?? last;
         }
         if (Object.prototype.hasOwnProperty.call(body, "lastName")) {
             const ln = typeof lastName === "string" ? lastName.trim() : null;
             const rows = await sqldb`UPDATE users SET lastName = ${ln} WHERE clerk_id = ${userId} RETURNING *`;
+            paystackPayload.last_name = ln;
             last = rows[0] ?? last;
         }
         if (Object.prototype.hasOwnProperty.call(body, "number")) {
             const nm = typeof number === "string" ? number.trim() : null;
             const rows = await sqldb`UPDATE users SET number = ${nm} WHERE clerk_id = ${userId} RETURNING *`;
+            paystackPayload.phone = nm;
             last = rows[0] ?? last;
         }
         if (!last) {
             return res.status(404).json({ message: "no user found" });
         }
-        return res.status(200).json({ message: "user updated successfully", data: last });
+        if (Object.keys(paystackPayload).length > 0) {
+            const response = await axios.put(
+                `${PAYSTACK_API}/customer/${finduser[0].customer_code}`,
+                paystackPayload,
+                {
+                    headers: {
+                        Authorization: `Bearer ${PAYSTACK_SECRET}`,
+                        'Content-Type': 'application/json'
+                    },
+                    timeout: 15000
+                }
+            );
+            updatedpaystack = response?.data ?? updatedpaystack
+        }
+        return res.status(200).json({
+            message: "user updated successfully",
+            data: last,
+            provider: updatedpaystack
+        });
     } catch (error) {
         if (error?.code === "23505") {
             return res.status(409).json({ message: "phone number already in use" });
@@ -175,7 +210,56 @@ export const UpdateUsers = async (req, res) => {
         return res.status(500).json({ message: "internal server error" });
     }
 };
+
+// Paystack Category
 const PAYSTACK_API = "https://api.paystack.co"
+
+export async function ValidateCustomer(req, res) {
+    try {
+        const { userId } = getAuth(req)
+        const finduser = await sqldb`
+            SELECT * FROM users WHERE clerk_id = ${userId}
+        `;
+        if (finduser.length == 0) {
+            return res.status(404).json({ message: "no user found" })
+        }
+        if (!finduser[0].customer_code) {
+            return res.status(409).json({ message: "customer_code not found for user. Create customer first" })
+        }
+        const data = {
+            country: "NG",
+            type: "bank_account",
+            account_number: finduser[0].acct_num ?? "0111111111",
+            bvn: finduser[0].bvn ?? "222222222221",
+            bank_code: "007",
+            first_name: finduser[0].firstname,
+            last_name: finduser[0].lastname
+        }
+        const postdata = await axios.post(`${PAYSTACK_API}/customer/${finduser[0].customer_code}/identification`, data, {
+            headers: {
+                Authorization: `Bearer ${PAYSTACK_SECRET}`,
+                'Content-Type': 'application/json'
+            }, timeout: 15000
+        })
+        return res.status(202).json({ postdata })
+    } catch (error) {
+        res.status(500).json({ message: "internal server error" });
+    }
+}
+
+export async function Webhookpaystack(req, res) {
+    const hash = crypto.createHmac('sha512', PAYSTACK_SECRET).update(req.body).digest('hex');
+    if (hash == req.headers['x-paystack-signature']) {
+        const event = req.body
+        if (event && event.event === 'customeridentification.success') {
+            return res.status(200).json(event?.data)
+        }
+        if (event && event.event === 'customeridentification.failed') {
+            return res.status(200).json(event?.data?.reason)
+        }
+    }
+    res.send(200)
+}
 
 export async function CreatePaystackCode(req, res) {
 
@@ -198,9 +282,6 @@ export async function CreatePaystackCode(req, res) {
             });
         }
 
-        if (!process.env.PAYSTACK_SECRET) {
-            return res.status(500).json({ message: "PAYSTACK_SECRET is not configured" });
-        }
         const data = {
             email: finduser[0].email,
             first_name: finduser[0].firstname,
@@ -211,7 +292,7 @@ export async function CreatePaystackCode(req, res) {
         const postdata = await axios.post(`${PAYSTACK_API}/customer`, data, {
             method: 'POST',
             headers: {
-                Authorization: `Bearer ${process.env.PAYSTACK_SECRET}`,
+                Authorization: `Bearer ${PAYSTACK_SECRET}`,
                 'Content-Type': 'application/json'
             }, timeout: 15000
         })
@@ -263,10 +344,6 @@ export async function CreatePaystackAcct(req, res) {
 
         const effectivePreferredBank = preferred_bank || "test-bank";
 
-        if (!process.env.PAYSTACK_SECRET) {
-            return res.status(500).json({ message: "PAYSTACK_SECRET is not configured" });
-        }
-
         const data = {
             customer: finduser[0].customer_code,
             preferred_bank: effectivePreferredBank
@@ -275,7 +352,7 @@ export async function CreatePaystackAcct(req, res) {
         const postdata = await axios.post(`${PAYSTACK_API}/dedicated_account`, data, {
             headers: {
                 method: 'POST',
-                Authorization: `Bearer ${process.env.PAYSTACK_SECRET}`,
+                Authorization: `Bearer ${PAYSTACK_SECRET}`,
                 'Content-Type': 'application/json'
             }, timeout: 15000
         })
