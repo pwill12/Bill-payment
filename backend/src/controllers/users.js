@@ -214,53 +214,6 @@ export const UpdateUsers = async (req, res) => {
 // Paystack Category
 const PAYSTACK_API = "https://api.paystack.co"
 
-export async function ValidateCustomer(req, res) {
-    try {
-        const { userId } = getAuth(req)
-        const finduser = await sqldb`
-            SELECT * FROM users WHERE clerk_id = ${userId}
-        `;
-        if (finduser.length == 0) {
-            return res.status(404).json({ message: "no user found" })
-        }
-        if (!finduser[0].customer_code) {
-            return res.status(409).json({ message: "customer_code not found for user. Create customer first" })
-        }
-        const data = {
-            country: "NG",
-            type: "bank_account",
-            account_number: finduser[0].acct_num ?? "0111111111",
-            bvn: finduser[0].bvn ?? "222222222221",
-            bank_code: "007",
-            first_name: finduser[0].firstname,
-            last_name: finduser[0].lastname
-        }
-        const postdata = await axios.post(`${PAYSTACK_API}/customer/${finduser[0].customer_code}/identification`, data, {
-            headers: {
-                Authorization: `Bearer ${PAYSTACK_SECRET}`,
-                'Content-Type': 'application/json'
-            }, timeout: 15000
-        })
-        return res.status(202).json({ postdata })
-    } catch (error) {
-        res.status(500).json({ message: "internal server error" });
-    }
-}
-
-export async function Webhookpaystack(req, res) {
-    const hash = crypto.createHmac('sha512', PAYSTACK_SECRET).update(req.body).digest('hex');
-    if (hash == req.headers['x-paystack-signature']) {
-        const event = req.body
-        if (event && event.event === 'customeridentification.success') {
-            return res.status(200).json(event?.data)
-        }
-        if (event && event.event === 'customeridentification.failed') {
-            return res.status(200).json(event?.data?.reason)
-        }
-    }
-    res.send(200)
-}
-
 export async function CreatePaystackCode(req, res) {
 
     try {
@@ -312,6 +265,39 @@ export async function CreatePaystackCode(req, res) {
 
     } catch (error) {
         res.status(500).json({ message: "internal server error" })
+    }
+}
+
+export async function ValidateCustomer(req, res) {
+    try {
+        const { userId } = getAuth(req)
+        const finduser = await sqldb`
+            SELECT * FROM users WHERE clerk_id = ${userId}
+        `;
+        if (finduser.length == 0) {
+            return res.status(404).json({ message: "no user found" })
+        }
+        if (!finduser[0].customer_code) {
+            return res.status(409).json({ message: "customer_code not found for user. Create customer first" })
+        }
+        const data = {
+            country: "NG",
+            type: "bank_account",
+            account_number: finduser[0].acct_num ?? "0111111111",
+            bvn: finduser[0].bvn ?? "222222222221",
+            bank_code: "007",
+            first_name: finduser[0].firstname,
+            last_name: finduser[0].lastname
+        }
+        const postdata = await axios.post(`${PAYSTACK_API}/customer/${finduser[0].customer_code}/identification`, data, {
+            headers: {
+                Authorization: `Bearer ${PAYSTACK_SECRET}`,
+                'Content-Type': 'application/json'
+            }, timeout: 15000
+        })
+        return res.status(202).json({ postdata })
+    } catch (error) {
+        res.status(500).json({ message: "internal server error" });
     }
 }
 
@@ -377,3 +363,17 @@ export async function CreatePaystackAcct(req, res) {
     }
 }
 
+export async function Webhookpaystack(req, res) {
+    const hash = crypto.createHmac('sha512', PAYSTACK_SECRET).update(req.body).digest('hex');
+    if (hash == req.headers['x-paystack-signature']) {
+        const event = req.body
+        if (event && event.event === 'customeridentification.success') {
+            CreatePaystackAcct(event)
+            return res.status(200).json(event?.data)
+        }
+        if (event && event.event === 'customeridentification.failed') {
+            return res.status(200).json(event?.data?.reason)
+        }
+    }
+    res.send(200)
+}
