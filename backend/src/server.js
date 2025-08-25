@@ -12,11 +12,6 @@ dotenv.config()
 
 const app = express();
 
-app.use(
-    "/api/paystack-webhook",
-    raw({ type: "application/json" }),
-    Webhookpaystack
-);
 app.use(express.json());
 
 app.use(clerkMiddleware())
