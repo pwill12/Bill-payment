@@ -368,7 +368,7 @@ export async function Webhookpaystack(req, res) {
     if (hash == req.headers['x-paystack-signature']) {
         const event = req.body
         if (event && event.event === 'customeridentification.success') {
-            CreatePaystackAcct(event)
+            CreatePaystackAcct()
             return res.status(200).json(event?.data)
         }
         if (event && event.event === 'customeridentification.failed') {
