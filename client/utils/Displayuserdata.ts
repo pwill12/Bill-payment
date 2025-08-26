@@ -4,7 +4,6 @@ import { ProfileName, ProfileProps } from "./data";
 export const displayUserdata = (
   type: ProfileProps["name"],
   currentUser: User | undefined,
-  showname?: boolean
 ) => {
   switch (type) {
     case ProfileName.USERNAME:

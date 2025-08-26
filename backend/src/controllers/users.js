@@ -301,79 +301,52 @@ export async function ValidateCustomer(req, res) {
     }
 }
 
-export async function CreatePaystackAcct(req, res) {
-
-    try {
-
-        const { userId } = getAuth(req)
-
-        const finduser = await sqldb`
-            SELECT * FROM users WHERE clerk_id = ${userId}
-        `;
-
-        if (finduser.length == 0) {
-            return res.status(404).json({ message: "no user found" })
-        }
-
-        if (finduser[0].acct_num) {
-            return res.status(200).json({
-                message: "acct_num already exists",
-                account_number: finduser[0].acct_num,
-                account_name: finduser[0].acct_name
-            });
-        }
-
-        if (!finduser[0].customer_code) {
-            return res.status(409).json({ message: "customer_code not found for user. Create customer first." });
-        }
-        const { preferred_bank } = req.body
-
-        const effectivePreferredBank = preferred_bank || "test-bank";
-
-        const data = {
-            customer: finduser[0].customer_code,
-            preferred_bank: effectivePreferredBank
-        };
-
-        const postdata = await axios.post(`${PAYSTACK_API}/dedicated_account`, data, {
-            headers: {
-                method: 'POST',
-                Authorization: `Bearer ${PAYSTACK_SECRET}`,
-                'Content-Type': 'application/json'
-            }, timeout: 15000
-        })
-
-        const createdacctnum = postdata?.data?.data?.account_number;
-        const createdacct = postdata?.data?.data?.account_name;
-        if (createdacct && createdacctnum) {
-            await sqldb`
-                UPDATE users
-                SET acct_num = ${createdacctnum}, acct_name = ${createdacct}
-                WHERE clerk_id = ${userId}
-             `;
-        }
-        return res.status(200).json({
-            account_number: createdacctnum,
-            account_name: createdacct,
-            provider: postdata.data
-        })
-
-    } catch (error) {
-        res.status(500).json({ message: "internal server error" })
-    }
-}
-
 export async function Webhookpaystack(req, res) {
-    const hash = crypto.createHmac('sha512', PAYSTACK_SECRET).update(req.body).digest('hex');
-    if (hash == req.headers['x-paystack-signature']) {
-        const event = req.body
-        if (event && event.event === 'customeridentification.success') {
-            CreatePaystackAcct()
-            return res.status(200).json(event?.data)
-        }
-        if (event && event.event === 'customeridentification.failed') {
-            return res.status(200).json(event?.data?.reason)
-        }
+    const signature = String(req.get('x-paystack-signature') || "");
+    const raw = Buffer.isBuffer(req.body)
+        ? req.body
+        : (req.rawBody && Buffer.isBuffer(req.rawBody) ? req.rawBody : null);
+    if (!raw || !signature) {
+        return res.sendStatus(400);
     }
-    res.send(200)
+    const computed = crypto.createHmac('sha512', PAYSTACK_SECRET).update(raw).digest('hex');
+    const expected = Buffer.from(computed, 'utf8');
+    const provided = Buffer.from(signature, 'utf8');
+    if (expected.length !== provided.length || !crypto.timingSafeEqual(expected, provided)) {
+        return res.sendStatus(401);
+    }
+
+    let event;
+    try {
+        event = JSON.parse(raw.toString('utf8'));
+    } catch {
+        return res.sendStatus(400);
+    }
+
+    if (event?.event === 'customeridentification.success') {
+        const customer_code = event?.data?.customer?.customer_code ?? event?.data?.customer_code;
+        if (!customer_code) return res.sendStatus(202);
+        const rows = await sqldb`SELECT id, acct_num FROM users WHERE customer_code = ${customer_code}`;
+        if (rows.length && rows[0].acct_num) return res.sendStatus(200);
+        try {
+            const postdata = await axios.post(`${PAYSTACK_API}/dedicated_account`, { customer: customer_code }, {
+                headers: {
+                    Authorization: `Bearer ${PAYSTACK_SECRET}`,
+                    'Content-Type': 'application/json'
+                }, timeout: 15000
+            });
+            const acct_num = postdata?.data?.data?.account_number;
+            const acct_name = postdata?.data?.data?.account_name;
+            if (acct_num && acct_name && rows.length) {
+                await sqldb`UPDATE users SET acct_num = ${acct_num}, acct_name = ${acct_name} WHERE id = ${rows[0].id}`;
+            }
+        } catch (e) {
+            console.error('Webhookpaystack: failed to create dedicated account', e?.response?.data ?? e);
+        }
+        return res.sendStatus(200);
+    }
+    if (event?.event === 'customeridentification.failed') {
+        return res.status(200).json({ reason: event?.data?.reason });
+    }
+    return res.sendStatus(200)
 }

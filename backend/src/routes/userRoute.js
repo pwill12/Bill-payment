@@ -11,7 +11,6 @@ router.get("/user/find/:receiver", protectRoute, findReceivers)
 router.put("/user/update", protectRoute, UpdateUsers)
 router.post("/user/customercode", protectRoute, CreatePaystackCode)
 router.post("/paystack-webhook", raw({ type: 'application/json' }),Webhookpaystack)
-router.post("/user/createpaystack", protectRoute, CreatePaystackAcct)
 router.post("/user/validatepaystack", protectRoute, ValidateCustomer)
 
 export default router
