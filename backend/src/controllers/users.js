@@ -270,15 +270,15 @@ export async function CreatePaystackCode(req, res) {
 
 export async function ValidateCustomer(req, res) {
     try {
-        const { userId } = getAuth(req)
-        const finduser = await sqldb`
-            SELECT * FROM users WHERE clerk_id = ${userId}
-        `;
-        if (finduser.length == 0) {
-            return res.status(404).json({ message: "no user found" })
-        }
+        // const { userId } = getAuth(req)
+        // const finduser = await sqldb`
+        //     SELECT * FROM users WHERE clerk_id = ${userId}
+        // `;
+        // if (finduser.length == 0) {
+        //     return res.status(404).json({ message: "no user found" })
+        // }
 
-        const customer_code = finduser[0].customer_code
+        const customer_code = req.params
 
         if (!customer_code) {
             return res.status(409).json({ message: "customer_code not found for user. Create customer first" })
@@ -292,16 +292,8 @@ export async function ValidateCustomer(req, res) {
             first_name: "Uchenna",
             last_name: "Okoro"
         }
-        const data2 = {
-            "country": "NG",
-            "type": "bank_account",
-            "account_number": "0111111111",
-            "bvn": "222222222221",
-            "bank_code": "007",
-            "first_name": "Uchenna",
-            "last_name": "Okoro"
-        }
-        const postdata = await axios.post(`${PAYSTACK_API}/customer/${customer_code}/identification`, data2, {
+        
+        const postdata = await axios.post(`${PAYSTACK_API}/customer/${customer_code}/identification`, data, {
             headers: {
                 Authorization: `Bearer ${PAYSTACK_SECRET}`,
                 'Content-Type': 'application/json'
