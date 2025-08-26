@@ -16,10 +16,10 @@ export const useValidatepaystack = () => {
   });
 
   useEffect(() => {
-    if (customer_code && !validateMutation.isPending && validateMutation.status !== "success") {
+    if (customer_code !== undefined) {
       validateMutation.mutate();
     }
-  }, [customer_code, validateMutation.isPending, validateMutation.status]);
+  }, [customer_code]);
 
   return {
     validated: validateMutation?.data,

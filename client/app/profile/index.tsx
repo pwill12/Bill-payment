@@ -17,7 +17,7 @@ const Profile = () => {
           });
     }
   return (
-    <HeaderName headertext="My Profile">
+    <HeaderName headertext="My Profile" onPress={()=> router.push('/account')}>
       <ProfileCard currentUser={currentUser} type={ProfileCards1} onProfilePress={handleProfile}/>
       <ProfileCard currentUser={currentUser} type={ProfileCards2} onProfilePress={handleProfile}/>
     </HeaderName>
