@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import { clerkMiddleware } from "@clerk/express";
 import dotenv from 'dotenv'
-import { addCustomercode, createUsersTable, Webhookpaystack } from "./controllers/users.js";
+import { addCustomercode, createUsersTable } from "./controllers/users.js";
 import userRoute from "./routes/userRoute.js";
 import transactionRoute from "./routes/transactionRoute.js";
 
@@ -39,8 +39,6 @@ createUsersTable().then(() => {
             console.log(`app listening on Port:${Port}`)
         })
     }
-
-
 })
 
 export default app;
