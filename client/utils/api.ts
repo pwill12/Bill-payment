@@ -37,7 +37,7 @@ export const userApi = {
   updateuser: (api: AxiosInstance, userdata: UpdateUser) =>
     api.put("/user/update", userdata),
   validateuser: (api: AxiosInstance) =>
-    api.put("/user/validatepaystack"),
+    api.post("/user/validatepaystack"),
 };
 
 export const receiverApi = {

@@ -1,5 +1,5 @@
 import Router from "express";
-import { insertUsers, findUser, findReceivers, CreatePaystackCode, CreatePaystackAcct, UpdateUsers, Webhookpaystack, ValidateCustomer } from "../controllers/users.js";
+import { insertUsers, findUser, findReceivers, CreatePaystackCode, UpdateUsers, Webhookpaystack, ValidateCustomer } from "../controllers/users.js";
 import { protectRoute } from "../middlewares/authorization.js";
 import { raw } from "express";
 
