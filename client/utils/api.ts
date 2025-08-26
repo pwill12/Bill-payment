@@ -2,7 +2,8 @@ import axios, { AxiosInstance } from "axios";
 import { useAuth } from "@clerk/clerk-expo";
 import { UpdateUser } from "@/types";
 
-export const API_BASE_URL = "https://bill-payment-one.vercel.app/api";
+export const API_BASE_URL = "https://bill-payment-1nd03a8gz-princewills-projects-39e70245.vercel.app/api"
+//  = "https://bill-payment-one.vercel.app/api";
 // ! 🔥 localhost api would not work on your actual physical device
 // const API_BASE_URL = "http://localhost:5001/api";
 
