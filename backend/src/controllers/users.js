@@ -292,8 +292,10 @@ export async function ValidateCustomer(req, res) {
             first_name: "Uchenna",
             last_name: "Okoro"
         }
+
+        const rawdata = JSON.stringify(data)
         
-        const postdata = await axios.post(`${PAYSTACK_API}/customer/${customer_code}/identification`, data, {
+        const postdata = await axios.post(`${PAYSTACK_API}/customer/${customer_code}/identification`, rawdata, {
             headers: {
                 Authorization: `Bearer ${PAYSTACK_SECRET}`,
                 'Content-Type': 'application/json'
