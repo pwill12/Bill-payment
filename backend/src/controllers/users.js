@@ -298,16 +298,34 @@ export async function ValidateCustomer(req, res) {
                 'Content-Type': 'application/json'
             }, timeout: 15000
         })
-        if (!postdata) {
-            return res.status(400).json({ message: "invalid data" })
+        const result = response.data;
+        if (!result?.status) {
+            return res
+                .status(400)
+                .json({ message: result.message || "provider rejected identification", provider: result });
         }
-        return res.status(202).json({ data: postdata.data })
+        return res.status(202).json({ provider: result });
     } catch (error) {
-        if (error?.code) {
-            return res.status(400).json({errormessage: error});
-        }
-        console.error('validate user', error)
-        res.status(500).json({ message: "internal server error" });
+        const status =
+            error?.response?.status ??
+            (error?.code === "ECONNABORTED" ? 504 : 502);
+        const provider =
+            error?.response?.data && typeof error.response.data === "object"
+                ? {
+                    status: error.response.data.status,
+                    message: error.response.data.message,
+                    code: error.response.data.code,
+                }
+                : undefined;
+        console.error("ValidateCustomer failed", {
+            code: error?.code,
+            status: error?.response?.status,
+            message: error?.message,
+        });
+        return res.status(status).json({
+            message: "validation failed",
+            provider,
+        })
     }
 }
 
