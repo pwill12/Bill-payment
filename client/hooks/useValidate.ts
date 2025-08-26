@@ -19,6 +19,7 @@ export const useValidatepaystack = () => {
     if (customer_code !== undefined) {
       validateMutation.mutate();
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [customer_code]);
 
   return {
