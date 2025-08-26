@@ -10,6 +10,8 @@ export const useSyncDb = () => {
   const syncUserMutation = useMutation({
     mutationFn: () => userApi.syncUser(api),
     onSuccess: (response: any) => {
+      console.log(response)
+
       return response?.data;
     },
     onError: (error: any) => console.error("User sync failed:", error),
@@ -21,6 +23,7 @@ export const useSyncDb = () => {
     if (isSignedIn && !syncUserMutation.data) {
       syncUserMutation.mutate();
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSignedIn]);
 
   return {

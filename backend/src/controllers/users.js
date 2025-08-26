@@ -292,13 +292,22 @@ export async function ValidateCustomer(req, res) {
             first_name: "Uchenna",
             last_name: "Okoro"
         }
-        const postdata = await axios.post(`${PAYSTACK_API}/customer/${customer_code}/identification`, data, {
+        const data2 = {
+            "country": "NG",
+            "type": "bank_account",
+            "account_number": "0111111111",
+            "bvn": "222222222221",
+            "bank_code": "007",
+            "first_name": "Uchenna",
+            "last_name": "Okoro"
+        }
+        const postdata = await axios.post(`${PAYSTACK_API}/customer/${customer_code}/identification`, data2, {
             headers: {
                 Authorization: `Bearer ${PAYSTACK_SECRET}`,
                 'Content-Type': 'application/json'
             }, timeout: 15000
         })
-        const result = response.data;
+        const result = postdata.data;
         if (!result?.status) {
             return res
                 .status(400)
