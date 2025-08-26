@@ -324,7 +324,7 @@ export async function ValidateCustomer(req, res) {
             message: error?.message,
         });
         return res.status(status).json({
-            message: "validation failed",
+            message: "validation fail",
             providers: error?.response?.message,
             mssg: error
         })
