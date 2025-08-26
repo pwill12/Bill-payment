@@ -1,7 +1,7 @@
 import { View, Text } from "react-native";
 import React, { useState } from "react";
 import HeaderName from "@/components/HeaderName";
-import { useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import TextInputs from "@/components/TextInputs";
 import { ProfileName } from "@/utils/data";
 import TransactionButton from "@/components/TransactionButton";
@@ -55,6 +55,7 @@ const UppdateProfile = () => {
             ? "Update Number"
             : "Update Profile"
       }
+      onPress={()=>router.back()}
     >
       <View className="gap-5">
         <Text className="font-semibold text-xl">

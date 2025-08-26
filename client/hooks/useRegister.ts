@@ -10,7 +10,7 @@ export const useSyncDb = () => {
   const syncUserMutation = useMutation({
     mutationFn: () => userApi.syncUser(api),
     onSuccess: (response: any) => {
-      console.log(response)
+      console.log(response?.data)
 
       return response?.data;
     },

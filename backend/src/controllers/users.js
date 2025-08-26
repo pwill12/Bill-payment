@@ -180,7 +180,7 @@ export const UpdateUsers = async (req, res) => {
         if (!last) {
             return res.status(404).json({ message: "no user found" });
         }
-        if (Object.keys(paystackPayload).length > 0) {
+        if (finduser[0].customer_code && Object.keys(paystackPayload).length > 0) {
             const response = await axios.put(
                 `${PAYSTACK_API}/customer/${finduser[0].customer_code}`,
                 paystackPayload,
