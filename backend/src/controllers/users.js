@@ -283,8 +283,8 @@ export async function ValidateCustomer(req, res) {
         const data = {
             country: "NG",
             type: "bank_account",
-            account_number: finduser[0].acct_num ?? "0111111111",
-            bvn: finduser[0].bvn ?? "222222222221",
+            account_number: "0111111111",
+            bvn: "222222222221",
             bank_code: "007",
             first_name: finduser[0].firstname,
             last_name: finduser[0].lastname

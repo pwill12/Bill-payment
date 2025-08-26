@@ -20,8 +20,8 @@ import { useValidatepaystack } from "@/hooks/useValidate";
 import { useSyncDb } from "@/hooks/useRegister";
 
 const HomeScreen = () => {
-  // useValidatepaystack()
-  useSyncDb()
+  useValidatepaystack()
+  // useSyncDb()
   const { user } = useUser();
   const username = user
     ? (user.emailAddresses?.[0]?.emailAddress?.split("@")[0] ?? "")
