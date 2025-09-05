@@ -16,11 +16,10 @@ import { useTransactions } from "@/hooks/useTransactions";
 import TransactionCard from "@/components/TransactionCard";
 import { useCurrentUser } from "@/hooks/useCurrentuser";
 import { router } from "expo-router";
-import { useValidatepaystack } from "@/hooks/useValidate";
+import { useSyncDb } from "@/hooks/useRegister";
 
 const HomeScreen = () => {
-  const {validated} = useValidatepaystack()
-  console.log(validated)
+  useSyncDb()
   const { user } = useUser();
   const username = user
     ? (user.emailAddresses?.[0]?.emailAddress?.split("@")[0] ?? "")

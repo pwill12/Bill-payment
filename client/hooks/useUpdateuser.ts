@@ -13,17 +13,27 @@ export const useUpdateuser = (data: UpdateUser) => {
     mutationFn: (datas: UpdateUser) => userApi.updateuser(api, datas),
     onSuccess: (response) => {
       QueryClient.invalidateQueries({ queryKey: ["authUser"] });
-      Alert.alert("User Update", "user info updated", [
+      Alert.alert("User Update", "user info updated successfully", [
       {
         text: "Ok",
         style: "destructive",
-        onPress: () => router.push('/profile'),
+        onPress: () => router.back(),
       },
     ]);
 
       return response;
     },
-    onError: (error: any) => console.error("User sync failed:", error),
+    onError: (error: any) => Alert.alert("User Update", error.message, [
+      {
+        text: "cancel",
+        style: "default",
+      },
+      {
+        text: "Ok",
+        style: "destructive",
+        onPress: () => router.back(),
+      },
+    ]),
   });
   // auto-sync user when signed in
 
@@ -53,5 +63,6 @@ export const useUpdateuser = (data: UpdateUser) => {
 
   return {
     creatUpdateuser,
+    loading: createUpdateMutation.isPending
   };
 };

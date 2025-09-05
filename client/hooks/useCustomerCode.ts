@@ -27,6 +27,7 @@ export const useCustomerCode = () => {
      ) {
        syncUserMutation.mutate();
      }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [usercreated]);
 
   return {

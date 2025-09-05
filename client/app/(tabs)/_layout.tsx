@@ -51,7 +51,7 @@ export default function Mytab() {
       <Tabs.Screen
         name="account"
         options={{
-          title: "profile",
+          title: "Account",
           tabBarIcon: ({ color, size }) => <Feather name="user" size={size} color={color} />,
         }}
       />
