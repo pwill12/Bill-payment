@@ -5,6 +5,8 @@ import dotenv from 'dotenv'
 import { addCustomercode, createUsersTable } from "./controllers/users.js";
 import userRoute from "./routes/userRoute.js";
 import transactionRoute from "./routes/transactionRoute.js";
+import favoriteRoute from "./routes/favoriteRoute.js";
+import { createFavoriteTable } from "./controllers/favourite.js";
 
 // import createUsersTable from "./controllers/users"
 
@@ -29,8 +31,10 @@ app.get("/", (req, res) => {
 
 app.use("/api", userRoute)
 app.use("/api", transactionRoute)
+app.use("/api", favoriteRoute)
 
 // MODIFY()
+createFavoriteTable()
 addCustomercode()
 
 createUsersTable().then(() => {

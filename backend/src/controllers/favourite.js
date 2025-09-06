@@ -21,7 +21,6 @@ export async function createFavoriteTable() {
 export async function insertFavourite(req, res) {
 
     try {
-        await createFavoriteTable()
         const { userId } = getAuth(req);
         const username = String(req.body?.username || "").trim();
         if (!username) {
