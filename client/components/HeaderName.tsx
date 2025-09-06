@@ -2,7 +2,14 @@ import { View, Text, TouchableOpacity } from "react-native";
 import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { AntDesign, Feather } from "@expo/vector-icons";
-import { router } from "expo-router";
+import {
+  ExternalPathString,
+  RelativePathString,
+  Router,
+  router,
+} from "expo-router";
+import { Routes } from "@/utils/data";
+import { navigate } from "expo-router/build/global-state/routing";
 
 interface HeaderProps {
   showhistorybutton?: boolean;
@@ -11,6 +18,7 @@ interface HeaderProps {
   onPress?: () => void;
   done?: string;
   icon?: React.ComponentProps<typeof AntDesign>["name"];
+  customheadernavigate?: Routes;
 }
 
 const HeaderName = ({
@@ -20,7 +28,16 @@ const HeaderName = ({
   onPress,
   done,
   icon,
+  customheadernavigate,
 }: HeaderProps) => {
+  const handleHeadernav = () => {
+    if (customheadernavigate !== undefined) {
+      router.push(`/${customheadernavigate}`);
+      // navigate('/account')
+      return
+    }
+    router.back();
+  };
   return (
     <SafeAreaView className={`flex-1 ${done ? "bg-gray-50" : "bg-white"}`}>
       <View className="bg-gray-50 gap-4 flex-1 sticky">
@@ -30,7 +47,7 @@ const HeaderName = ({
           {headertext && (
             <TouchableOpacity
               className="flex-row items-center gap-3"
-              onPress={() => router.back()}
+              onPress={handleHeadernav}
             >
               <Feather name="arrow-left" color={"lightgreen"} />
               <Text>{headertext}</Text>
@@ -44,7 +61,7 @@ const HeaderName = ({
               role="button"
             >
               {icon ? (
-                <AntDesign name={icon} size={20}/>
+                <AntDesign name={icon} size={20} />
               ) : (
                 <Text className="text-green-500">
                   {done ? done : "History"}

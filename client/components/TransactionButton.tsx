@@ -13,8 +13,8 @@ export enum TEXTCOLORS {
 export enum ButtonSize {
   small = "px-4",
   medium = "px-6",
-  large = "px-8",
-  xl = "px-10",
+  large = "px-8 py-3",
+  xl = "px-10 py-3",
   xs = "px-1 py-0",
   xss = "px-0 py-0",
   custom = "px-7 py-2",

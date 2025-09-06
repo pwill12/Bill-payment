@@ -44,7 +44,7 @@ const UppdateProfile = () => {
         return {};
     }
   };
-  const { creatUpdateuser } = useUpdateuser(getData());
+  const { creatUpdateuser, loading } = useUpdateuser(getData());
 
   return (
     <HeaderName
@@ -55,7 +55,7 @@ const UppdateProfile = () => {
             ? "Update Number"
             : "Update Profile"
       }
-      onPress={()=>router.back()}
+      onPress={() => router.back()}
     >
       <View className="gap-5">
         <Text className="font-semibold text-xl">
@@ -76,7 +76,12 @@ const UppdateProfile = () => {
         <TransactionButton
           title="Save"
           onPress={creatUpdateuser}
-          disabled={name === ProfileName.EMAIL}
+          disabled={
+            name === ProfileName.EMAIL ||
+            loading ||
+            value === rawData ||
+            value === `${firstName} ${lastName}`
+          }
         />
       </View>
     </HeaderName>

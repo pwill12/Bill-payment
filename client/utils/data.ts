@@ -7,7 +7,10 @@ export enum Routes {
   TABS = "(tabs)",
   TRANSFER = "transfer",
   TRANSFER_SUMMARY = "transfer/summary",
-  TRANSACTION_DETAILS = 'transaction-details'
+  TRANSACTION_DETAILS = 'transaction-details',
+  PROFILE_PAGE = 'profile',
+  ACCOUNT = 'account'
+
 }
 export interface CategoryProps {
   id: string;
@@ -16,10 +19,11 @@ export interface CategoryProps {
   size?: number;
   page?: Routes;
   text?: string;
+  active?: boolean;
 }
 
 export enum ProfileName {
-  USERNAME = 'App Account Number',
+  USERNAME = 'App Account username',
   ACCOUNT_TIER = 'Account tier',
   FULL_NAME = 'Full Name',
   MOBILE_NUMBER = 'Mobile Number',
@@ -118,4 +122,9 @@ export const UpdateCard: ProfileProps[] = [
   {id: 1, name: ProfileName.FULL_NAME},
   {id: 2, name: ProfileName.MOBILE_NUMBER},
   {id: 3, name: ProfileName.EMAIL},
+]
+
+export const TabsCategory: Pick<CategoryProps, 'id' | 'name' | 'active'>[]= [
+  {id: 'recent', name: 'Recent', active: false},
+  {id: 'favourites', name: 'Favourites', active: false},
 ]

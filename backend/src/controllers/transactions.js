@@ -124,3 +124,35 @@ export async function findTransaction(req, res) {
     }
 }
 
+export async function getRecent(req, res) {
+    try {
+        const { userId } = getAuth(req);
+        const { username } = req.params
+        const me = await sqldb`
+            SELECT username FROM users WHERE clerk_id = ${userId}
+        `;
+        if (!me || me.length === 0) {
+            return res.status(404).json({ message: "user not found" });
+        }
+        if (me[0].username !== username) {
+            return res.status(403).json({ message: "forbidden" });
+        }
+        const limitParam = Number.parseInt((req.query.limit ?? "3"), 10);
+        const offsetParam = Number.parseInt((req.query.offset ?? "0"), 10);
+        const limit = Number.isFinite(limitParam) && limitParam > 0 && limitParam <= 100 ? limitParam : 3;
+        const offset = Number.isFinite(offsetParam) && offsetParam >= 0 ? offsetParam : 0;
+        const getRecentsTransfer = await sqldb`
+            SELECT * FROM transactionlog WHERE sender = ${username}
+            ORDER BY created_at DESC
+            LIMIT ${limit} OFFSET ${offset};
+        `
+        if (getRecentsTransfer.length == 0) {
+            return res.status(200).json({ data: [] })
+        }
+
+        res.status(200).json({ data: getRecentsTransfer })
+
+    } catch (error) {
+        res.status(500).json({ message: "internal server error" })
+    }
+}

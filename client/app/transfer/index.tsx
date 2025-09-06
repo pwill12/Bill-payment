@@ -7,6 +7,8 @@ import { navigate } from "expo-router/build/global-state/routing";
 import { router } from "expo-router";
 import { useReceiver } from "@/hooks/useReceiver";
 import { useAuth } from "@clerk/clerk-expo";
+import RecentTransfer from "@/components/RecentsTransfer";
+import { TabsCategory } from "@/utils/data";
 
 const TransferPageCard = () => {
   const { fetchUsersandCache, data, loading } = useReceiver();
@@ -44,6 +46,7 @@ const TransferPageCard = () => {
         <Text>Free transfer for today 3</Text>
       </View>
       <TransferCard onTransfer={HandleTransfer} isLoading={loading}/>
+      <RecentTransfer data={TabsCategory}/>
     </HeaderName>
   );
 };
