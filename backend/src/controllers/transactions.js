@@ -131,6 +131,9 @@ export async function getRecent(req, res) {
         const me = await sqldb`
             SELECT username FROM users WHERE clerk_id = ${userId}
         `;
+        if (!me || me.length === 0) {
+            return res.status(404).json({ message: "user not found" });
+        }
         if (me[0].username !== username) {
             return res.status(403).json({ message: "forbidden" });
         }

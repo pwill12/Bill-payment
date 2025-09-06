@@ -31,10 +31,10 @@ const HeaderName = ({
   customheadernavigate,
 }: HeaderProps) => {
   const handleHeadernav = () => {
-    if (customheadernavigate) {
-      // router.push('/account');
+    if (customheadernavigate !== undefined) {
+      router.push(`/${customheadernavigate}`);
       // navigate('/account')
-      router.back()
+      return
     }
     router.back();
   };

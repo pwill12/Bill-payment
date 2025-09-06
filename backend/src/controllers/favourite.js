@@ -4,17 +4,17 @@ export async function createFavoriteTable() {
         await sqldb`CREATE TABLE IF NOT EXISTS favorite(
         clerk_id VARCHAR(50) NOT NULL,
         username VARCHAR(50) NOT NULL,
-        firstName VARCHAR(255) NULL,
-        lastName VARCHAR(255) NULL,
-        img VARCHAR(255) NULL,
+        firstName VARCHAR(255),
+        lastName VARCHAR(255),
+        img VARCHAR(255),
         PRIMARY KEY (clerk_id, username),
         FOREIGN KEY (clerk_id) REFERENCES users(clerk_id) ON DELETE CASCADE
         created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
         )`
         console.log("Favorite table created successfully");
     } catch (error) {
-        console.error("Error while creating users table", error);
-        process.exit(1)
+        console.error("Error while creating favorite table", error);
+        throw error
     }
 }
 
@@ -23,23 +23,31 @@ export async function insertFavourite(req, res) {
     try {
         await createFavoriteTable()
         const { userId } = getAuth(req);
+        const username = String(req.body?.username || "").trim();
+        if (!username) {
+            return res.status(400).json({ message: "username required" })
+        }
 
-        const username = req.body.username
-
+        const me = await sqldb`SELECT username FROM users WHERE clerk_id = ${userId}`;
+        if (me.length === 0) {
+            return res.status(404).json({ message: "current user not found" });
+        }
+        if (me[0].username === username) {
+            return res.status(400).json({ message: "cannot favorite yourself" });
+        }
         const checkuser = await sqldb`
-            SELECT * FROM favourite WHERE username = ${username}
+            SELECT username, firstName, lastName, img FROM users WHERE username = ${username}
         `;
-
-        if (!checkuser) {
+        if (checkuser.length === 0) {
             return res.status(404).json({ message: "no user found" })
         }
 
         const checkfavorited = await sqldb`
-            SELECT * FROM favourite WHERE clerk_id = ${userId} AND username = ${username}
+            SELECT 1 FROM favourite WHERE clerk_id = ${userId} AND username = ${username}
         `;
 
         if (checkfavorited.length > 0) {
-            return res.status(200).json({ user: checkfavorited[0], message: "User already favorited" });
+            return res.status(200).json({ message: "User already favorited" });
         }
 
         const userData = {

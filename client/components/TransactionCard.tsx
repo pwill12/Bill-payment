@@ -54,6 +54,7 @@ const TransactionCard = ({
     <ScrollView
       style={{ maxHeight: height * 0.76 }}
       showsVerticalScrollIndicator={false}
+      // onScrollEndDrag={}
     >
       <View className="rounded-xl flex-col bg-white">
         {loading ? (
