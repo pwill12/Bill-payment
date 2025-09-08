@@ -53,11 +53,11 @@ export const useGetTransaction = (id: number | undefined) => {
   return { transaction_details, isLoading, error, refetch };
 };
 
-export const useFindArrayofUsers = (username: string, limit: number = 10) => {
+export const useRecentUsers = (username?: string, limit: number = 10) => {
   const api = useApiClient();
 
   const {
-    data: currentUser,
+    data: recentUsers,
     isLoading,
     error,
     refetch,
@@ -68,6 +68,5 @@ export const useFindArrayofUsers = (username: string, limit: number = 10) => {
     select: (response: user) => response.data.data,
   });
 
-  return { currentUser, isLoading, error, refetch };
+  return { recentUsers, isLoading, error, refetch };
 };
-
