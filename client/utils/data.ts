@@ -19,7 +19,6 @@ export interface CategoryProps {
   size?: number;
   page?: Routes;
   text?: string;
-  active?: boolean;
 }
 
 export enum ProfileName {
@@ -124,7 +123,7 @@ export const UpdateCard: ProfileProps[] = [
   {id: 3, name: ProfileName.EMAIL},
 ]
 
-export const TabsCategory: Pick<CategoryProps, 'id' | 'name' | 'active'>[]= [
-  {id: 'recent', name: 'Recent', active: false},
-  {id: 'favourites', name: 'Favourites', active: false},
+export const TabsCategory: Pick<CategoryProps, 'id' | 'name'>[]= [
+  {id: 'recent', name: 'Recent'},
+  {id: 'favourites', name: 'Favourites'},
 ]
