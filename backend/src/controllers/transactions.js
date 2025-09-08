@@ -153,16 +153,20 @@ export async function getRecent(req, res) {
             return res.status(200).json({ data: [] })
         }
 
-        const receivers = getRecentsTransfer
+        const receiverscsv = getRecentsTransfer
             .map(r => r?.receiver)
             .filter((v) => typeof v === 'string' && v.trim().length > 0)
             .map(v => v.trim())
-            .join(',')
+            .join(',');
+        
+        if (receiverscsv.length === 0) {
+            return res.status(200).json({ data: [] })
+        }
 
         const findusers = await sqldb`
            SELECT username, firstName, lastName, img
            FROM users
-           WHERE username = ${receivers}
+           WHERE username = ANY(string_to_array(${receiverscsv}, ','))
          `;
         return res.status(200).json({ data: findusers })
 
