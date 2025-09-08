@@ -156,17 +156,13 @@ export async function getRecent(req, res) {
         const receivers = getRecentsTransfer
             .map(r => r?.receiver)
             .filter((v) => typeof v === 'string' && v.trim().length > 0)
-            .map(v => v.trim());
+            .map(v => v.trim())
+            .join(',')
 
-        const uniqueReceivers = Array.from(new Set(receivers));
-        if (uniqueReceivers.length === 0) {
-            return res.status(200).json({ data: [] });
-        }
-        
         const findusers = await sqldb`
            SELECT username, firstName, lastName, img
            FROM users
-           WHERE username IN ${sqldb(uniqueReceivers)}
+           WHERE username = ${receivers}
          `;
         return res.status(200).json({ data: findusers })
 

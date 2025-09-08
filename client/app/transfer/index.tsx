@@ -9,8 +9,11 @@ import { useReceiver } from "@/hooks/useReceiver";
 import { useAuth } from "@clerk/clerk-expo";
 import RecentTransfer from "@/components/RecentsTransfer";
 import { TabsCategory } from "@/utils/data";
+import { useRecentUsers } from "@/hooks/useTransactions";
+import { useCurrentUser } from "@/hooks/useCurrentuser";
 
 const TransferPageCard = () => {
+  const {currentUser} = useCurrentUser()
   const { fetchUsersandCache, data, loading } = useReceiver();
   const {userId} = useAuth()
 
@@ -21,9 +24,6 @@ const TransferPageCard = () => {
   const HandleTransfer = async (username: string) => {
     await fetchUsersandCache(username);
   };
-
-  
-
 
   useEffect(() => {
     if (data?.clerk_id === userId) {
@@ -36,6 +36,10 @@ const TransferPageCard = () => {
       });
     }
   }, [data,userId]);
+
+  const {recentUsers, error} = useRecentUsers(currentUser?.username)
+
+  console.log(error, currentUser?.username)
 
   return (
     <HeaderName
