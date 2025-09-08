@@ -26,9 +26,8 @@ export async function insertFavourite(req, res) {
         if (!username) {
             return res.status(400).json({ message: "username required" })
         }
-
         const me = await sqldb`SELECT username FROM users WHERE clerk_id = ${userId}`;
-        if (me.length === 0) {
+        if (!me || me.length === 0) {
             return res.status(404).json({ message: "current user not found" });
         }
         if (me[0].username === username) {

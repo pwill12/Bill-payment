@@ -7,6 +7,6 @@ const router = express.Router()
 router.post("/send",protectRoute, transactions)
 router.get("/transactions/:username",protectRoute, getTransactions)
 router.get("/transaction/:id",protectRoute, findTransaction)
-router.get("/recent-transaction/:username",protectRoute, getRecent)
+router.get("/recent-transaction",protectRoute, getRecent)
 
 export default router;

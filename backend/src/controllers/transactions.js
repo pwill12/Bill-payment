@@ -1,5 +1,6 @@
 import { getAuth } from "@clerk/express";
 import { sqldb } from "../config/db.js";
+import axios from "axios";
 
 export async function transactionsTable() {
     try {
@@ -127,7 +128,9 @@ export async function findTransaction(req, res) {
 export async function getRecent(req, res) {
     try {
         const { userId } = getAuth(req);
-        const { username } = req.params
+        if (!userId) return res.status(401).json({ message: "unauthorized" });
+        const username = req.query.username
+        if (!username) return res.status(400).json({ message: "username required" });
         const me = await sqldb`
             SELECT username FROM users WHERE clerk_id = ${userId}
         `;
@@ -142,7 +145,7 @@ export async function getRecent(req, res) {
         const limit = Number.isFinite(limitParam) && limitParam > 0 && limitParam <= 100 ? limitParam : 3;
         const offset = Number.isFinite(offsetParam) && offsetParam >= 0 ? offsetParam : 0;
         const getRecentsTransfer = await sqldb`
-            SELECT * FROM transactionlog WHERE sender = ${username}
+            SELECT receiver FROM transactionlog WHERE sender = ${username}
             ORDER BY created_at DESC
             LIMIT ${limit} OFFSET ${offset};
         `
@@ -150,8 +153,19 @@ export async function getRecent(req, res) {
             return res.status(200).json({ data: [] })
         }
 
-        res.status(200).json({ data: getRecentsTransfer })
+        const isreceiverArray = getRecentsTransfer.map(receiver=> String(receiver.trim()).filter(receiver => isNaN(receiver)))
 
+        const convertArrayofRecentUsers = isreceiverArray.join(',')
+
+        const findusers = await sqldb`
+            SELECT username,firstname,lastname,img FROM users WHERE username = ${convertArrayofRecentUsers}
+        `;
+
+        if (findusers.length == 0) {
+            return res.status(404).json({ message: "no user found" })
+        }
+
+        res.status(200).json({data: findusers})
     } catch (error) {
         res.status(500).json({ message: "internal server error" })
     }

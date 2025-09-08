@@ -1,24 +1,36 @@
 import { View, Text, TouchableOpacity } from "react-native";
 import React, { useState } from "react";
 import { Feather } from "@expo/vector-icons";
-import { TabsCategory } from "@/utils/data";
+import { CategoryProps, TabsCategory } from "@/utils/data";
+import { Transactions, User } from "@/types";
 
 type Tabs = {
   id: string;
   name: string;
-  active?: boolean;
 };
-interface Data {
+
+interface RecentTabActionProps {
   data: readonly Tabs[];
   onChange?: (id: string) => void;
+  categories?: Omit<User, "number" | "email" | "balance">[];
+  onCategoryPress?: (categories: Pick<CategoryProps, "id" | "name">) => void;
 }
-const RecentTransfer = ({ data, onChange }: Data) => {
+
+const RecentTransfer = ({
+  data,
+  onChange,
+  categories,
+}: RecentTabActionProps) => {
   const [activeId, setActiveId] = useState<string>(
-    data.find((t) => t.active)?.id ?? data[0]?.id ?? ""
+    data.find((t) => t.id)?.id ?? data[0]?.id ?? ""
+  );
+  const [activePage, setActivePage] = useState<string>(
+    data.find((t) => t.id)?.id ?? data[0]?.id ?? ""
   );
   const handleTabschange = (id: string) => {
     setActiveId(id);
     onChange?.(id);
+    setActivePage(id);
   };
   return (
     <View className="p-2 bg-white rounded-xl">
@@ -35,6 +47,19 @@ const RecentTransfer = ({ data, onChange }: Data) => {
           ))}
         </View>
         <Feather name="search" />
+      </View>
+      <View>
+        {activePage === "recent" || 'favorite' ? (
+          categories?.map((category) => (
+            <TouchableOpacity key={category.clerk_id}>
+              <View>
+                <Text>{category.firstname}</Text>
+              </View>
+            </TouchableOpacity>
+          ))
+        ) : (
+          <Text>no tabs data</Text>
+        )}
       </View>
     </View>
   );

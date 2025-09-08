@@ -32,13 +32,11 @@ export const useApiClient = (): AxiosInstance => {
 
 export const userApi = {
   syncUser: (api: AxiosInstance) => api.post("/users"),
-  AddcustomerCode: (api: AxiosInstance) =>
-    api.post("/user/customercode"),
+  AddcustomerCode: (api: AxiosInstance) => api.post("/user/customercode"),
   getCurrentUser: (api: AxiosInstance) => api.get("/user/find"),
   updateuser: (api: AxiosInstance, userdata: UpdateUser) =>
     api.put("/user/update", userdata),
-  validateuser: (api: AxiosInstance) =>
-    api.post("/user/validatepaystack"),
+  validateuser: (api: AxiosInstance) => api.post("/user/validatepaystack"),
 };
 
 export const receiverApi = {
@@ -54,4 +52,9 @@ export const transactionsApi = {
   ) => api.get(`/transactions/${username}?limit=${limit}`),
   getTransaction: (api: AxiosInstance, id: number | undefined) =>
     api.get(`/transaction/${id}`),
+  getRecentTransactions: (
+    api: AxiosInstance,
+    username: string,
+    limit: number
+  ) => api.get(`/recent-transaction?receiver=${username}?limit=${limit}`),
 };

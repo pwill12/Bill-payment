@@ -1,10 +1,16 @@
 import { useQuery } from "@tanstack/react-query";
 import { transactionsApi, useApiClient } from "../utils/api";
-import { Transactions } from "@/types";
+import { Transactions, User } from "@/types";
 
 interface transaction {
   data: {
     data: Transactions[]
+  };
+}
+
+interface user {
+  data: {
+    data: Omit<User, 'balance' | 'email'>[]
   };
 }
 
@@ -46,3 +52,21 @@ export const useGetTransaction = (id: number | undefined) => {
 
   return { transaction_details, isLoading, error, refetch };
 };
+
+export const useFindArrayofUsers = (username: string, limit: number = 10) => {
+  const api = useApiClient();
+
+  const {
+    data: currentUser,
+    isLoading,
+    error,
+    refetch,
+  } = useQuery({
+    queryKey: ["recents", username, limit],
+    queryFn: () => transactionsApi.getRecentTransactions(api, username, limit),
+    select: (response: user) => response.data.data,
+  });
+
+  return { currentUser, isLoading, error, refetch };
+};
+
