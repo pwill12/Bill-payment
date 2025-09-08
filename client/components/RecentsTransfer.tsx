@@ -13,13 +13,16 @@ interface RecentTabActionProps {
   data: readonly Tabs[];
   onChange?: (id: string) => void;
   categories?: Omit<User, "number" | "email" | "balance">[];
-  onCategoryPress?: (categories: Pick<CategoryProps, "id" | "name">) => void;
+  onUserPress?: (
+    user: Pick<User, "clerk_id" | "firstname" | "username" | "img">
+  ) => void;
 }
 
 const RecentTransfer = ({
   data,
   onChange,
   categories,
+  onUserPress,
 }: RecentTabActionProps) => {
   const [activeId, setActiveId] = useState<string>(
     data.find((t) => t.id)?.id ?? data[0]?.id ?? ""
@@ -49,9 +52,11 @@ const RecentTransfer = ({
         <Feather name="search" />
       </View>
       <View>
-        {activePage === "recent" || 'favorite' ? (
+        {activePage === "recent" || activePage === "favorite" ? (
           categories?.map((category) => (
-            <TouchableOpacity key={category.clerk_id}>
+            <TouchableOpacity
+              key={category.clerk_id ?? category.username}
+            >
               <View>
                 <Text>{category.firstname}</Text>
               </View>

@@ -64,6 +64,7 @@ export const useFindArrayofUsers = (username: string, limit: number = 10) => {
   } = useQuery({
     queryKey: ["recents", username, limit],
     queryFn: () => transactionsApi.getRecentTransactions(api, username, limit),
+    enabled: Boolean(username),
     select: (response: user) => response.data.data,
   });
 

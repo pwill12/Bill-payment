@@ -153,19 +153,23 @@ export async function getRecent(req, res) {
             return res.status(200).json({ data: [] })
         }
 
-        const isreceiverArray = getRecentsTransfer.map(receiver=> String(receiver.trim()).filter(receiver => isNaN(receiver)))
+        const receivers = getRecentsTransfer
+            .map(r => r?.receiver)
+            .filter((v) => typeof v === 'string' && v.trim().length > 0)
+            .map(v => v.trim());
 
-        const convertArrayofRecentUsers = isreceiverArray.join(',')
-
-        const findusers = await sqldb`
-            SELECT username,firstname,lastname,img FROM users WHERE username = ${convertArrayofRecentUsers}
-        `;
-
-        if (findusers.length == 0) {
-            return res.status(404).json({ message: "no user found" })
+        const uniqueReceivers = Array.from(new Set(receivers));
+        if (uniqueReceivers.length === 0) {
+            return res.status(200).json({ data: [] });
         }
+        
+        const findusers = await sqldb`
+           SELECT username, firstName, lastName, img
+           FROM users
+           WHERE username IN ${sqldb(uniqueReceivers)}
+         `;
+        return res.status(200).json({ data: findusers })
 
-        res.status(200).json({data: findusers})
     } catch (error) {
         res.status(500).json({ message: "internal server error" })
     }

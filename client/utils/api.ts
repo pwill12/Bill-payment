@@ -56,5 +56,5 @@ export const transactionsApi = {
     api: AxiosInstance,
     username: string,
     limit: number
-  ) => api.get(`/recent-transaction?receiver=${username}?limit=${limit}`),
+  ) => api.get("/recent-transaction", { params: { username, limit } }),
 };
