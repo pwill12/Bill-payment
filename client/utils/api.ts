@@ -46,9 +46,9 @@ export const receiverApi = {
 
 export const addFavoriteApi = {
   addfavorite: (api: AxiosInstance, username: string) =>
-    api.post(`/addfavorite/${username}`),
+    api.post("/addfavorite", {username}),
   getfavorite: (api: AxiosInstance, limit: number) =>
-    api.get("/getfavorite"),
+    api.get("/getfavorite", {params: {limit}}),
 };
 
 export const transactionsApi = {

@@ -44,17 +44,12 @@ export async function insertFavourite(req, res) {
         }
 
         const checkfavorited = await sqldb`
-            SELECT 1 FROM favourite WHERE clerk_id = ${userId} AND username = ${username}
+            SELECT 1 FROM favorite WHERE clerk_id = ${userId} AND username = ${username}
         `;
 
         if (checkfavorited.length > 0) {
             return res.status(200).json({ message: "User already favorited" });
         }
-
-        const limitParam = Number.parseInt((req.query.limit ?? "3"), 10);
-        const offsetParam = Number.parseInt((req.query.offset ?? "0"), 10);
-        const limit = Number.isFinite(limitParam) && limitParam > 0 && limitParam <= 100 ? limitParam : 3;
-        const offset = Number.isFinite(offsetParam) && offsetParam >= 0 ? offsetParam : 0;
 
         const userData = {
             clerk_id: userId,
@@ -64,13 +59,15 @@ export async function insertFavourite(req, res) {
             img: checkuser[0].img ?? null,
         };
 
-        const insertuser = await sqldb`
-            INSERT INTO users(clerk_id, username, firstName, lastName, img)
+        const insertfavorite = await sqldb`
+            INSERT INTO favorite(clerk_id, username, firstName, lastName, img)
             VALUES (${userData.clerk_id}, ${userData.username}, ${userData.firstName}, ${userData.lastName}, ${userData.img})
-            LIMIT ${limit} OFFSET ${offset};
+            ON CONFLICT (clerk_id, username) DO NOTHING
             RETURNING *
         `;
-        return res.status(201).json(insertuser[0])
+
+        if (insertfavorite.length === 0) return res.status(200).json({ message: "User already favorited" });
+        return res.status(201).json(insertfavorite[0])
     } catch (error) {
         console.log("Error while creating users", error);
         res.status(500).json({ message: "internal server error" })
@@ -83,8 +80,15 @@ export async function findFavorite(req, res) {
         const { userId } = getAuth(req)
         if (!userId) return res.status(401).json({ message: "unauthorized" });
 
+        const limitParam = Number.parseInt((req.query.limit ?? "3"), 10);
+        const offsetParam = Number.parseInt((req.query.offset ?? "0"), 10);
+        const limit = Number.isFinite(limitParam) && limitParam > 0 && limitParam <= 100 ? limitParam : 3;
+        const offset = Number.isFinite(offsetParam) && offsetParam >= 0 ? offsetParam : 0;
+
         const findfavorite = await sqldb`
             SELECT * FROM favorite WHERE clerk_id = ${userId}
+            ORDER BY created_at DESC
+            LIMIT ${limit} OFFSET ${offset};
         `;
 
         if (findfavorite.length == 0) {
