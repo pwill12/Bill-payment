@@ -1,5 +1,5 @@
 import { getAuth } from "@clerk/express";
-import { sqldb } from "../config/db";
+import { sqldb } from "../config/db.js";
 
 export async function createFavoriteTable() {
 
