@@ -1,3 +1,6 @@
+import { getAuth } from "@clerk/express";
+import { sqldb } from "../config/db";
+
 export async function createFavoriteTable() {
 
     try {
@@ -48,6 +51,11 @@ export async function insertFavourite(req, res) {
             return res.status(200).json({ message: "User already favorited" });
         }
 
+        const limitParam = Number.parseInt((req.query.limit ?? "3"), 10);
+        const offsetParam = Number.parseInt((req.query.offset ?? "0"), 10);
+        const limit = Number.isFinite(limitParam) && limitParam > 0 && limitParam <= 100 ? limitParam : 3;
+        const offset = Number.isFinite(offsetParam) && offsetParam >= 0 ? offsetParam : 0;
+
         const userData = {
             clerk_id: userId,
             firstName: checkuser[0].firstname ?? null,
@@ -59,11 +67,33 @@ export async function insertFavourite(req, res) {
         const insertuser = await sqldb`
             INSERT INTO users(clerk_id, username, firstName, lastName, img)
             VALUES (${userData.clerk_id}, ${userData.username}, ${userData.firstName}, ${userData.lastName}, ${userData.img})
+            LIMIT ${limit} OFFSET ${offset};
             RETURNING *
         `;
         return res.status(201).json(insertuser[0])
     } catch (error) {
         console.log("Error while creating users", error);
+        res.status(500).json({ message: "internal server error" })
+    }
+}
+
+export async function findFavorite(req, res) {
+
+    try {
+        const { userId } = getAuth(req)
+        if (!userId) return res.status(401).json({ message: "unauthorized" });
+
+        const findfavorite = await sqldb`
+            SELECT * FROM favorite WHERE clerk_id = ${userId}
+        `;
+
+        if (findfavorite.length == 0) {
+            return res.status(200).json({ message: "no favorite user" })
+        }
+
+        res.status(200).json({ data: findfavorite })
+
+    } catch (error) {
         res.status(500).json({ message: "internal server error" })
     }
 }

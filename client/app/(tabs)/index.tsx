@@ -24,7 +24,7 @@ const HomeScreen = () => {
   const username = user
     ? (user.emailAddresses?.[0]?.emailAddress?.split("@")[0] ?? "")
     : "";
-  const { transactionslog,isLoading ,refetch} = useTransactions(username, 4);
+  const { transactionslog,isLoading ,refetch} = useTransactions(username, 3);
   const { refetch: refetchbalance} = useCurrentUser();
 
   const [isRefetching, setIsRefetching] = useState(false);

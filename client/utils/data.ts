@@ -126,4 +126,5 @@ export const UpdateCard: ProfileProps[] = [
 export const TabsCategory: Pick<CategoryProps, 'id' | 'name'>[]= [
   {id: 'recent', name: 'Recent'},
   {id: 'favorite', name: 'Favorites'},
+  {id: 'fav', name: 'Fav'},
 ]
