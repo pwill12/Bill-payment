@@ -1,4 +1,5 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { ComponentProps } from "react";
 
 export enum Routes {
   HOME = "/",
@@ -14,7 +15,7 @@ export enum Routes {
 export interface CategoryProps {
   id: string;
   name: string;
-  icon: React.ComponentProps<typeof MaterialCommunityIcons>["name"];
+  icon: ComponentProps<typeof MaterialCommunityIcons>["name"];
   size?: number;
   page?: Routes;
   text?: string;
@@ -68,7 +69,7 @@ export const SuccessCategory: CategoryProps[] = [
   {
     id: "details",
     name: "View details",
-    icon: "details",
+    icon: "file-document-outline",
     size: 21,
     page: Routes.TRANSACTION_DETAILS,
   },

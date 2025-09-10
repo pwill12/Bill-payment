@@ -29,14 +29,14 @@ const Success = () => {
           id: param_id,
         },
       });
+      return;
     }
 
     if (addFav) {
       createFavorite();
+      return;
     }
-    if (!page || addFav) {
-      Alert.prompt("Upcoming", "Feature will be added soon");
-    }
+    Alert.alert("Upcoming", "Feature will be added soon");
   };
 
   return (
