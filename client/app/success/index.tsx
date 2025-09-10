@@ -1,13 +1,14 @@
-import { View, Text } from "react-native";
+import { View, Text, Alert } from "react-native";
 import React from "react";
 import HeaderName from "../../components/HeaderName";
 import CategoryActions from "../../components/CategoryCard";
-import { CategoryProps, SuccessCategory } from "@/utils/data";
+import { CategoryProps, Routes, SuccessCategory } from "@/utils/data";
 import LottieView from "lottie-react-native";
 import { Assetimages } from "@/assets";
 import { homestyles } from "@/assets/styles/home.styles";
 import { router, useLocalSearchParams } from "expo-router";
 import { categorystyle } from "@/types";
+import { useAddFavorite } from "@/hooks/useFavorite";
 
 const Success = () => {
   const params = useLocalSearchParams();
@@ -15,18 +16,27 @@ const Success = () => {
     ? params.amount[0]
     : params.amount;
   const param_id = Array.isArray(params.id) ? params.id[0] : params.id;
+  const name = Array.isArray(params.name) ? params.name[0] : params.name;
+  const { createFavorite } = useAddFavorite(name);
 
   const handlecategory = (category: CategoryProps) => {
-    const page = category?.page;
-    {
-      page &&
-        router.push({
-          pathname: "/transaction-details",
-          params: {
-            id: param_id,
-          },
-        });
+    const page = category?.page === Routes.TRANSACTION_DETAILS;
+    const addFav = category.id === "favourites";
+    if (page) {
+      router.push({
+        pathname: "/transaction-details",
+        params: {
+          id: param_id,
+        },
+      });
+      return;
     }
+
+    if (addFav) {
+      createFavorite();
+      return;
+    }
+    Alert.alert("Upcoming", "Feature will be added soon");
   };
 
   return (

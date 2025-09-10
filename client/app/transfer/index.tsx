@@ -11,11 +11,12 @@ import RecentTransfer from "@/components/RecentsTransfer";
 import { TabsCategory } from "@/utils/data";
 import { useRecentUsers } from "@/hooks/useTransactions";
 import { useCurrentUser } from "@/hooks/useCurrentuser";
+import { useGetFavorites } from "@/hooks/useFavorite";
 
 const TransferPageCard = () => {
-  const {currentUser} = useCurrentUser()
+  const { currentUser } = useCurrentUser();
   const { fetchUsersandCache, data, loading } = useReceiver();
-  const {userId} = useAuth()
+  const { userId } = useAuth();
 
   const handlePress = () => {
     navigate("/");
@@ -27,19 +28,25 @@ const TransferPageCard = () => {
 
   useEffect(() => {
     if (data?.clerk_id === userId) {
-      Alert.alert("You cannot send to yourself")
-    }
-    else if (data?.username) {
+      Alert.alert("You cannot send to yourself");
+    } else if (data?.username) {
       router.push({
         pathname: "/transfer/summary",
-        params: { name: data?.username, firstname: data?.firstname, lastname: data?.lastname, img: data?.img },
+        params: {
+          name: data?.username,
+          firstname: data?.firstname,
+          lastname: data?.lastname,
+          img: data?.img,
+        },
       });
     }
-  }, [data,userId]);
+  }, [data, userId]);
 
-  const {recentUsers, error} = useRecentUsers(currentUser?.username)
-
-  console.log(error, currentUser?.username)
+  const { recentUsers, isLoading } = useRecentUsers(
+    currentUser?.username,
+    3
+  );
+  const { favoriteUser, favloading } = useGetFavorites(3);
 
   return (
     <HeaderName
@@ -51,8 +58,14 @@ const TransferPageCard = () => {
         <MaterialCommunityIcons name="bank-transfer" size={21} />
         <Text>Free transfer for today 3</Text>
       </View>
-      <TransferCard onTransfer={HandleTransfer} isLoading={loading}/>
-      <RecentTransfer data={TabsCategory}/>
+      <TransferCard onTransfer={HandleTransfer} isLoading={loading} />
+      <RecentTransfer
+        data={TabsCategory}
+        categories={recentUsers ?? []}
+        favorites={favoriteUser ?? []}
+        loading={isLoading}
+        favoriteloading={favloading}
+      />
     </HeaderName>
   );
 };

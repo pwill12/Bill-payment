@@ -44,6 +44,13 @@ export const receiverApi = {
     api.get(`/user/find/${username}`),
 };
 
+export const addFavoriteApi = {
+  addfavorite: (api: AxiosInstance, username: string) =>
+    api.post("/addfavorite", {username}),
+  getfavorite: (api: AxiosInstance, limit: number) =>
+    api.get("/getfavorite", {params: {limit}}),
+};
+
 export const transactionsApi = {
   getUserTransactions: (
     api: AxiosInstance,

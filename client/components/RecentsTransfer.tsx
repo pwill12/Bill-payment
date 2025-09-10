@@ -1,8 +1,9 @@
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity, ActivityIndicator } from "react-native";
 import React, { useState } from "react";
 import { Feather } from "@expo/vector-icons";
-import { CategoryProps, TabsCategory } from "@/utils/data";
-import { Transactions, User } from "@/types";
+import { User } from "@/types";
+import TabsComponents from "./TabsComponents";
+import { router } from "expo-router";
 
 type Tabs = {
   id: string;
@@ -11,61 +12,98 @@ type Tabs = {
 
 interface RecentTabActionProps {
   data: readonly Tabs[];
+  loading: boolean;
+  favoriteloading: boolean;
   onChange?: (id: string) => void;
-  categories?: Omit<User, "number" | "email" | "balance">[];
-  onUserPress?: (
-    user: Pick<User, "clerk_id" | "firstname" | "username" | "img">
-  ) => void;
+  categories: Pick<User, "firstname" | "lastname" | "img" | "username">[];
+  favorites: Pick<User, "firstname" | "lastname" | "img" | "username">[];
 }
 
 const RecentTransfer = ({
-  data,
+  data: user,
   onChange,
   categories,
-  onUserPress,
+  loading,
+  favoriteloading,
+  favorites,
 }: RecentTabActionProps) => {
   const [activeId, setActiveId] = useState<string>(
-    data.find((t) => t.id)?.id ?? data[0]?.id ?? ""
+    user.find((t) => t.id)?.id ?? user[0]?.id ?? ""
   );
   const [activePage, setActivePage] = useState<string>(
-    data.find((t) => t.id)?.id ?? data[0]?.id ?? ""
+    user.find((t) => t.id)?.id ?? user[0]?.id ?? ""
   );
   const handleTabschange = (id: string) => {
     setActiveId(id);
     onChange?.(id);
     setActivePage(id);
   };
+
+  const handleCategoryPress = (
+    user: Pick<User, "lastname" | "firstname" | "username" | "img">
+  ) => {
+    router.push({
+      pathname: "/transfer/summary",
+      params: {
+        name: user.username,
+        firstname: user.firstname,
+        lastname: user.lastname,
+        img: user.img,
+      },
+    });
+  };
   return (
-    <View className="p-2 bg-white rounded-xl">
+    <View className="py-2 px-4 bg-white rounded-xl gap-3">
       <View className="flex-row justify-between items-center pt-2">
-        <View className="flex-row gap-3">
-          {data.map((tab, index) => (
+        <View className="flex-row gap-5 items-center">
+          {user.map((tab, index) => (
             <TouchableOpacity
-              className={`border-b-2 ${activeId === tab.id ? "border-red-500" : "border-transparent"}`}
+              className={`border-b-2 ${activeId === tab.id ? "border-green-500" : "border-transparent"}`}
               key={tab.id}
               onPress={() => handleTabschange(tab.id)}
             >
-              <Text>{tab.name}</Text>
+              <Text
+                className={`${activeId === tab.id && "text-green-600"} ${index === 0 ? "text-xl" : ""}`}
+              >
+                {tab.name}
+              </Text>
             </TouchableOpacity>
           ))}
         </View>
-        <Feather name="search" />
+        <View className="justify-center items-center w-11">
+          <Feather name="search" size={15} color={"green"} />
+        </View>
       </View>
-      <View>
-        {activePage === "recent" || activePage === "favorite" ? (
-          categories?.map((category) => (
-            <TouchableOpacity
-              key={category.clerk_id ?? category.username}
-            >
-              <View>
-                <Text>{category.firstname}</Text>
-              </View>
-            </TouchableOpacity>
-          ))
+      {activePage === "recent" ? (
+        loading ? (
+          <View className="px-4 justify-center items-center bg-gray-50">
+            <ActivityIndicator size={"large"} />
+          </View>
+        ) : categories?.length === 0 ? (
+          <View>
+            <Text>no recent transfer</Text>
+          </View>
         ) : (
-          <Text>no tabs data</Text>
-        )}
-      </View>
+          <TabsComponents
+            categories={categories}
+            onUserPress={handleCategoryPress}
+          />
+        )
+      ) : activeId === "favorite" ? (
+        favoriteloading ? (
+          <View className="px-4 justify-center items-center bg-gray-50">
+            <ActivityIndicator size={"large"} />
+          </View>
+        ) : favorites?.length === 0 ? (
+          <View>
+            <Text>no recent transfer</Text>
+          </View>
+        ) : (
+          <TabsComponents categories={favorites} />
+        )
+      ) : (
+        <Text>no tabs data</Text>
+      )}
     </View>
   );
 };

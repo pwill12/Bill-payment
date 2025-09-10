@@ -1,6 +1,13 @@
 import React, { useState } from "react";
 import { AntDesign, Ionicons } from "@expo/vector-icons";
-import { Image, RefreshControl, ScrollView, Text, View } from "react-native";
+import {
+  Alert,
+  Image,
+  RefreshControl,
+  ScrollView,
+  Text,
+  View,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import SignOutButton from "@/components/SignOutButton";
 import { useUser } from "@clerk/clerk-expo";
@@ -19,13 +26,13 @@ import { router } from "expo-router";
 import { useSyncDb } from "@/hooks/useRegister";
 
 const HomeScreen = () => {
-  useSyncDb()
+  useSyncDb();
   const { user } = useUser();
   const username = user
     ? (user.emailAddresses?.[0]?.emailAddress?.split("@")[0] ?? "")
     : "";
-  const { transactionslog,isLoading ,refetch} = useTransactions(username, 4);
-  const { refetch: refetchbalance} = useCurrentUser();
+  const { transactionslog, isLoading, refetch } = useTransactions(username, 3);
+  const { refetch: refetchbalance } = useCurrentUser();
 
   const [isRefetching, setIsRefetching] = useState(false);
 
@@ -33,6 +40,9 @@ const HomeScreen = () => {
     const page = category?.page;
     {
       page && router.push(`/${page}`);
+    }
+    if (!page) {
+      Alert.alert("Upcoming", "Feature will be added soon");
     }
   };
 
@@ -85,7 +95,11 @@ const HomeScreen = () => {
             onCategoryPress={handleCatPress}
             bg
           />
-          <TransactionCard transactions={transactionslog} loading={isLoading} username={username}/>
+          <TransactionCard
+            transactions={transactionslog}
+            loading={isLoading}
+            username={username}
+          />
         </ScrollView>
       </View>
     </SafeAreaView>
