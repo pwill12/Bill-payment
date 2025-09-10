@@ -5,12 +5,12 @@ export async function createFavoriteTable() {
 
     try {
         await sqldb`CREATE TABLE IF NOT EXISTS favorite(
+        id SERIAL PRIMARY KEY,
         clerk_id VARCHAR(50) NOT NULL,
         username VARCHAR(50) NOT NULL,
         firstName VARCHAR(255),
         lastName VARCHAR(255),
         img VARCHAR(255),
-        PRIMARY KEY (clerk_id, username),
         FOREIGN KEY (clerk_id) REFERENCES users(clerk_id) ON DELETE CASCADE
         created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
         )`
@@ -62,7 +62,6 @@ export async function insertFavourite(req, res) {
         const insertfavorite = await sqldb`
             INSERT INTO favorite(clerk_id, username, firstName, lastName, img)
             VALUES (${userData.clerk_id}, ${userData.username}, ${userData.firstName}, ${userData.lastName}, ${userData.img})
-            ON CONFLICT (clerk_id, username) DO NOTHING
             RETURNING *
         `;
 
