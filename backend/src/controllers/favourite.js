@@ -6,12 +6,11 @@ export async function createFavoriteTable() {
     try {
         await sqldb`CREATE TABLE IF NOT EXISTS favorite(
         id SERIAL PRIMARY KEY,
-        clerk_id VARCHAR(50) NOT NULL,
+        clerk_id VARCHAR(50) NOT NULL FOREIGN KEY REFERENCES users(clerk_id) ON DELETE CASCADE,
         username VARCHAR(50) NOT NULL,
         firstName VARCHAR(255),
         lastName VARCHAR(255),
         img VARCHAR(255),
-        FOREIGN KEY (clerk_id) REFERENCES users(clerk_id) ON DELETE CASCADE
         created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
         )`
         console.log("Favorite table created successfully");
