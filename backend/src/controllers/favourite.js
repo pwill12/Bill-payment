@@ -6,8 +6,9 @@ export async function createFavoriteTable() {
     try {
         await sqldb`CREATE TABLE IF NOT EXISTS favorite(
         id SERIAL PRIMARY KEY,
-        clerk_id VARCHAR(50) NOT NULL FOREIGN KEY REFERENCES users(clerk_id) ON DELETE CASCADE,
+        clerk_id VARCHAR(50) NOT NULL REFERENCES users(clerk_id) ON DELETE CASCADE,
         username VARCHAR(50) NOT NULL,
+        UNIQUE (clerk_id, username),
         firstName VARCHAR(255),
         lastName VARCHAR(255),
         img VARCHAR(255),
