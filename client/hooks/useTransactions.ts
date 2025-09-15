@@ -22,16 +22,17 @@ export const useTransactions = (
   limit: number = 10
 ) => {
   const api = useApiClient();
-
+  const normalizedUsername = username?.trim();
+  const safeLimit = Math.max(1, Math.min(limit, 100));
   const {
     data: transactionslog,
     isLoading,
     error,
     refetch,
   } = useQuery({
-    queryKey: ["transactions", username, limit],
-    queryFn: () => transactionsApi.getUserTransactions(api, username!, limit),
-    enabled: Boolean(username),
+    queryKey: ["transactions", normalizedUsername, safeLimit],
+    queryFn: () => transactionsApi.getUserTransactions(api, normalizedUsername!, limit),
+    enabled: Boolean(normalizedUsername),
     select: (response: transaction) => response.data.data,
   });
 

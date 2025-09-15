@@ -1,4 +1,4 @@
-import { View, Text, Alert } from "react-native";
+import { View, Text, Alert, ScrollView } from "react-native";
 import React, { useEffect } from "react";
 import TransferCard from "@/components/TransferCard";
 import HeaderName from "@/components/HeaderName";
@@ -54,6 +54,11 @@ const TransferPageCard = () => {
       headertext="Transfer to User Account"
       onPress={handlePress}
     >
+      <ScrollView
+      contentContainerStyle={{
+        gap: 8
+      }}
+      >
       <View className="bg-blue-50 px-3 py-4 flex-row gap-2 items-center rounded-xl ">
         <MaterialCommunityIcons name="bank-transfer" size={21} />
         <Text>Free transfer for today 3</Text>
@@ -66,6 +71,7 @@ const TransferPageCard = () => {
         loading={isLoading}
         favoriteloading={favloading}
       />
+      </ScrollView>
     </HeaderName>
   );
 };

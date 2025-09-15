@@ -54,7 +54,10 @@ const CategoryActions = ({
           accessibilityRole="button"
           accessibilityLabel={`Select ${category.name}`}
           onPress={() => handlePress(category)}
-          disabled={disabled}
+          disabled={!!(disabled && category.id === "favourites")}
+          accessibilityState={{
+            disabled: !!(disabled && category.id === "favourites"),
+          }}
         >
           <View className="items-center bg-green-50 rounded-lg p-2">
             <MaterialCommunityIcons
@@ -64,12 +67,14 @@ const CategoryActions = ({
             />
           </View>
           <Text
-            className={`text-xs ${category.id === "favourites" ? (disabled ? "text-gray-300" : "") : ""}`}
+            className={`text-xs ${
+              category.id === "favourites" && disabled ? "text-gray-300" : ""
+            }`}
           >
             {category.id === "favourites"
               ? disabled
                 ? "Added to favorites"
-                : "Add to favorite"
+                : "Add to favorites"
               : category.name}
           </Text>
         </TouchableOpacity>

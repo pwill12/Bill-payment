@@ -16,7 +16,7 @@ const rewards = () => {
       className="flex-1 bg-teal-100 rounded-b-3xl"
       style={{ maxHeight: height * 0.265 }}
     >
-      <View className="p-3 gap-4">
+      <View className="px-4 py-3 gap-4">
         <View className="flex flex-row justify-between py-3 items-center">
           <Text className="font-bold text-3xl">Rewards</Text>
           <TouchableOpacity>
@@ -48,7 +48,7 @@ const rewards = () => {
             <Text className="text-sm">Welcome Bonus</Text>
             <TransactionButton disabled title="total bonus" size={ButtonSize.xs}/>
           </View>
-          <BonusReward type={BonusCard}/>
+          <BonusReward type={BonusCard} bg/>
         </View>
       </View>
     </SafeAreaView>

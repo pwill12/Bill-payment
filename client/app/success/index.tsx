@@ -41,7 +41,7 @@ const Success = () => {
 
   const { favoriteUser } = useGetFavorites(4);
 
-  const findfav = favoriteUser?.find((user) => user.username)?.username === name;
+  const findfav = !!favoriteUser?.some((u) => u.username === name);
   return (
     <HeaderName showhistorybutton done="Done" onPress={() => router.push("/")}>
       <View className="items-center">
