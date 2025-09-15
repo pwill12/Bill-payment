@@ -44,9 +44,9 @@ const TransferPageCard = () => {
 
   const { recentUsers, isLoading } = useRecentUsers(
     currentUser?.username,
-    3
+    4
   );
-  const { favoriteUser, favloading } = useGetFavorites(3);
+  const { favoriteUser, favloading } = useGetFavorites(4);
 
   return (
     <HeaderName

@@ -8,7 +8,7 @@ import { Assetimages } from "@/assets";
 import { homestyles } from "@/assets/styles/home.styles";
 import { router, useLocalSearchParams } from "expo-router";
 import { categorystyle } from "@/types";
-import { useAddFavorite } from "@/hooks/useFavorite";
+import { useAddFavorite, useGetFavorites } from "@/hooks/useFavorite";
 
 const Success = () => {
   const params = useLocalSearchParams();
@@ -39,6 +39,9 @@ const Success = () => {
     Alert.alert("Upcoming", "Feature will be added soon");
   };
 
+  const { favoriteUser } = useGetFavorites(4);
+
+  const findfav = favoriteUser?.find((user) => user.username)?.username === name;
   return (
     <HeaderName showhistorybutton done="Done" onPress={() => router.push("/")}>
       <View className="items-center">
@@ -55,8 +58,9 @@ const Success = () => {
         <CategoryActions
           type={SuccessCategory}
           card
-          styles={categorystyle.medium}
+          styles={categorystyle.small}
           onCategoryPress={handlecategory}
+          disabled={findfav}
         />
       </View>
     </HeaderName>

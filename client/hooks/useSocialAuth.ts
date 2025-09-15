@@ -1,5 +1,5 @@
 import { useSSO } from "@clerk/clerk-expo";
-import { navigate } from "expo-router/build/global-state/routing";
+import { router } from "expo-router";
 import { useState } from "react";
 import { Alert } from "react-native";
 
@@ -13,7 +13,7 @@ export const useSocialAuth = () => {
       const { createdSessionId, setActive } = await startSSOFlow({ strategy });
       if (createdSessionId && setActive) {
         await setActive({ session: createdSessionId });
-        navigate('/(tabs)');
+        router.push('/(tabs)');
       }
     } catch (err) {
       console.log("Error in social auth", err);

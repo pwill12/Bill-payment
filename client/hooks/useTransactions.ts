@@ -4,20 +4,23 @@ import { Transactions, User } from "@/types";
 
 interface transaction {
   data: {
-    data: Transactions[]
+    data: Transactions[];
   };
 }
 
 interface user {
   data: {
-    data: Omit<User, 'balance' | 'email'>[]
+    data: Omit<User, "balance" | "email">[];
   };
 }
 
 interface transactiondetail {
-    data: Transactions
+  data: Transactions;
 }
-export const useTransactions = (username: string | undefined, limit: number = 10) => {
+export const useTransactions = (
+  username: string | undefined,
+  limit: number = 10
+) => {
   const api = useApiClient();
 
   const {
@@ -26,7 +29,7 @@ export const useTransactions = (username: string | undefined, limit: number = 10
     error,
     refetch,
   } = useQuery({
-    queryKey: ["transactions", username , limit],
+    queryKey: ["transactions", username, limit],
     queryFn: () => transactionsApi.getUserTransactions(api, username!, limit),
     enabled: Boolean(username),
     select: (response: transaction) => response.data.data,

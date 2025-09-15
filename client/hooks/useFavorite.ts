@@ -18,14 +18,7 @@ export const useAddFavorite = (username: string) => {
     mutationFn: (username: string) => addFavoriteApi.addfavorite(api, username),
     onSuccess: (response) => {
       QueryClient.invalidateQueries({ queryKey: ["favorite"] });
-      Alert.alert("User Update", "user info updated successfully", [
-        {
-          text: "Ok",
-          style: "destructive",
-          onPress: () => router.push("/"),
-        },
-      ]);
-
+      Alert.alert(`${username} added to favorite`);
       return response;
     },
     onError: (error) => {

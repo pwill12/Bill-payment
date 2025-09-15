@@ -1,7 +1,7 @@
 import { Assetimages } from "@/assets";
 import { useSocialAuth } from "@/hooks/useSocialAuth";
 import { useAuth } from "@clerk/clerk-expo";
-import { Redirect } from "expo-router";
+import { router } from "expo-router";
 import {
   ActivityIndicator,
   Image,
@@ -15,7 +15,7 @@ export default function Index() {
   const { isSignedIn } = useAuth();
 
   if (isSignedIn) {
-    return <Redirect href={"/(tabs)"} />;
+    router.push('/(tabs)')
   }
 
   return (
