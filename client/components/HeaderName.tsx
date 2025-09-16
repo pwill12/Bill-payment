@@ -3,19 +3,16 @@ import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { AntDesign, Feather } from "@expo/vector-icons";
 import {
-  ExternalPathString,
-  RelativePathString,
-  Router,
   router,
 } from "expo-router";
 import { Routes } from "@/utils/data";
-import { navigate } from "expo-router/build/global-state/routing";
 
 interface HeaderProps {
   showhistorybutton?: boolean;
   headertext?: string;
   children: React.ReactNode;
   onPress?: () => void;
+  onPressHistory?: () => void;
   done?: string;
   icon?: React.ComponentProps<typeof AntDesign>["name"];
   customheadernavigate?: Routes;

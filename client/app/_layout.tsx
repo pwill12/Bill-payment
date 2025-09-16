@@ -1,4 +1,4 @@
-import { Redirect, Stack } from "expo-router";
+import { Stack } from "expo-router";
 import "../global.css";
 import { ClerkProvider } from "@clerk/clerk-expo";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -25,7 +25,6 @@ export default function RootLayout() {
     <ClerkProvider tokenCache={tokenCache}>
       <QueryClientProvider client={queryClient}>
         <Stack screenOptions={{ headerShown: false }}>
-          {/* <Stack.Screen name="onboarding" /> */}
           <Stack.Screen name="(auth)" />
           <Stack.Screen name="(tabs)" />
           {/* <Stack.Screen name="transferpage" /> */}
