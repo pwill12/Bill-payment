@@ -15,6 +15,13 @@ const TransactionHistory = () => {
     moredata
   );
   const [users, setUsers] = useState(transactionslog ?? []);
+  const [loading, setloading] = useState(isLoading)
+  React.useEffect(() => {
+    if (transactionslog) {
+      setUsers(transactionslog);
+      setloading(false)
+    }
+  }, [transactionslog]);
   const handleloadmore = () => {
     setmoredata((prev) => prev + 10);
     if (transactionslog && transactionslog.length > 0) {
@@ -22,15 +29,15 @@ const TransactionHistory = () => {
     }
     void refetch();
   };
-  console.log(users)
   return (
     <HeaderName headertext="Transaction History">
       <TransactionCard
-        transactions={users}
-        loading={isLoading}
+        transactions={Array.from(new Map(users.map(item => [item.id, item])).values())}
+        loading={loading}
         username={username}
         loadpage={handleloadmore}
         showload
+        loadmore={isLoading}
       />
     </HeaderName>
   );
