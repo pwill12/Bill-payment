@@ -25,7 +25,7 @@ export const useTransactions = (
   const api = useApiClient();
   const normalizedUsername = username?.trim();
   const safeLimit = Math.max(1, Math.min(limit, 100));
-  const offsetLimit = Math.max(1, Math.min(offset ?? 0, 100));
+  const offsetLimit = Math.max(0, offset ?? 0);
   const {
     data: transactionslog,
     isLoading,

@@ -10,10 +10,11 @@ const TransactionHistory = () => {
     ? params.username[0]
     : params.username;
   const [moredata, setmoredata] = useState<number>(10);
+  const [offset, setoffset] = useState<number>(0);
   const { transactionslog, isLoading, refetch } = useTransactions(
     username,
     moredata,
-    0
+    offset
   );
   const [users, setUsers] = useState(transactionslog ?? []);
   const [loading, setloading] = useState(isLoading);
@@ -31,12 +32,13 @@ const TransactionHistory = () => {
   );
   const handleloadmore = () => {
     setmoredata((prev) => prev + 10);
-    if (transactionslog && transactionslog.length > 0) {
+    if (transactionslog && transactionslog.length === 10) {
+      setoffset((prev)=> prev + 10)
       setUsers((currentUsers) => [...currentUsers, ...transactionslog]);
+    }else if (transactionslog && transactionslog.length < 10) {
+      console.log('no more')
     }
-    if (transactionslog && transactionslog.length === 0) {
-      console.log('first')
-    }
+    
     void refetch();
   };
   return (
