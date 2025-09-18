@@ -9,7 +9,7 @@ const TransactionHistory = () => {
   const username = Array.isArray(params.username)
     ? params.username[0]
     : params.username;
-  const [moredata, setmoredata] = useState<number>(10);
+  const moredata = 10
   const [offset, setoffset] = useState<number>(0);
   const { transactionslog, isLoading, refetch } = useTransactions(
     username,
@@ -18,41 +18,43 @@ const TransactionHistory = () => {
   );
   const [users, setUsers] = useState(transactionslog ?? []);
   const [loading, setloading] = useState(isLoading);
+  const [hasMoreData, sethasMoreData] = useState(true);
+
   React.useEffect(() => {
-    if (transactionslog) {
-      setUsers(transactionslog);
-      setloading(false);
-    }
-  }, [transactionslog]);
-  console.log(
-    transactionslog?.length !== undefined && transactionslog.length,
-    transactionslog !== undefined && transactionslog.length < 10
-      ? true
-      : false
-  );
+    if (!transactionslog) return;
+    setUsers((prev) => {
+      if (prev.length === 0 && offset === 0) return transactionslog;
+      const byId = new Map(prev.map((i) => [i.id, i]));
+      for (const t of transactionslog) byId.set(t.id, t);
+      return Array.from(byId.values());
+    });
+    setloading(false)
+  }, [transactionslog, offset]);
   const handleloadmore = () => {
-    setmoredata((prev) => prev + 10);
-    if (transactionslog && transactionslog.length === 10) {
-      setoffset((prev)=> prev + 10)
-      setUsers((currentUsers) => [...currentUsers, ...transactionslog]);
-    }else if (transactionslog && transactionslog.length < 10) {
-      console.log('no more')
-    }
-    
+    setoffset((prev) => prev + moredata);
     void refetch();
   };
+
+  React.useEffect(() => {
+    if (transactionslog && transactionslog.length < moredata) {
+      console.log("no more data");
+      sethasMoreData(false);
+      // setUsers((currentUsers) => [...currentUsers, ...transactionslog]);
+    }
+  }, [transactionslog, moredata]);
   return (
     <HeaderName headertext="Transaction History">
       <TransactionCard
-        transactions={Array.from(
-          new Map(users.map((item) => [item.id, item])).values()
-        )}
+        // transactions={Array.from(
+        //   new Map(users.map((item) => [item.id, item])).values()
+        // )}
+        transactions={users}
         loading={loading}
         username={username}
         loadpage={handleloadmore}
         showload
         loadmore={isLoading}
-        lastindex={users.length - 1 ? true : false}
+        lastindex={hasMoreData}
       />
     </HeaderName>
   );

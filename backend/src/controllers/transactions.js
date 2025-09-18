@@ -156,14 +156,16 @@ export async function getRecent(req, res) {
              SELECT receiver, MAX(created_at) AS last_sent_at
              FROM transactionlog
              WHERE sender = ${username}
+                AND receiver IS NOT NULL
+                AND receiver <> ''
              GROUP BY receiver
-             ORDER BY last_sent_at DESC
+             ORDER BY last_sent_at DESC, receiver ASC
              LIMIT ${limit} OFFSET ${offset}
            )
            SELECT u.username, u.firstName, u.lastName, u.img
            FROM users u
            JOIN recent_receivers r ON u.username = r.receiver
-           ORDER BY r.last_sent_at DESC;
+           ORDER BY r.last_sent_at DESC, r.receiver ASC;
          `;
         return res.status(200).json({ data: findusers })
 
