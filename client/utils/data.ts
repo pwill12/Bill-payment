@@ -11,6 +11,7 @@ export enum Routes {
   TRANSACTION_DETAILS = "transaction-details",
   PROFILE_PAGE = "profile",
   ACCOUNT = "account",
+  TRANSACTIONHISTORY = 'history'
 }
 export interface CategoryProps {
   id: string;

@@ -4,31 +4,37 @@ import { Transactions, User } from "@/types";
 
 interface transaction {
   data: {
-    data: Transactions[]
+    data: Transactions[];
   };
 }
 
 interface user {
   data: {
-    data: Omit<User, 'balance' | 'email'>[]
+    data: Omit<User, "balance" | "email">[];
   };
 }
 
 interface transactiondetail {
-    data: Transactions
+  data: Transactions;
 }
-export const useTransactions = (username: string | undefined, limit: number = 10) => {
+export const useTransactions = (
+  username: string | undefined,
+  limit: number = 10,
+  offset?: number
+) => {
   const api = useApiClient();
-
+  const normalizedUsername = username?.trim();
+  const safeLimit = Math.max(1, Math.min(limit, 100));
+  const offsetLimit = Math.max(0, offset ?? 0);
   const {
     data: transactionslog,
     isLoading,
     error,
     refetch,
   } = useQuery({
-    queryKey: ["transactions", username , limit],
-    queryFn: () => transactionsApi.getUserTransactions(api, username!, limit),
-    enabled: Boolean(username),
+    queryKey: ["transactions", normalizedUsername, safeLimit, offsetLimit],
+    queryFn: () => transactionsApi.getUserTransactions(api, normalizedUsername!, safeLimit, offsetLimit),
+    enabled: Boolean(normalizedUsername),
     select: (response: transaction) => response.data.data,
   });
 

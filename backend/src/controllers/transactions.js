@@ -144,31 +144,36 @@ export async function getRecent(req, res) {
         const offsetParam = Number.parseInt((req.query.offset ?? "0"), 10);
         const limit = Number.isFinite(limitParam) && limitParam > 0 && limitParam <= 100 ? limitParam : 3;
         const offset = Number.isFinite(offsetParam) && offsetParam >= 0 ? offsetParam : 0;
-        const getRecentsTransfer = await sqldb`
-            SELECT receiver FROM transactionlog WHERE sender = ${username}
-            ORDER BY created_at DESC
-            LIMIT ${limit} OFFSET ${offset};
-        `
-        if (getRecentsTransfer.length == 0) {
-            return res.status(200).json({ data: [] })
-        }
 
-        const receiverscsv = getRecentsTransfer
-            .map(r => r?.receiver)
-            .filter((v) => typeof v === 'string' && v.trim().length > 0)
-            .map(v => v.trim())
-            .join(',');
-        
-        if (receiverscsv.length === 0) {
-            return res.status(200).json({ data: [] })
-        }
+        // const receiverscsv = getRecentsTransfer
+        //     .map(r => r?.receiver)
+        //     .filter((v) => typeof v === 'string' && v.trim().length > 0)
+        //     .map(v => v.trim())
+        //     .join(',');
 
         const findusers = await sqldb`
-           SELECT username, firstName, lastName, img
-           FROM users
-           WHERE username = ANY(string_to_array(${receiverscsv}, ','))
+           WITH recent_receivers AS (
+             SELECT receiver, MAX(created_at) AS last_sent_at
+             FROM transactionlog
+             WHERE sender = ${username}
+                AND receiver IS NOT NULL
+                AND receiver <> ''
+             GROUP BY receiver
+             ORDER BY last_sent_at DESC, receiver ASC
+             LIMIT ${limit} OFFSET ${offset}
+           )
+           SELECT u.username, u.firstName, u.lastName, u.img
+           FROM users u
+           JOIN recent_receivers r ON u.username = r.receiver
+           ORDER BY r.last_sent_at DESC, r.receiver ASC;
          `;
         return res.status(200).json({ data: findusers })
+
+        // const findusers = await sqldb`
+        //    SELECT username, firstName, lastName, img
+        //    FROM users
+        //    WHERE username = ANY(string_to_array(${receiverscsv}, ','))
+        //  `;
 
     } catch (error) {
         res.status(500).json({ message: "internal server error" })

@@ -31,7 +31,7 @@ const BonusReward = ({
       )}
       {Categories.map((category) => (
         <TouchableOpacity key={category.id} className="flex-row gap-2">
-          <View className="bg-white py-3 px-4 items-center rounded-2xl">
+          <View className={`${bg ? 'bg-gray-100': 'bg-white'} py-3 px-4 items-center rounded-2xl ${bg && 'border border-gray-100'}`}>
             <MaterialCommunityIcons
               name={category.icon}
               size={bg ? category.size : 24}

@@ -17,6 +17,8 @@ interface TransactionCardProps {
   username: string;
   loadpage?: () => void;
   showload?: boolean;
+  loadmore?: boolean;
+  lastindex?: boolean;
 }
 
 const TransactionCard = ({
@@ -25,6 +27,8 @@ const TransactionCard = ({
   username,
   loadpage,
   showload,
+  loadmore,
+  lastindex
 }: TransactionCardProps) => {
   const getStatusStyle = (type: Transactions["type"]) => {
     switch (type) {
@@ -59,7 +63,7 @@ const TransactionCard = ({
       <View className="rounded-xl flex-col bg-white">
         {loading ? (
           <View className="px-4 justify-center items-center bg-gray-50">
-            <ActivityIndicator size={"large"} />
+            <ActivityIndicator size={"large"} color={'green'}/>
           </View>
         ) : transactions !== undefined && transactions.length > 0 ? (
           <View>
@@ -122,9 +126,22 @@ const TransactionCard = ({
               <TouchableOpacity
                 className="flex-row items-center gap-2 py-1 justify-center border border-gray-100 w-32 self-center mb-4 rounded-lg"
                 onPress={loadpage}
+                disabled={loadmore || !lastindex}
               >
-                <Feather name="search" />
-                <Text className="text-sm">load more</Text>
+                {loadmore ? (
+                  <View className="px-4 justify-center items-center">
+                    <ActivityIndicator size={"small"} />
+                  </View>
+                ) : !lastindex ? (
+                  <View>
+                    <Text className="text-green-600 font-bold">no more record</Text>
+                  </View>
+                ) : (
+                  <>
+                    <Feather name="search" />
+                    <Text className="text-sm">load more</Text>
+                  </>
+                )}
               </TouchableOpacity>
             ) : null}
           </View>

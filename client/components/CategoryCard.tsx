@@ -24,6 +24,7 @@ interface CategoryActionProps {
   bg?: boolean;
   card?: boolean;
   rewardstyle?: boolean;
+  disabled?: boolean;
 }
 
 const CategoryActions = ({
@@ -34,6 +35,7 @@ const CategoryActions = ({
   bg,
   card,
   rewardstyle,
+  disabled,
 }: CategoryActionProps) => {
   const Categories = categories || type;
 
@@ -42,16 +44,20 @@ const CategoryActions = ({
   };
   return (
     <View
-      className={`${styles ? styles : "py-4 px-5"} flex-row ${bg && "bg-white"} items-center mt-0 ${card ? "gap-3" : rewardstyle ? "gap-2 justify-between" : "justify-between"} rounded-lg`}
+      className={`${styles ? styles : "py-4 px-5"} flex-row ${bg && "bg-white"} items-center mt-0 ${card ? "gap-3" : "justify-between"} rounded-lg`}
     >
       {Categories.map((category) => (
         <TouchableOpacity
           key={category.id}
-          className={`flex-col items-center gap-1 ${card ? "bg-white px-6 py-3 rounded-lg" : rewardstyle ? "bg-white rounded-xl px-4 py-5" : ""}`}
+          className={`flex-col items-center gap-1 ${card ? "bg-white max-h-20 min-h-20 min-w-32 max-w-32 rounded-lg items-center justify-center" : rewardstyle ? "bg-white rounded-xl max-h-24 min-h-24 min-w-24 max-w-24 justify-center" : ""}`}
           accessible={true}
           accessibilityRole="button"
           accessibilityLabel={`Select ${category.name}`}
           onPress={() => handlePress(category)}
+          disabled={!!(disabled && category.id === "favourites")}
+          accessibilityState={{
+            disabled: !!(disabled && category.id === "favourites"),
+          }}
         >
           <View className="items-center bg-green-50 rounded-lg p-2">
             <MaterialCommunityIcons
@@ -60,7 +66,17 @@ const CategoryActions = ({
               color={"lightgreen"}
             />
           </View>
-          <Text className="text-xs">{category.name}</Text>
+          <Text
+            className={`text-xs ${
+              category.id === "favourites" && disabled ? "text-gray-300" : ""
+            }`}
+          >
+            {category.id === "favourites"
+              ? disabled
+                ? "Added to favorites"
+                : "Add to favorites"
+              : category.name}
+          </Text>
         </TouchableOpacity>
       ))}
     </View>
