@@ -145,7 +145,7 @@ export async function getRecent(req, res) {
         const limit = Number.isFinite(limitParam) && limitParam > 0 && limitParam <= 100 ? limitParam : 3;
         const offset = Number.isFinite(offsetParam) && offsetParam >= 0 ? offsetParam : 0;
         const getRecentsTransfer = await sqldb`
-            SELECT receiver FROM transactionlog WHERE sender = ${username}
+            SELECT DISTINCT receiver FROM transactionlog WHERE sender = ${username}
             ORDER BY created_at DESC
             LIMIT ${limit} OFFSET ${offset};
         `

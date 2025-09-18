@@ -46,17 +46,18 @@ export const receiverApi = {
 
 export const addFavoriteApi = {
   addfavorite: (api: AxiosInstance, username: string) =>
-    api.post("/addfavorite", {username}),
+    api.post("/addfavorite", { username }),
   getfavorite: (api: AxiosInstance, limit: number) =>
-    api.get("/getfavorite", {params: {limit}}),
+    api.get("/getfavorite", { params: { limit } }),
 };
 
 export const transactionsApi = {
   getUserTransactions: (
     api: AxiosInstance,
     username: string | undefined,
-    limit: number
-  ) => api.get(`/transactions/${username}?limit=${limit}`),
+    limit: number,
+    offset?: number
+  ) => api.get(`/transactions/${username}`, { params: { limit, offset } }),
   getTransaction: (api: AxiosInstance, id: number | undefined) =>
     api.get(`/transaction/${id}`),
   getRecentTransactions: (

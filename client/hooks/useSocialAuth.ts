@@ -12,7 +12,7 @@ export const useSocialAuth = () => {
     try {
       const { createdSessionId, setActive } = await startSSOFlow({ strategy });
       if (createdSessionId && setActive) {
-        await setActive({ session: createdSessionId , redirectUrl: '/profile'});
+        await setActive({ session: createdSessionId});
       }
     } catch (err) {
       console.log("Error in social auth", err);

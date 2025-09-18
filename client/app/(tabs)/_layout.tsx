@@ -13,8 +13,9 @@ export default function Mytab() {
     <Tabs
       screenOptions={{
         tabBarVisibilityAnimationConfig: {hide: {animation: 'timing'}},
-        tabBarActiveTintColor: "lightgreen",
-        tabBarInactiveTintColor: "lightgray",
+        tabBarActiveTintColor: "green",
+        tabBarInactiveTintColor: "gray",
+        headerShadowVisible: false,
         tabBarStyle: {
           backgroundColor: "white",
           borderTopWidth: 0,

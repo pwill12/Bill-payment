@@ -18,6 +18,7 @@ interface TransactionCardProps {
   loadpage?: () => void;
   showload?: boolean;
   loadmore?: boolean;
+  lastindex?: boolean;
 }
 
 const TransactionCard = ({
@@ -27,6 +28,7 @@ const TransactionCard = ({
   loadpage,
   showload,
   loadmore,
+  lastindex
 }: TransactionCardProps) => {
   const getStatusStyle = (type: Transactions["type"]) => {
     switch (type) {
@@ -124,13 +126,13 @@ const TransactionCard = ({
               <TouchableOpacity
                 className="flex-row items-center gap-2 py-1 justify-center border border-gray-100 w-32 self-center mb-4 rounded-lg"
                 onPress={loadpage}
-                disabled={loadmore || transactions.length === 0}
+                disabled={loadmore || transactions.length === 3}
               >
                 {loadmore ? (
                   <View className="px-4 justify-center items-center">
                     <ActivityIndicator size={"small"} />
                   </View>
-                ) : transactions.length === 0 ? (
+                ) : transactions.length === 3 ? (
                   <View>
                     <Text>no more data</Text>
                   </View>

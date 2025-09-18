@@ -19,19 +19,21 @@ interface transactiondetail {
 }
 export const useTransactions = (
   username: string | undefined,
-  limit: number = 10
+  limit: number = 10,
+  offset?: number
 ) => {
   const api = useApiClient();
   const normalizedUsername = username?.trim();
   const safeLimit = Math.max(1, Math.min(limit, 100));
+  const offsetLimit = Math.max(1, Math.min(offset ?? 0, 100));
   const {
     data: transactionslog,
     isLoading,
     error,
     refetch,
   } = useQuery({
-    queryKey: ["transactions", normalizedUsername, safeLimit],
-    queryFn: () => transactionsApi.getUserTransactions(api, normalizedUsername!, limit),
+    queryKey: ["transactions", normalizedUsername, safeLimit, offsetLimit],
+    queryFn: () => transactionsApi.getUserTransactions(api, normalizedUsername!, safeLimit, offsetLimit),
     enabled: Boolean(normalizedUsername),
     select: (response: transaction) => response.data.data,
   });
