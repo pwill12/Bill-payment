@@ -44,6 +44,8 @@ const UppdateProfile = () => {
         return {};
     }
   };
+
+  console.log(name !== ProfileName.FULL_NAME && value === rawData);
   const { creatUpdateuser, loading } = useUpdateuser(getData());
 
   return (
@@ -79,7 +81,7 @@ const UppdateProfile = () => {
           disabled={
             name === ProfileName.EMAIL ||
             loading ||
-            value === rawData ||
+            name !== ProfileName.FULL_NAME && value === rawData ||
             value === `${firstName} ${lastName}`
           }
         />

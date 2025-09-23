@@ -11,7 +11,8 @@ export enum Routes {
   TRANSACTION_DETAILS = "transaction-details",
   PROFILE_PAGE = "profile",
   ACCOUNT = "account",
-  TRANSACTIONHISTORY = 'history'
+  TRANSACTIONHISTORY = 'history',
+  CARD = "addmoney/card"
 }
 export interface CategoryProps {
   id: string;
@@ -89,14 +90,12 @@ export const RewardsCard: CategoryProps[] = [
     name: " Spin & Win",
     icon: "cash",
     size: 21,
-    page: Routes.TRANSACTION_DETAILS,
   },
   {
     id: "play",
     name: "play & Win",
     icon: "cash",
     size: 21,
-    page: Routes.TRANSACTION_DETAILS,
   },
 ];
 
@@ -121,6 +120,31 @@ export const BonusCard: CategoryProps[] = [
     icon: "cash",
     size: 21,
     text: "Fund betting account with $1 or more",
+  },
+];
+
+export const addMoneyCard: CategoryProps[] = [
+  {
+    id: "bank",
+    name: "Bank Transfer",
+    icon: "bank-outline",
+    size: 14,
+    text: "Add Money via mobile or internet banking",
+  },
+  {
+    id: "cash",
+    name: "Cash Deposit",
+    icon: "cash",
+    size: 14,
+    text: "Fund your account with nearby merchants",
+  },
+  {
+    id: "top-up",
+    name: "Top-up with Card/Account",
+    icon: "credit-card",
+    size: 14,
+    text: "Add money directly from your bank card or account",
+    page: Routes.CARD
   },
 ];
 

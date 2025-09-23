@@ -77,7 +77,7 @@ const RecentTransfer = ({
       {activePage === "recent" ? (
         loading ? (
           <View className="px-4 justify-center items-center bg-gray-50">
-            <ActivityIndicator size={"large"} />
+            <ActivityIndicator size={"small"} color={'green'} />
           </View>
         ) : categories?.length === 0 ? (
           <View>
@@ -92,7 +92,7 @@ const RecentTransfer = ({
       ) : activeId === "favorite" ? (
         favoriteloading ? (
           <View className="px-4 justify-center items-center bg-gray-50">
-            <ActivityIndicator size={"large"} />
+            <ActivityIndicator size={"small"} color={'green'} />
           </View>
         ) : favorites?.length === 0 ? (
           <View>

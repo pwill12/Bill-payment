@@ -6,7 +6,7 @@ import CategoryActions from "@/components/CategoryCard";
 import { BonusCard, RewardsCard } from "@/utils/data";
 import { categorystyle } from "@/types";
 import TransactionButton, { ButtonSize } from "@/components/TransactionButton";
-import BonusReward from "@/components/BonusReward";
+import BonusReward from "@/components/ExtrasCard";
 
 const rewards = () => {
   const { height } = Dimensions.get("screen");

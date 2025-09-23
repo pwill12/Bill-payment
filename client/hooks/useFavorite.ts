@@ -43,7 +43,7 @@ export const useAddFavorite = (username: string) => {
   };
 };
 
-export const useGetFavorites = (limit: number = 10) => {
+export const useGetFavorites = (username?: string, limit: number = 4) => {
   const api = useApiClient();
 
   const {
@@ -52,7 +52,7 @@ export const useGetFavorites = (limit: number = 10) => {
     error,
     refetch,
   } = useQuery({
-    queryKey: ["favorite", limit],
+    queryKey: ["favorite", username, limit],
     queryFn: () => addFavoriteApi.getfavorite(api, limit),
     select: (response: user) => response.data.data,
   });

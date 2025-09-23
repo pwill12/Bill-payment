@@ -66,3 +66,8 @@ export const transactionsApi = {
     limit?: number
   ) => api.get("/recent-transaction", { params: { username, limit } }),
 };
+
+export const stripeApi = {
+  getPublishableKey: (api: AxiosInstance) =>
+    api.get("/stripe"),
+};
