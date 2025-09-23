@@ -36,7 +36,11 @@ export async function addCustomercode() {
     try {
         await sqldb`
             ALTER TABLE users
-            ADD COLUMN IF NOT EXISTS customer_code VARCHAR(50)
+            ADD COLUMN IF NOT EXISTS stripe_id VARCHAR(250)
+        `
+        await sqldb`
+            ALTER TABLE users
+            ADD COLUMN IF NOT EXISTS ephemeralkeys VARCHAR(250)
         `
         await sqldb`
             ALTER TABLE users
