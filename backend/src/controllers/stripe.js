@@ -52,10 +52,11 @@ export async function PaymentSheet(req, res) {
             if (!customer?.id) {
                 return res.status(502).json({ message: "error creating stripe customer" })
             }
+
             await sqldb`UPDATE users SET stripe_id = ${customer.id} WHERE clerk_id = ${userId}`;
             finduser[0].stripe_id = customer.id;
         }
-        const ephemeralKey = await stripe.ephemeralKeys.create({ customer: finduser[0].stripe_id }, { apiVersion: '2025-08-27.basil' })
+        const ephemeralKey = await stripe.ephemeralKeys.create({ customer: finduser[0].stripe_id }, { apiVersion: '2022-11-15' })
 
         if (!ephemeralKey?.secret) {
             return res.status(502).json({ message: "error creating epheralKeys" })

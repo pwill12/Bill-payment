@@ -13,7 +13,7 @@ export const useStripePublic = () => {
   } = useQuery({
     queryKey: ["stripe"],
     queryFn: () => stripeApi.getPublishableKey(api),
-    select: (response) => response.data.publishableKey,
+    select: (response) => response.data,
   });
 
   return { publicKey, isLoading, error, refetch };
