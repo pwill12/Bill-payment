@@ -65,7 +65,7 @@ export async function PaymentSheet(req, res) {
         console.log(ephemeralKey)
 
         const paymentIntent = await stripe.paymentIntents.create({
-            amount: amount,
+            amount: parseInt(amount),
             currency: 'usd',
             customer: finduser[0].stripe_id,
             automatic_payment_methods: {
@@ -73,7 +73,7 @@ export async function PaymentSheet(req, res) {
             }
         })
 
-        if (!paymentIntent?.secret) {
+        if (!paymentIntent?.client_secret) {
             return res.status(502).json({ message: "error creating paymentIntent" })
         }
 
