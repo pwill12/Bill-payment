@@ -17,12 +17,7 @@ const CardDeposit = () => {
   const [loading, setLoading] = useState(false);
   const { publicKey, isLoading, error, refetch } = useStripePublic();
   const {
-    isCreating,
-    paymentIntent,
-    ephemeralKey,
-    errors,
     createPaymentSheetAsync,
-    customer,
   } = usePaymentSheet(parseFloat(amount));
   const handleChange = (text: string) => {
     setamount(text);
@@ -62,6 +57,7 @@ const CardDeposit = () => {
       // Create a fresh PaymentIntent   ephemeral key on the backend
       const resp = await createPaymentSheetAsync();
       const data = resp?.data ?? resp;
+      console.log(resp)
       if (!data?.paymentIntent || !data?.ephemeralKey || !data?.customer) {
         Alert.alert(
           "Payment unavailable",
