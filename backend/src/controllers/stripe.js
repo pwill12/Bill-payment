@@ -56,14 +56,16 @@ export async function PaymentSheet(req, res) {
             await sqldb`UPDATE users SET stripe_id = ${customer.id} WHERE clerk_id = ${userId}`;
             finduser[0].stripe_id = customer.id;
         }
-        const ephemeralKey = await stripe.ephemeralKeys.create({ customer: finduser[0].stripe_id }, { apiVersion: '2022-11-15' })
+        const ephemeralKey = await stripe.ephemeralKeys.create({ customer: finduser[0].stripe_id }, { apiVersion: '2025-08-27.basil' })
 
         if (!ephemeralKey?.secret) {
             return res.status(502).json({ message: "error creating epheralKeys" })
         }
 
+        console.log(ephemeralKey)
+
         const paymentIntent = await stripe.paymentIntents.create({
-            amount: parseInt(amount),
+            amount: amount,
             currency: 'usd',
             customer: finduser[0].stripe_id,
             automatic_payment_methods: {
@@ -74,6 +76,8 @@ export async function PaymentSheet(req, res) {
         if (!paymentIntent?.secret) {
             return res.status(502).json({ message: "error creating paymentIntent" })
         }
+
+        console.log(paymentIntent)
 
         return res.status(200).json({
             paymentIntent: paymentIntent.client_secret,
