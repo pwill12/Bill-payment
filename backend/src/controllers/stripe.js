@@ -1,9 +1,10 @@
 import { getAuth } from "@clerk/express";
 import "dotenv/config"
 import { sqldb } from "../config/db.js";
+import { Stripe } from 'stripe'
 
 const STRIPE_PUBLISHABLE_KEY = process.env.STRIPE_PUBLISHABLE_KEY
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY)
+const stripe = Stripe(process.env.STRIPE_SECRET_KEY)
 if (!STRIPE_PUBLISHABLE_KEY && !STRIPE_SECRET_KEY) {
     throw new Error("Missing PAYSTACK_SECRET Keys environment variable")
 }
