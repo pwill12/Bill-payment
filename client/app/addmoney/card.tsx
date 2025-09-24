@@ -57,7 +57,6 @@ const CardDeposit = () => {
       // Create a fresh PaymentIntent   ephemeral key on the backend
       const resp = await createPaymentSheetAsync();
       const data = resp?.data ?? resp;
-      console.log(resp)
       if (!data?.paymentIntent || !data?.ephemeralKey || !data?.customer) {
         Alert.alert(
           "Payment unavailable",
