@@ -63,7 +63,7 @@ const TransactionCard = ({
       <View className="rounded-xl flex-col bg-white">
         {loading ? (
           <View className="px-4 justify-center items-center bg-gray-50">
-            <ActivityIndicator size={"large"} color={'green'}/>
+            <ActivityIndicator size={"large"} color='lightgreen'/>
           </View>
         ) : transactions !== undefined && transactions.length > 0 ? (
           <View>
@@ -130,7 +130,7 @@ const TransactionCard = ({
               >
                 {loadmore ? (
                   <View className="px-4 justify-center items-center">
-                    <ActivityIndicator size={"small"} />
+                    <ActivityIndicator size={"small"} color={'lightgreen'}/>
                   </View>
                 ) : !lastindex ? (
                   <View>

@@ -60,7 +60,10 @@ const ProfileCard = ({
                       );
                     }
                   }}
-                  disabled={category.name === ProfileName.ACCOUNT_TIER}
+                  disabled={
+                    category.name === ProfileName.ACCOUNT_TIER ||
+                    category.name === ProfileName.EMAIL
+                  }
                 >
                   <Text className="text-gray-400">
                     {displayUserdata(category?.name, currentUser)}

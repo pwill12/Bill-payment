@@ -3,7 +3,7 @@ import React from "react";
 
 export enum COLORS {
   lightblue = "bg-blue-300",
-  lightgreen = "bg-green-50",
+  lightgreen = "bg-green-100",
 }
 
 export enum TEXTCOLORS {
@@ -24,8 +24,8 @@ interface TransactionButtonProps {
   onPress?: () => void;
   title?: string;
   disabled?: boolean;
-  size?: ButtonSize;
-  color?: COLORS;
+  size?: ButtonSize | string;
+  color?: COLORS | string;
   textcolor?: TEXTCOLORS;
 }
 
@@ -44,7 +44,7 @@ const TransactionButton = ({
       disabled={disabled}
     >
       <Text
-        className={`${(size === ButtonSize.xs || size === ButtonSize.xss) ? "text-xs" : size === ButtonSize.custom ? "text-xs" : "text-xl"} ${disabled ? "text-gray-500" : textcolor ? textcolor : "text-white"}`}
+        className={`${(size === ButtonSize.xs || size === ButtonSize.xss) ? "text-xs" : size === ButtonSize.custom ? "text-xs" : "text-lg"} ${disabled ? "text-gray-500" : textcolor ? textcolor : "text-white"}`}
       >
         {title}
       </Text>

@@ -5,10 +5,7 @@ import { Redirect } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Loading() {
-  const { isSignedIn , isLoaded} = useAuth();
-  if (isLoaded) {
-    return <Redirect href={"/(auth)"} />;
-  }
+  const { isSignedIn } = useAuth();
 
   if (isSignedIn) {
     return <Redirect href={"/(tabs)"} />;

@@ -1,4 +1,4 @@
-import BonusReward from "@/components/BonusReward";
+import BonusReward from "@/components/ExtrasCard";
 import TransactionButton, { ButtonSize } from "@/components/TransactionButton";
 import { useCurrentUser } from "@/hooks/useCurrentuser";
 import { Profile } from "@/utils/data";

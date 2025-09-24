@@ -1,18 +1,31 @@
 import { useSSO } from "@clerk/clerk-expo";
-import { router } from "expo-router";
-import { useState } from "react";
-import { Alert } from "react-native";
+import { useCallback, useEffect, useState } from "react";
+import { Alert, Platform } from "react-native";
+import { OAuthStrategy } from "@clerk/types";
+import * as AuthSession from "expo-auth-session";
+import * as WebBrowser from "expo-web-browser";
 
+export const useWarmupbrowser = () => {
+  useEffect(() => {
+    if (Platform.OS === 'web') return
+    void WebBrowser.warmUpAsync()
+    return () => {
+      void WebBrowser.coolDownAsync()
+    }
+  }, [])
+  
+}
 export const useSocialAuth = () => {
+  useWarmupbrowser()
   const [isLoading, setIsLoading] = useState(false);
   const { startSSOFlow } = useSSO();
 
-  const handleSocialAuth = async (strategy: "oauth_google" | "oauth_apple") => {
+  const handleSocialAuth = useCallback( async (strategy: OAuthStrategy) => {
     setIsLoading(true);
     try {
-      const { createdSessionId, setActive } = await startSSOFlow({ strategy });
-      if (createdSessionId && setActive) {
-        await setActive({ session: createdSessionId});
+      const { createdSessionId, setActive } = await startSSOFlow({ strategy, redirectUrl: AuthSession.makeRedirectUri()});
+      if (createdSessionId) {
+        await setActive!({ session: createdSessionId});
       }
     } catch (err) {
       console.log("Error in social auth", err);
@@ -21,7 +34,7 @@ export const useSocialAuth = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [startSSOFlow])
 
   return { isLoading, handleSocialAuth };
 };

@@ -31,12 +31,12 @@ const TransactionDetails = ({ id }: details) => {
         contentContainerStyle={{ paddingBottom: 80, gap: 16 }}
         style={{maxHeight: height*0.79}}
       >
-        <View className="gap-5 bg-white flex-col mt-6 rounded-md px-3 py-4">
-          <View className="items-center bottom-11">
+        <View className="gap-4 bg-white flex-col mt-6 rounded-md px-3 py-4">
+          <View className="items-center bottom-10">
             <MaterialCommunityIcons
               name="bank"
               size={24}
-              className="bg-white p-3 rounded-full absolute border border-gray-50"
+              className="bg-white p-3 rounded-full absolute border border-gray-100"
               color={"green"}
             />
           </View>
