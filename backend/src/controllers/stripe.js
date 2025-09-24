@@ -1,6 +1,6 @@
 import { getAuth } from "@clerk/express";
 import "dotenv/config"
-import { sqldb } from "../config/db";
+import { sqldb } from "../config/db.js";
 
 const STRIPE_PUBLISHABLE_KEY = process.env.STRIPE_PUBLISHABLE_KEY
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY)
