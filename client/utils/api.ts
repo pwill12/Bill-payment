@@ -70,6 +70,6 @@ export const transactionsApi = {
 export const stripeApi = {
   getPublishableKey: (api: AxiosInstance) =>
     api.get("/stripe"),
-  postPaymentSheet: (api: AxiosInstance, amount: number) =>
-    api.post("/payment-sheet", amount),
+  postPaymentSheet: (api: AxiosInstance, payload: {amount: number}) =>
+    api.post("/payment-sheet", payload),
 };

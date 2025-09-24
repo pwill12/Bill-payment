@@ -21,7 +21,7 @@ const CardDeposit = () => {
     paymentIntent,
     ephemeralKey,
     errors,
-    createpaymentsheet,
+    createPaymentSheetAsync,
     customer,
   } = usePaymentSheet(parseFloat(amount));
   const handleChange = (text: string) => {
@@ -56,44 +56,45 @@ const CardDeposit = () => {
     return null;
   }
 
-  const initializePaymentSheet = async () => {
-    const { error } = await initPaymentSheet({
-      merchantDisplayName: "Bill-App, Inc.",
-      customerId: customer,
-      customerEphemeralKeySecret: ephemeralKey,
-      paymentIntentClientSecret: paymentIntent,
-      // Set `allowsDelayedPaymentMethods` to true if your business can handle payment
-      //methods that complete payment after a delay, like SEPA Debit and Sofort.
-      allowsDelayedPaymentMethods: true,
-      defaultBillingDetails: {
-        name: `${currentUser?.firstname} ${currentUser?.lastname}`,
-      },
-    });
-    if (!error) {
-      setLoading(true);
-    }
-  };
-
-  initializePaymentSheet();
-
   const handlePayment = async () => {
-    createpaymentsheet();
-    if (ephemeralKey) {
-      openPaymentSheet()
-    }
-  }
-
-  const openPaymentSheet = async () => {
-    const { error } = await presentPaymentSheet();
-
-    if (error) {
-      Alert.alert(`Error code: ${error.code}`, error.message);
-    } else {
-      Alert.alert("Success", "Your order is confirmed!");
+    try {
+      setLoading(true);
+      // Create a fresh PaymentIntent   ephemeral key on the backend
+      const resp = await createPaymentSheetAsync();
+      const data = resp?.data ?? resp;
+      if (!data?.paymentIntent || !data?.ephemeralKey || !data?.customer) {
+        Alert.alert(
+          "Payment unavailable",
+          "Unable to create payment session. Please try again."
+        );
+        return;
+      }
+      // Initialize the Stripe payment sheet
+      const { error: initError } = await initPaymentSheet({
+        merchantDisplayName: "Bill-App, Inc.",
+        customerId: data.customer,
+        customerEphemeralKeySecret: data.ephemeralKey,
+        paymentIntentClientSecret: data.paymentIntent,
+        allowsDelayedPaymentMethods: true,
+        defaultBillingDetails: {
+          name: `${currentUser?.firstname} ${currentUser?.lastname}`,
+        },
+      });
+      if (initError) {
+        Alert.alert("Payment setup failed", initError.message);
+        return;
+      }
+      // Present the sheet
+      const { error: presentError } = await presentPaymentSheet();
+      if (presentError) {
+        Alert.alert(`Error code: ${presentError.code}`, presentError.message);
+      } else {
+        Alert.alert("Success", "Your order is confirmed!");
+      }
+    } finally {
+      setLoading(false);
     }
   };
-
-  initializePaymentSheet();
 
   return (
     <StripeProvider publishableKey={publicKey}>

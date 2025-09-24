@@ -22,28 +22,30 @@ export const useStripePublic = () => {
 export const usePaymentSheet = (amount: number) => {
   const api = useApiClient();
 
-    const paymentSheetMutation = useMutation({
-    mutationFn: () => stripeApi.postPaymentSheet(api, amount),
-    onSuccess: (response) => {
-      return response?.data;
-    },
+  const paymentSheetMutation = useMutation({
+    mutationFn: (payload: { amount: number }) =>
+      stripeApi.postPaymentSheet(api, payload),
     onError: (error: any) => console.error("Payment Sheet failed:", error),
   });
 
-  const createpaymentsheet = () => {
-      if (!amount) {
-        Alert.alert("Missing required field", "Please enter amount or username!");
-        return;
-      }
-      paymentSheetMutation.mutate();
-    };
-  
-    return {
-      isCreating: paymentSheetMutation.isPending,
-      paymentIntent: paymentSheetMutation.data?.data.paymentIntent,
-      ephemeralKey: paymentSheetMutation.data?.data.ephemeralKey,
-      customer: paymentSheetMutation.data?.data.customer,
-      errors: paymentSheetMutation.error,
-      createpaymentsheet,
-    };
-}
+  const createPaymentSheetAsync = () => {
+    if (!(amount > 0)) {
+      Alert.alert(
+        "Missing required field",
+        "Please enter a valid amount greater than 0."
+      );
+      return Promise.resolve(undefined);
+    }
+    const amountInCents = Math.round(amount * 100);
+    return paymentSheetMutation.mutateAsync({ amount: amountInCents });
+  };
+
+  return {
+    isCreating: paymentSheetMutation.isPending,
+    paymentIntent: paymentSheetMutation.data?.data.paymentIntent,
+    ephemeralKey: paymentSheetMutation.data?.data.ephemeralKey,
+    customer: paymentSheetMutation.data?.data.customer,
+    errors: paymentSheetMutation.error,
+    createPaymentSheetAsync,
+  };
+};
