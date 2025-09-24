@@ -62,6 +62,8 @@ export async function PaymentSheet(req, res) {
             return res.status(502).json({ message: "error creating epheralKeys" })
         }
 
+        console.log(ephemeralKey)
+
         const paymentIntent = await stripe.paymentIntents.create({
             amount: amount,
             currency: 'usd',
@@ -74,6 +76,8 @@ export async function PaymentSheet(req, res) {
         if (!paymentIntent?.secret) {
             return res.status(502).json({ message: "error creating paymentIntent" })
         }
+
+        console.log(paymentIntent)
 
         return res.status(200).json({
             paymentIntent: paymentIntent.client_secret,
