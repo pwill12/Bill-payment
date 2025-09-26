@@ -51,7 +51,7 @@ export const useUpdateuser = (data: UpdateUser) => {
       return;
     }
 
-    if (data.amount !== undefined && data.amount <= 0) {
+    if (data.amount !== undefined && (!Number.isFinite(data.amount) || data.amount <= 0)) {
       Alert.alert("Missing required field", "Please enter amount");
       return;
     }

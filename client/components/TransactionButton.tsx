@@ -27,7 +27,7 @@ interface TransactionButtonProps {
   size?: ButtonSize | string;
   color?: COLORS | string;
   textcolor?: TEXTCOLORS;
-  loading?: boolean
+  loading?: boolean;
 }
 
 const TransactionButton = ({
@@ -37,7 +37,7 @@ const TransactionButton = ({
   size,
   color,
   textcolor,
-  loading
+  loading,
 }: TransactionButtonProps) => {
   return (
     <TouchableOpacity
@@ -45,11 +45,15 @@ const TransactionButton = ({
       onPress={onPress}
       disabled={disabled || loading}
     >
-      <Text
-        className={`${(size === ButtonSize.xs || size === ButtonSize.xss) ? "text-xs" : size === ButtonSize.custom ? "text-xs" : "text-lg"} ${disabled ? "text-gray-500" : textcolor ? textcolor : "text-white"}`}
-      >
-        {loading ? <ActivityIndicator size={'small'} color={'green'}/> : title}
-      </Text>
+      {loading ? (
+        <ActivityIndicator size="small" color={disabled ? "gray" : "white"} />
+      ) : (
+        <Text
+          className={`${size === ButtonSize.xs || size === ButtonSize.xss ? "text-xs" : size === ButtonSize.custom ? "text-xs" : "text-lg"} ${disabled ? "text-gray-500" : textcolor ? textcolor : "text-white"}`}
+        >
+          {title}
+        </Text>
+      )}
     </TouchableOpacity>
   );
 };

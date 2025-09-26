@@ -17,10 +17,13 @@ const CardDeposit = () => {
   const [amount, setamount] = useState("");
   const [loading, setLoading] = useState(false);
   const { publicKey, isLoading, error, refetch } = useStripePublic();
+  const numericAmount = parseFloat(amount);
+  const hasValidAmount = Number.isFinite(numericAmount) && numericAmount > 0;
   const {
     createPaymentSheetAsync,
   } = usePaymentSheet(parseFloat(amount));
-  const { creatUpdateuser } = useUpdateuser({amount: parseFloat(amount)})
+  const { creatUpdateuser , loading: updating} = useUpdateuser({amount: numericAmount})
+  const busy = loading || updating;
   const handleChange = (text: string) => {
     setamount(text);
   };
@@ -98,7 +101,7 @@ const CardDeposit = () => {
     <StripeProvider publishableKey={publicKey}>
       <HeaderName headertext="add card">
         <AmountCard handleChange={handleChange} amount={amount}/>
-        <TransactionButton title="Pay" onPress={handlePayment} disabled={loading} loading={loading}/>
+        <TransactionButton title="Pay" onPress={handlePayment} disabled={busy || !hasValidAmount} loading={busy}/>
       </HeaderName>
     </StripeProvider>
   );

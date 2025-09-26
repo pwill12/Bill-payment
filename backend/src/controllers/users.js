@@ -179,11 +179,25 @@ export const UpdateUsers = async (req, res) => {
             last = rows[0] ?? last;
         }
         if (Object.prototype.hasOwnProperty.call(body, "amount")) {
-            const am = typeof amount === "string" ? number.trim() : null;
-            const rows = await sqldb`UPDATE users SET balance = balance + ${am} WHERE clerk_id = ${userId} RETURNING *`;
-            // paystackPayload.phone = nm;
-            last = rows[0] ?? last;
-        }
+             const raw =
+                 typeof amount === "number"
+                     ? amount
+                     : typeof amount === "string"
+                     ? amount.trim()
+                     : null;
+             const parsed =
+                 raw === null || raw === ""
+                     ? null
+                     : Number(raw);
+             if (parsed === null || Number.isNaN(parsed)) {
+                 return res.status(400).json({ message: "invalid amount" });
+             }
+             if (parsed <= 0) {
+                 return res.status(400).json({ message: "amount must be greater than zero" });
+             }
+             const rows = await sqldb`UPDATE users SET balance = balance + ${parsed} WHERE clerk_id = ${userId} RETURNING *`;
+             last = rows[0] ?? last;
+         }
         if (!last) {
             return res.status(404).json({ message: "no user found" });
         }
