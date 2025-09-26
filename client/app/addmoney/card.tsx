@@ -1,4 +1,4 @@
-import { View, Text, Alert, ActivityIndicator } from "react-native";
+import { View, Alert, ActivityIndicator } from "react-native";
 import React, { useEffect, useState } from "react";
 import HeaderName from "@/components/HeaderName";
 import {
@@ -7,18 +7,23 @@ import {
   StripeProvider,
 } from "@stripe/stripe-react-native";
 import { usePaymentSheet, useStripePublic } from "@/hooks/useStripe";
-import NumberInputs from "@/components/NumberInputs";
 import TransactionButton from "@/components/TransactionButton";
 import { useCurrentUser } from "@/hooks/useCurrentuser";
+import { useUpdateuser } from "@/hooks/useUpdateuser";
+import AmountCard from "@/components/AmountCard";
 
 const CardDeposit = () => {
   const { currentUser } = useCurrentUser();
   const [amount, setamount] = useState("");
   const [loading, setLoading] = useState(false);
   const { publicKey, isLoading, error, refetch } = useStripePublic();
+  const numericAmount = parseFloat(amount);
+  const hasValidAmount = Number.isFinite(numericAmount) && numericAmount > 0;
   const {
     createPaymentSheetAsync,
   } = usePaymentSheet(parseFloat(amount));
+  const { creatUpdateuser , loading: updating} = useUpdateuser({amount: numericAmount})
+  const busy = loading || updating;
   const handleChange = (text: string) => {
     setamount(text);
   };
@@ -84,7 +89,8 @@ const CardDeposit = () => {
       if (presentError) {
         Alert.alert(`Error code: ${presentError.code}`, presentError.message);
       } else {
-        Alert.alert("Success", "Your order is confirmed!");
+        creatUpdateuser()
+        // Alert.alert("Success", "Your order is confirmed!");
       }
     } finally {
       setLoading(false);
@@ -94,8 +100,8 @@ const CardDeposit = () => {
   return (
     <StripeProvider publishableKey={publicKey}>
       <HeaderName headertext="add card">
-        <NumberInputs value={amount} onchange={handleChange} />
-        <TransactionButton title="Pay" onPress={handlePayment} />
+        <AmountCard handleChange={handleChange} amount={amount}/>
+        <TransactionButton title="Pay" onPress={handlePayment} disabled={busy || !hasValidAmount} loading={busy}/>
       </HeaderName>
     </StripeProvider>
   );

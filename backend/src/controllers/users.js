@@ -140,13 +140,14 @@ export const UpdateUsers = async (req, res) => {
         if (!userId) return res.status(401).json({ message: "unauthorized" });
 
         const body = req.body ?? {};
-        const { firstName, lastName, number } = body;
+        const { firstName, lastName, number , amount} = body;
 
         // Apply only provided fields atomically and return the final row
         const hasAny =
             Object.prototype.hasOwnProperty.call(body, "firstName") ||
             Object.prototype.hasOwnProperty.call(body, "lastName") ||
-            Object.prototype.hasOwnProperty.call(body, "number");
+            Object.prototype.hasOwnProperty.call(body, "number") || 
+            Object.prototype.hasOwnProperty.call(body, "amount");
         if (!hasAny) {
             return res.status(400).json({ message: "no fields to update" });
         }
@@ -177,6 +178,26 @@ export const UpdateUsers = async (req, res) => {
             // paystackPayload.phone = nm;
             last = rows[0] ?? last;
         }
+        if (Object.prototype.hasOwnProperty.call(body, "amount")) {
+             const raw =
+                 typeof amount === "number"
+                     ? amount
+                     : typeof amount === "string"
+                     ? amount.trim()
+                     : null;
+             const parsed =
+                 raw === null || raw === ""
+                     ? null
+                     : Number(raw);
+             if (parsed === null || Number.isNaN(parsed)) {
+                 return res.status(400).json({ message: "invalid amount" });
+             }
+             if (parsed <= 0) {
+                 return res.status(400).json({ message: "amount must be greater than zero" });
+             }
+             const rows = await sqldb`UPDATE users SET balance = balance + ${parsed} WHERE clerk_id = ${userId} RETURNING *`;
+             last = rows[0] ?? last;
+         }
         if (!last) {
             return res.status(404).json({ message: "no user found" });
         }
