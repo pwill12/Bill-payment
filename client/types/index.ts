@@ -39,4 +39,5 @@ export interface UpdateUser {
   firstName?: string;
   lastName?: string;
   number?: string;
+  amount?: number;
 }

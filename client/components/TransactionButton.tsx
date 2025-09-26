@@ -1,4 +1,4 @@
-import { Text, TouchableOpacity } from "react-native";
+import { ActivityIndicator, Text, TouchableOpacity } from "react-native";
 import React from "react";
 
 export enum COLORS {
@@ -27,6 +27,7 @@ interface TransactionButtonProps {
   size?: ButtonSize | string;
   color?: COLORS | string;
   textcolor?: TEXTCOLORS;
+  loading?: boolean
 }
 
 const TransactionButton = ({
@@ -36,17 +37,18 @@ const TransactionButton = ({
   size,
   color,
   textcolor,
+  loading
 }: TransactionButtonProps) => {
   return (
     <TouchableOpacity
       className={`items-center justify-center rounded-full shadow-sm ${size ?? "py-3"} ${disabled ? "bg-gray-200" : color ? color : "bg-green-400"}`}
       onPress={onPress}
-      disabled={disabled}
+      disabled={disabled || loading}
     >
       <Text
         className={`${(size === ButtonSize.xs || size === ButtonSize.xss) ? "text-xs" : size === ButtonSize.custom ? "text-xs" : "text-lg"} ${disabled ? "text-gray-500" : textcolor ? textcolor : "text-white"}`}
       >
-        {title}
+        {loading ? <ActivityIndicator size={'small'} color={'green'}/> : title}
       </Text>
     </TouchableOpacity>
   );

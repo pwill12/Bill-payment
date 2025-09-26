@@ -140,13 +140,14 @@ export const UpdateUsers = async (req, res) => {
         if (!userId) return res.status(401).json({ message: "unauthorized" });
 
         const body = req.body ?? {};
-        const { firstName, lastName, number } = body;
+        const { firstName, lastName, number , amount} = body;
 
         // Apply only provided fields atomically and return the final row
         const hasAny =
             Object.prototype.hasOwnProperty.call(body, "firstName") ||
             Object.prototype.hasOwnProperty.call(body, "lastName") ||
-            Object.prototype.hasOwnProperty.call(body, "number");
+            Object.prototype.hasOwnProperty.call(body, "number") || 
+            Object.prototype.hasOwnProperty.call(body, "amount");
         if (!hasAny) {
             return res.status(400).json({ message: "no fields to update" });
         }
@@ -174,6 +175,12 @@ export const UpdateUsers = async (req, res) => {
         if (Object.prototype.hasOwnProperty.call(body, "number")) {
             const nm = typeof number === "string" ? number.trim() : null;
             const rows = await sqldb`UPDATE users SET number = ${nm} WHERE clerk_id = ${userId} RETURNING *`;
+            // paystackPayload.phone = nm;
+            last = rows[0] ?? last;
+        }
+        if (Object.prototype.hasOwnProperty.call(body, "amount")) {
+            const am = typeof amount === "string" ? number.trim() : null;
+            const rows = await sqldb`UPDATE users SET balance = balance + ${am} WHERE clerk_id = ${userId} RETURNING *`;
             // paystackPayload.phone = nm;
             last = rows[0] ?? last;
         }

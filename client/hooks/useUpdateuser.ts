@@ -50,10 +50,16 @@ export const useUpdateuser = (data: UpdateUser) => {
       Alert.alert("Missing required field", "Please enter last name");
       return;
     }
+
+    if (data.amount !== undefined && data.amount <= 0) {
+      Alert.alert("Missing required field", "Please enter amount");
+      return;
+    }
     const updata = {
       firstName: data.firstName,
       lastName: data.lastName,
       number: data.number,
+      amount: data.amount
     } as UpdateUser;
     createUpdateMutation.mutate(updata);
   };
