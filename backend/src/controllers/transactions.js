@@ -29,6 +29,21 @@ export async function transactions(req, res) {
         const getbalance = await sqldb`
             SELECT balance,username FROM users WHERE clerk_id = ${userId}
         `
+        if (!getbalance || getbalance.length === 0) {
+            return res.status(404).json({ message: "User not Found" })
+        }
+
+        if (type === 'card-deposit') {
+            if (amount <= 0) {
+                return res.status(400).json({ message: "Amount must be positive" })
+            }
+            const [transaction] = await sqldb`INSERT INTO transactionlog(sender, receiver, type, amount)
+                VALUES('Card-Deposit', ${getbalance[0].username}, ${type}, ${amount})
+                RETURNING id
+            `
+            return res.status(201).json(transaction)
+        }
+
         const getreceiver = await sqldb`
             SELECT username FROM users WHERE username = ${receiver}
          `

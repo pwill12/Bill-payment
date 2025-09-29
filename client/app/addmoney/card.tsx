@@ -11,6 +11,8 @@ import TransactionButton from "@/components/TransactionButton";
 import { useCurrentUser } from "@/hooks/useCurrentuser";
 import { useUpdateuser } from "@/hooks/useUpdateuser";
 import AmountCard from "@/components/AmountCard";
+import useTransfer from "@/hooks/useTransfer";
+import { transactiontype } from "@/types";
 
 const CardDeposit = () => {
   const { currentUser } = useCurrentUser();
@@ -22,8 +24,9 @@ const CardDeposit = () => {
   const {
     createPaymentSheetAsync,
   } = usePaymentSheet(parseFloat(amount));
-  const { creatUpdateuser , loading: updating} = useUpdateuser({amount: numericAmount})
-  const busy = loading || updating;
+  const { creatUpdateuser , loading: updating} = useUpdateuser({amount: numericAmount}, transactiontype.CARDDEPOSIT)
+  const {createsend, isCreating} = useTransfer(numericAmount, 'card-deposit', currentUser?.username)
+  const busy = loading || updating || isCreating;
   const handleChange = (text: string) => {
     setamount(text);
   };
@@ -45,8 +48,8 @@ const CardDeposit = () => {
 
   if (isLoading) {
     return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <ActivityIndicator style={{ backfaceVisibility: "hidden" }} />
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" ,backgroundColor: 'rgba(0,0,0,0.1)', padding: 20, borderRadius: 8}}>
+        <ActivityIndicator style={{ backfaceVisibility: "visible"}} />
       </View>
     );
   }
@@ -90,6 +93,7 @@ const CardDeposit = () => {
         Alert.alert(`Error code: ${presentError.code}`, presentError.message);
       } else {
         creatUpdateuser()
+        createsend()
         // Alert.alert("Success", "Your order is confirmed!");
       }
     } finally {
@@ -99,7 +103,7 @@ const CardDeposit = () => {
 
   return (
     <StripeProvider publishableKey={publicKey}>
-      <HeaderName headertext="add card">
+      <HeaderName headertext="Enter Amount">
         <AmountCard handleChange={handleChange} amount={amount}/>
         <TransactionButton title="Pay" onPress={handlePayment} disabled={busy || !hasValidAmount} loading={busy}/>
       </HeaderName>

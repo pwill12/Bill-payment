@@ -6,8 +6,8 @@ import { Alert } from "react-native";
 
 const useTransfer = (
   amount: number | undefined,
-  type: string | undefined,
-  receiver: string | undefined,
+  type: "card-deposit" | "money-transfer" | "airtime" | "tv" | "data",
+  receiver: string | undefined
 ) => {
   const api = useApiClient();
   const QueryClient = useQueryClient();
@@ -21,15 +21,19 @@ const useTransfer = (
     onSuccess: (response) => {
       QueryClient.invalidateQueries({ queryKey: ["authUser"] });
       QueryClient.invalidateQueries({ queryKey: ["transactions"] });
-      router.push({
-      pathname: "/success",
-      params: {
-        name: receiver,
-        amount: amount,
-        type: type,
-        id: response.data.id
-      },
-    });
+      if (type === "card-deposit") {
+        return;
+      } else {
+        router.push({
+          pathname: "/success",
+          params: {
+            name: receiver,
+            amount: amount,
+            type: type,
+            id: response.data.id,
+          },
+        });
+      }
     },
     onError: (error) => {
       console.error(error);

@@ -57,6 +57,7 @@ export const SendMoneyorDeposit: CategoryProps[] = [
     name: "Card Deposit",
     icon: "credit-card-outline",
     size: 25,
+    page: Routes.CARD
   },
 ];
 

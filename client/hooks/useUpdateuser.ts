@@ -1,10 +1,13 @@
-import { UpdateUser } from "@/types";
+import { transactiontype, UpdateUser } from "@/types";
 import { useApiClient, userApi } from "@/utils/api";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { router } from "expo-router";
 import { Alert } from "react-native";
 
-export const useUpdateuser = (data: UpdateUser) => {
+export const useUpdateuser = (
+  data: UpdateUser,
+  type?: transactiontype | "update-user"
+) => {
   const api = useApiClient();
   const QueryClient = useQueryClient();
 
@@ -12,13 +15,27 @@ export const useUpdateuser = (data: UpdateUser) => {
     mutationFn: (datas: UpdateUser) => userApi.updateuser(api, datas),
     onSuccess: (response) => {
       QueryClient.invalidateQueries({ queryKey: ["authUser"] });
-      Alert.alert("User Update", "user info updated successfully", [
-        {
-          text: "Ok",
-          style: "destructive",
-          onPress: () => router.back(),
-        },
-      ]);
+      if (type === "card-deposit") {
+        Alert.alert(
+          "Congratulations",
+          `Deposit of $${data.amount} is Successful`,
+          [
+            {
+              text: "Ok",
+              style: "default",
+              onPress: () => router.back(),
+            },
+          ]
+        );
+      } else {
+        Alert.alert("User Update", "user info updated successfully", [
+          {
+            text: "Ok",
+            style: "default",
+            onPress: () => router.back(),
+          },
+        ]);
+      }
 
       return response;
     },
@@ -51,7 +68,10 @@ export const useUpdateuser = (data: UpdateUser) => {
       return;
     }
 
-    if (data.amount !== undefined && (!Number.isFinite(data.amount) || data.amount <= 0)) {
+    if (
+      data.amount !== undefined &&
+      (!Number.isFinite(data.amount) || data.amount <= 0)
+    ) {
       Alert.alert("Missing required field", "Please enter amount");
       return;
     }
@@ -59,7 +79,7 @@ export const useUpdateuser = (data: UpdateUser) => {
       firstName: data.firstName,
       lastName: data.lastName,
       number: data.number,
-      amount: data.amount
+      amount: data.amount,
     } as UpdateUser;
     createUpdateMutation.mutate(updata);
   };

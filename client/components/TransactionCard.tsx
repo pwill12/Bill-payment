@@ -1,4 +1,4 @@
-import { Transactions } from "@/types";
+import { Transactions, transactiontype } from "@/types";
 import { formatDate } from "@/utils/dateFormat";
 import { Feather } from "@expo/vector-icons";
 import { router } from "expo-router";
@@ -28,7 +28,7 @@ const TransactionCard = ({
   loadpage,
   showload,
   loadmore,
-  lastindex
+  lastindex,
 }: TransactionCardProps) => {
   const getStatusStyle = (type: Transactions["type"]) => {
     switch (type) {
@@ -63,7 +63,7 @@ const TransactionCard = ({
       <View className="rounded-xl flex-col bg-white">
         {loading ? (
           <View className="px-4 justify-center items-center bg-gray-50">
-            <ActivityIndicator size={"large"} color='lightgreen'/>
+            <ActivityIndicator size={"large"} color="lightgreen" />
           </View>
         ) : transactions !== undefined && transactions.length > 0 ? (
           <View>
@@ -79,6 +79,8 @@ const TransactionCard = ({
                     <View className="size-12 justify-center items-center bg-green-100 rounded-full">
                       {transaction.sender === username ? (
                         <Feather name="arrow-up" color="green" size={15} />
+                      ) : transaction.type === "card-deposit" ? (
+                        <Feather name="credit-card" color='green' size={15}/>
                       ) : (
                         <Feather name="arrow-down" color="green" size={15} />
                       )}
@@ -88,7 +90,7 @@ const TransactionCard = ({
                         <Text className="text-sm">
                           Transfer to {transaction.receiver}
                         </Text>
-                      ) : (
+                      ) : transaction.type === transactiontype.CARDDEPOSIT ? <Text className="text-sm">Card Deposit</Text> : (
                         <Text className="text-sm">
                           Received from {transaction.sender}
                         </Text>
@@ -107,7 +109,7 @@ const TransactionCard = ({
                         </Text>
                       ) : (
                         <Text className="text-green-400 font-medium text-xl">
-                          {transaction.amount}
+                          +{transaction.amount}
                         </Text>
                       )}
                     </View>
@@ -130,11 +132,13 @@ const TransactionCard = ({
               >
                 {loadmore ? (
                   <View className="px-4 justify-center items-center">
-                    <ActivityIndicator size={"small"} color={'lightgreen'}/>
+                    <ActivityIndicator size={"small"} color={"lightgreen"} />
                   </View>
                 ) : !lastindex ? (
                   <View>
-                    <Text className="text-green-600 font-bold">no more record</Text>
+                    <Text className="text-green-600 font-bold">
+                      no more record
+                    </Text>
                   </View>
                 ) : (
                   <>

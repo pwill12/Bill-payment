@@ -15,7 +15,7 @@ export interface Transactions {
     receiver: string;
     amount: number;
     created_at: string;
-    type: "transfer" | "airtime" | "data";
+    type: "transfer" | "airtime" | "data" | "card-deposit";
 }
 
 export enum categorystyle {
@@ -26,8 +26,10 @@ export enum categorystyle {
 }
 
 export enum transactiontype {
-  SEND = "send",
+  SEND = "money-transfer",
   AIRTIME = "airtime",
+  TV = "tv",
+  CARDDEPOSIT = "card-deposit",
 }
 export interface Transferprops {
   amount: number;
