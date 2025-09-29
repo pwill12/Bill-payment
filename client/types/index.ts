@@ -15,7 +15,7 @@ export interface Transactions {
     receiver: string;
     amount: number;
     created_at: string;
-    type: "transfer" | "airtime" | "data";
+    type: "transfer" | "airtime" | "data" | "card-deposit";
 }
 
 export enum categorystyle {
