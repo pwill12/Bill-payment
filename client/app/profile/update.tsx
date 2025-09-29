@@ -84,6 +84,7 @@ const UppdateProfile = () => {
             name !== ProfileName.FULL_NAME && value === rawData ||
             value === `${firstName} ${lastName}`
           }
+          loading={loading}
         />
       </View>
     </HeaderName>

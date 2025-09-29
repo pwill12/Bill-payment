@@ -20,7 +20,7 @@ interface Props {
   receiver: string | undefined;
   bank: string;
   amount: number;
-  type: transactiontype | undefined;
+  type: transactiontype;
   Ref: Ref<BottomSheet>;
   onClose: () => void;
 }

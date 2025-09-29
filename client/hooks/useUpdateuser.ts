@@ -4,7 +4,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { router } from "expo-router";
 import { Alert } from "react-native";
 
-export const useUpdateuser = (data: UpdateUser) => {
+export const useUpdateuser = (data: UpdateUser, type?: "card" | "internet") => {
   const api = useApiClient();
   const QueryClient = useQueryClient();
 
@@ -12,13 +12,25 @@ export const useUpdateuser = (data: UpdateUser) => {
     mutationFn: (datas: UpdateUser) => userApi.updateuser(api, datas),
     onSuccess: (response) => {
       QueryClient.invalidateQueries({ queryKey: ["authUser"] });
-      Alert.alert("User Update", "user info updated successfully", [
+      if (type === "card") {
+        console.log(type)
+        Alert.alert("Congratulations", `Deposit of $${data.amount} is Successfull`, [
         {
           text: "Ok",
           style: "destructive",
           onPress: () => router.back(),
         },
       ]);
+      }
+      if (!type) {
+        Alert.alert("User Update", "user info updated successfully", [
+        {
+          text: "Ok",
+          style: "destructive",
+          onPress: () => router.back(),
+        },
+      ]);
+      }
 
       return response;
     },

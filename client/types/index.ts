@@ -26,8 +26,10 @@ export enum categorystyle {
 }
 
 export enum transactiontype {
-  SEND = "send",
+  SEND = "money-transfer",
   AIRTIME = "airtime",
+  TV = "tv",
+  CARDDEPOSIT = "card-deposit",
 }
 export interface Transferprops {
   amount: number;

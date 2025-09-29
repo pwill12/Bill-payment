@@ -11,6 +11,7 @@ import TransactionButton from "@/components/TransactionButton";
 import { useCurrentUser } from "@/hooks/useCurrentuser";
 import { useUpdateuser } from "@/hooks/useUpdateuser";
 import AmountCard from "@/components/AmountCard";
+import useTransfer from "@/hooks/useTransfer";
 
 const CardDeposit = () => {
   const { currentUser } = useCurrentUser();
@@ -22,7 +23,8 @@ const CardDeposit = () => {
   const {
     createPaymentSheetAsync,
   } = usePaymentSheet(parseFloat(amount));
-  const { creatUpdateuser , loading: updating} = useUpdateuser({amount: numericAmount})
+  const { creatUpdateuser , loading: updating} = useUpdateuser({amount: numericAmount}, "card")
+  const {createsend, isCreating} = useTransfer(numericAmount, 'card-deposit', currentUser?.username)
   const busy = loading || updating;
   const handleChange = (text: string) => {
     setamount(text);
@@ -46,7 +48,7 @@ const CardDeposit = () => {
   if (isLoading) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <ActivityIndicator style={{ backfaceVisibility: "hidden" }} />
+        <ActivityIndicator style={{ backfaceVisibility: "visible",backdropFilter: 'gray' }} />
       </View>
     );
   }
@@ -90,6 +92,7 @@ const CardDeposit = () => {
         Alert.alert(`Error code: ${presentError.code}`, presentError.message);
       } else {
         creatUpdateuser()
+        createsend()
         // Alert.alert("Success", "Your order is confirmed!");
       }
     } finally {
@@ -99,7 +102,7 @@ const CardDeposit = () => {
 
   return (
     <StripeProvider publishableKey={publicKey}>
-      <HeaderName headertext="add card">
+      <HeaderName headertext="Enter Amount">
         <AmountCard handleChange={handleChange} amount={amount}/>
         <TransactionButton title="Pay" onPress={handlePayment} disabled={busy || !hasValidAmount} loading={busy}/>
       </HeaderName>
