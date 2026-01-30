@@ -3,6 +3,8 @@ import "../global.css";
 import { ClerkProvider } from "@clerk/clerk-expo";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { tokenCache } from "@clerk/clerk-expo/token-cache";
+import { StatusBar } from "expo-status-bar";
+import { Platform } from "react-native";
 // import { getItem } from "@/utils/asyncStorage";
 
 const queryClient = new QueryClient();
@@ -36,9 +38,14 @@ export default function RootLayout() {
     publishableKey ? "Key found" : "Key missing",
   );
 
+  // Debug: Log platform info
+  console.log("[DEBUG] Platform:", Platform.OS);
+  console.log("[DEBUG] Platform Version:", Platform.Version);
+
   return (
     <ClerkProvider publishableKey={publishableKey} tokenCache={tokenCache}>
       <QueryClientProvider client={queryClient}>
+        <StatusBar style="dark" />
         <Stack screenOptions={{ headerShown: false }}>
           <Stack.Screen name="(auth)" />
           <Stack.Screen name="(tabs)" />

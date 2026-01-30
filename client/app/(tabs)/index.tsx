@@ -54,18 +54,18 @@ const HomeScreen = () => {
   };
 
   return (
-    <SafeAreaView className="bg-gray-50 flex-1">
+    <SafeAreaView className="bg-gray-50 flex-1" edges={['top']}>
       <View className="flex-col py-3 px-4 gap-4">
         <View className="flex-row justify-between py-1">
-          <View className="flex-row items-center gap-5">
+          <View className="flex-row items-center gap-2">
             <Image
               source={{ uri: user?.imageUrl }}
               className="w-11 h-11 rounded-full"
             />
             <Text className="text-lg font-bold">Hi, {username}</Text>
           </View>
-          <View className="flex-row gap-6 items-center">
-            <AntDesign name="customerservice" size={24} />
+          <View className="flex-row gap-4 items-center">
+            <AntDesign name="message" size={24} />
             <Ionicons name="scan" size={24} />
             <Ionicons name="notifications-outline" size={24} />
             <SignOutButton />
@@ -73,7 +73,7 @@ const HomeScreen = () => {
         </View>
         <ScrollView
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ paddingBottom: 80, gap: 16 }}
+          contentContainerStyle={{ paddingBottom: 100, gap: 16 }}
           pagingEnabled
           refreshControl={
             <RefreshControl

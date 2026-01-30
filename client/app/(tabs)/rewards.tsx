@@ -15,6 +15,7 @@ const rewards = () => {
     <SafeAreaView
       className="flex-1 bg-teal-100 rounded-b-3xl"
       style={{ maxHeight: height * 0.265 }}
+      edges={['top']}
     >
       <View className="px-4 py-3 gap-4">
         <View className="flex flex-row justify-between py-3 items-center">

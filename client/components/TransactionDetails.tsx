@@ -24,7 +24,7 @@ const TransactionDetails = ({ id }: details) => {
     <HeaderName
       headertext="Transaction Details"
       showhistorybutton
-      icon="customerservice"
+      icon="message"
     >
       <ScrollView
         showsVerticalScrollIndicator={false}

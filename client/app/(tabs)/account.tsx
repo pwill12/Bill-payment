@@ -18,7 +18,7 @@ const Account = () => {
   const { currentUser } = useCurrentUser();
 
   return (
-    <SafeAreaView className=" bg-gray-50">
+    <SafeAreaView className=" bg-gray-50 flex-1" edges={['top']}>
       <View className="flex-col gap-4 px-4 py-3">
         <View className="flex-row justify-between">
           <TouchableOpacity className="flex-row gap-3 items-center" onPress={()=> router.push('/profile')}>
@@ -43,7 +43,7 @@ const Account = () => {
         </View>
         <ScrollView
           style={{}}
-          contentContainerStyle={{ paddingBottom: 80, gap: 16 }}
+          contentContainerStyle={{ paddingBottom: 100, gap: 16 }}
           showsVerticalScrollIndicator={false}
         >
           <View className=" gap-4 flex-col">
