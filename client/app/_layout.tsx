@@ -6,8 +6,18 @@ import { tokenCache } from "@clerk/clerk-expo/token-cache";
 // import { getItem } from "@/utils/asyncStorage";
 
 const queryClient = new QueryClient();
+const publishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY || "";
 
 export default function RootLayout() {
+  // Debug: Log environment variable
+  console.log(
+    "[DEBUG] EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY:",
+    process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY,
+  );
+  console.log(
+    "[DEBUG] Using publishableKey:",
+    publishableKey ? "Key found" : "Key missing",
+  );
   // const checkstate = async () => {
   //   let onboarded = await getItem("onboarded");
   //   if (onboarded === "true") {
@@ -21,8 +31,13 @@ export default function RootLayout() {
 
   // }
 
+  console.log(
+    "[DEBUG] Using publishableKey:",
+    publishableKey ? "Key found" : "Key missing",
+  );
+
   return (
-    <ClerkProvider tokenCache={tokenCache}>
+    <ClerkProvider publishableKey={publishableKey} tokenCache={tokenCache}>
       <QueryClientProvider client={queryClient}>
         <Stack screenOptions={{ headerShown: false }}>
           <Stack.Screen name="(auth)" />
